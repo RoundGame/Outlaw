@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Outlaw", "Outlaw\Outlaw.vcxproj", "{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}.Debug|x64.ActiveCfg = Debug|x64
+		{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}.Debug|x64.Build.0 = Debug|x64
+		{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}.Debug|x86.ActiveCfg = Debug|Win32
+		{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}.Debug|x86.Build.0 = Debug|Win32
+		{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}.Release|x64.ActiveCfg = Release|x64
+		{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}.Release|x64.Build.0 = Release|x64
+		{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}.Release|x86.ActiveCfg = Release|Win32
+		{A97750A4-F1F8-4DF7-A5FD-4C70D91890E2}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0C9C15A6-6116-435B-9030-501D936F9184}
+	EndGlobalSection
+EndGlobal
