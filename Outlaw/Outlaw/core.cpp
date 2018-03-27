@@ -88,7 +88,6 @@ void NormalKeys(unsigned char key, int x, int y)
 	switch (key) {
 	case KEY_ESC: exit(0); break;
 	}
-		printf("key : %d \n", key);
 }
 
 void SpecialKeys(int key, int x, int y)

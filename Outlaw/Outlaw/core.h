@@ -13,6 +13,5 @@ void reshape_win_size(int w, int h);
 // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
 void InitTexture(unsigned int& texture1, const char name[]);
 
-
 void NormalKeys(unsigned char key, int x, int y);
 void SpecialKeys(int key, int x, int y);
