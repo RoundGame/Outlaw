@@ -1,7 +1,4 @@
 #include "core.h"
-#include <GL/glut.h>
-#include <soil.h>
-#include <cstdio>
 
 //текстура
 unsigned int Textures[6]; // ћаксимально доступное кол-во текстур

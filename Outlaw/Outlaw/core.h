@@ -1,5 +1,8 @@
-#ifndef CORE_H
-#define CORE_H
+#pragma once
+
+#include <GL/glut.h>
+#include <soil.h>
+#include <cstdio>
 
 // Инициализация главного окна
 void initGL(int argc, char **argv);
@@ -12,4 +15,3 @@ void reshape_win_size(int w, int h);
 
 // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
 void InitTexture(unsigned int& texture1, const char name[]);
-#endif // !CORE_H
