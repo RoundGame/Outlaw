@@ -1,5 +1,4 @@
 #include "core.h"
-#include <GL/glut.h>
 
 int main(int argc, char **argv)
 {

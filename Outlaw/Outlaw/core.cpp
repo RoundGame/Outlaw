@@ -1,5 +1,4 @@
 #include "core.h"
-#include <GL/glut.h>
 #include <soil.h>
 #include <cstdio>
 
@@ -13,11 +12,12 @@ void InitTexture(unsigned int& texture1, const char name[])
 	int *width = new int(0),
 		*height = new int(0);
 	unsigned char* image = SOIL_load_image(name, width, height, 0, SOIL_LOAD_RGB);
-	if (image == 0) exit(1);
+	if (image == 0)
+		printf("InitTexture ERROR : %s \n", name);
 
 	glGenTextures(1, &texture1); // Генерация текстуры
 
-								 // Установка параметров
+	// Установка параметров
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -43,7 +43,7 @@ void initGL(int argc, char **argv)
 									 // Инициализация текстур
 	InitTexture(Textures[0], "test.jpg");
 	InitTexture(Textures[1], "test.bmp");
-	//InitTexture(Textures[2], "a.jpg");
+	InitTexture(Textures[2], "a3.jpg");
 	//InitTexture(Textures[3], "b.bmp");
 	//InitTexture(Textures[4], "c.png");
 

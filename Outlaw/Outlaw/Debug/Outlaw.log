@@ -1,4 +1,9 @@
-﻿  main.cpp
+﻿  core.cpp
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(58): warning C4305: аргумент: усечение из "double" в "GLclampf"
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(62): warning C4305: аргумент: усечение из "double" в "GLfloat"
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(63): warning C4305: аргумент: усечение из "double" в "GLfloat"
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(64): warning C4305: аргумент: усечение из "double" в "GLfloat"
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(65): warning C4305: аргумент: усечение из "double" в "GLfloat"
 soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB
 soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB
 soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB
