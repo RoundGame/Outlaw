@@ -9,8 +9,11 @@ int main(int argc, char **argv)
 	glutDisplayFunc(render);
 
 	// Регистрация обработанных данных
+	//Изменение
 	glutReshapeFunc(reshape_win_size);
-
+	// Клавиатура
+	glutKeyboardFunc(NormalKeys);
+	glutSpecialFunc(SpecialKeys);
 	// Основной цикл
 	glutMainLoop();
 

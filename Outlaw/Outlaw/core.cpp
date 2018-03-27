@@ -1,4 +1,5 @@
 #include "core.h"
+#include "key.h"
 #include <soil.h>
 #include <cstdio>
 
@@ -19,7 +20,7 @@ void InitTexture(unsigned int& texture1, const char name[])
 
 	// Установка параметров
 	glBindTexture(GL_TEXTURE_2D, texture1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Создание миникарты
@@ -80,4 +81,17 @@ void reshape_win_size(int w, int h)
 	// Определяем окно просмотра
 	glViewport(0, 0, w, h);
 	printf("w - %d, h - %d \n", w, h); // вывод текущего размера окна в консоль
+}
+
+void NormalKeys(unsigned char key, int x, int y)
+{
+	switch (key) {
+	case KEY_ESC: exit(0); break;
+	}
+		printf("key : %d \n", key);
+}
+
+void SpecialKeys(int key, int x, int y)
+{
+
 }
