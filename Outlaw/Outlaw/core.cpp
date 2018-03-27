@@ -1,4 +1,5 @@
 #include "core.h"
+#include "key.h"
 #include <soil.h>
 #include <cstdio>
 
@@ -78,4 +79,16 @@ void reshape_win_size(int w, int h)
 	// Определяем окно просмотра
 	glViewport(0, 0, w, h);
 	printf("w - %d, h - %d \n", w, h); // вывод текущего размера окна в консоль
+}
+
+void NormalKeys(unsigned char key, int x, int y)
+{
+	switch (key) {
+	case KEY_ESC: exit(0); break;
+	}
+}
+
+void SpecialKeys(int key, int x, int y)
+{
+
 }
