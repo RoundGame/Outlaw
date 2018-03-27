@@ -24,7 +24,7 @@ void InitTexture(unsigned int& texture1, const char name[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Создание миникарты
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image);
 }
 
 // Инициализация главного окна
@@ -54,7 +54,11 @@ void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Очистка буферов глубины и цвета
 	glClearColor(0.2, 0.2, 0.5, 1);
+	
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.5f);
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
+
 	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_TRIANGLE_FAN); // Начало обьекта рисуемого треугольниками
 	glTexCoord2f(0.0, 1.0); glVertex3f(-0.5, -0.5, 0.7);
@@ -70,6 +74,10 @@ void render()
 	glTexCoord2f(1.0, 0.0); glVertex2f(0.25, 0.25);
 	glTexCoord2f(1.0, 1.0); glVertex2f(0.25, -0.25);
 	glEnd(); // Конец обьекта рисуемого треугольниками
+
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_ALPHA_TEST);
+
 	glutSwapBuffers(); // Замена буфера на вновь отрисованный 
 }
 
