@@ -1,16 +1,16 @@
-#pragma once
+п»ї#pragma once
 #include <GL/glut.h>
 
-// Инициализация главного окна
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°
 void initGL(int argc, char **argv);
 
-// Отрисовка
+// РћС‚СЂРёСЃРѕРІРєР°
 void render();
 
-// Регистрация изменения размеров окна
+// Р РµРіРёСЃС‚СЂР°С†РёСЏ РёР·РјРµРЅРµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ РѕРєРЅР°
 void reshape_win_size(int w, int h);
 
-// Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
+// Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚РєСѓСЂС‹ texture1 - РєСѓРґР°, name - РїСѓС‚СЊ Рє Р·Р°РіСЂСѓР¶Р°РµРјРѕРјСѓ С„Р°Р№Р»Сѓ
 void InitTexture(unsigned int& texture1, const char name[]);
 
 void NormalKeys(unsigned char key, int x, int y);

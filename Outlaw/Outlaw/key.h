@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #define KEY_ESC 27 
 
 #define KEY_0 48

@@ -1,12 +1,12 @@
-#include "core.h"
+п»ї#include "core.h"
 #include "key.h"
 #include <soil.h>
 #include <cstdio>
 
-//текстура
-unsigned int Textures[6]; // Максимально доступное кол-во текстур
+//С‚РµРєСЃС‚СѓСЂР°
+unsigned int Textures[6]; // РњР°РєСЃРёРјР°Р»СЊРЅРѕ РґРѕСЃС‚СѓРїРЅРѕРµ РєРѕР»-РІРѕ С‚РµРєСЃС‚СѓСЂ
 
-						  // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
+						  // Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚РєСѓСЂС‹ texture1 - РєСѓРґР°, name - РїСѓС‚СЊ Рє Р·Р°РіСЂСѓР¶Р°РµРјРѕРјСѓ С„Р°Р№Р»Сѓ
 void InitTexture(unsigned int& texture1, const char name[])
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -16,77 +16,76 @@ void InitTexture(unsigned int& texture1, const char name[])
 	if (image == 0)
 		printf("InitTexture ERROR : %s \n", name);
 
-	glGenTextures(1, &texture1); // Генерация текстуры
+	glGenTextures(1, &texture1); // Р“РµРЅРµСЂР°С†РёСЏ С‚РµРєСЃС‚СѓСЂС‹
 
-	// Установка параметров
+	// РЈСЃС‚Р°РЅРѕРІРєР° РїР°СЂР°РјРµС‚СЂРѕРІ
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	// Создание миникарты
+	// РЎРѕР·РґР°РЅРёРµ РјРёРЅРёРєР°СЂС‚С‹
 	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image);
 }
 
-// Инициализация главного окна
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°
 void initGL(int argc, char **argv)
 {
-	glutInit(&argc, argv);	// Инициализация glut
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA); 	// Установка парометров отрисовки где
-																// GLUT_DEPTH - разрешение глубины
-																// GLUT_DOUBLE - режим двойной буферизации
-																// GLUT_RGBA - цветовой канал(RGB) + альфа канал(А)
-	glutInitWindowSize(800, 600);	 // Размер экрана в пикселях
-	glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
-	glutCreateWindow("Roggame");	 // Имя окна
+	glutInit(&argc, argv);	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ glut
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA); 	// РЈСЃС‚Р°РЅРѕРІРєР° РїР°СЂРѕРјРµС‚СЂРѕРІ РѕС‚СЂРёСЃРѕРІРєРё РіРґРµ
+																// GLUT_DEPTH - СЂР°Р·СЂРµС€РµРЅРёРµ РіР»СѓР±РёРЅС‹
+																// GLUT_DOUBLE - СЂРµР¶РёРј РґРІРѕР№РЅРѕР№ Р±СѓС„РµСЂРёР·Р°С†РёРё
+																// GLUT_RGBA - С†РІРµС‚РѕРІРѕР№ РєР°РЅР°Р»(RGB) + Р°Р»СЊС„Р° РєР°РЅР°Р»(Рђ)
+	glutInitWindowSize(800, 600);	 // Р Р°Р·РјРµСЂ СЌРєСЂР°РЅР° РІ РїРёРєСЃРµР»СЏС…
+	glutInitWindowPosition(100, 100); // РџРѕР·РёС†РёСЏ РѕРєРЅР° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ Р»РµРІРѕРіРѕ РІРµСЂС…РЅРµРіРѕ СѓРіР»Р°(0,0) РІ РїРёРєСЃРµР»СЏС…
+	glutCreateWindow("Roggame");	 // РРјСЏ РѕРєРЅР°
 
-									 // Инициализация текстур
+									 // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С‚РµРєСЃС‚СѓСЂ
 	InitTexture(Textures[0], "test.jpg");
 	InitTexture(Textures[1], "test.png");
 	//InitTexture(Textures[2], "a3.jpg");
 	//InitTexture(Textures[3], "b.bmp");
 	//InitTexture(Textures[4], "c.png");
 
-	//printf("InitGL - complete\n"); // Нужно сделаь проверку создания окна
+	//printf("InitGL - complete\n"); // РќСѓР¶РЅРѕ СЃРґРµР»Р°СЊ РїСЂРѕРІРµСЂРєСѓ СЃРѕР·РґР°РЅРёСЏ РѕРєРЅР°
 }
 
-// Отрисовка
+// РћС‚СЂРёСЃРѕРІРєР°
 void render()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Очистка буферов глубины и цвета
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // РћС‡РёСЃС‚РєР° Р±СѓС„РµСЂРѕРІ РіР»СѓР±РёРЅС‹ Рё С†РІРµС‚Р°
 	glClearColor(0.2, 0.2, 0.5, 1);
 	
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.5f);
-	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
+	glEnable(GL_TEXTURE_2D); // Р’РєР»СЋС‡Р°РµС‚ РґРІСѓС…РјРµСЂРЅРѕРµ С‚РµРєСЃС‚СѓСЂРёСЂРѕРІР°РЅРёРµ
 
-	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glBegin(GL_TRIANGLE_FAN); // Начало обьекта рисуемого треугольниками
+	glBindTexture(GL_TEXTURE_2D, Textures[0]); // РџСЂРёРІСЏР·С‹РІР°РµРј С‚РµРєСЃС‚СѓСЂСѓ, РґР°Р»РµРµ Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РѕРЅР°, РґРѕ РЅРѕРІРѕР№ РїСЂРёРІСЏР·РєРё
+	glBegin(GL_TRIANGLE_FAN); // РќР°С‡Р°Р»Рѕ РѕР±СЊРµРєС‚Р° СЂРёСЃСѓРµРјРѕРіРѕ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°РјРё
 	glTexCoord2f(0.0, 1.0); glVertex3f(-0.5, -0.5, 0.7);
 	glTexCoord2f(0.0, 0.0); glVertex3f(-0.5, 0.5, 0.7);
 	glTexCoord2f(1.0, 0.0); glVertex3f(0.5, 0.5, 0.7);
 	glTexCoord2f(1.0, 1.0); glVertex3f(0.5, -0.5, 0.7);
-	glEnd(); // Конец обьекта рисуемого треугольниками
+	glEnd(); // РљРѕРЅРµС† РѕР±СЊРµРєС‚Р° СЂРёСЃСѓРµРјРѕРіРѕ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°РјРё
 
-	glBindTexture(GL_TEXTURE_2D, Textures[1]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glBegin(GL_TRIANGLE_FAN); // Начало обьекта рисуемого треугольниками
+	glBindTexture(GL_TEXTURE_2D, Textures[1]); // РџСЂРёРІСЏР·С‹РІР°РµРј С‚РµРєСЃС‚СѓСЂСѓ, РґР°Р»РµРµ Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РѕРЅР°, РґРѕ РЅРѕРІРѕР№ РїСЂРёРІСЏР·РєРё
+	glBegin(GL_TRIANGLE_FAN); // РќР°С‡Р°Р»Рѕ РѕР±СЊРµРєС‚Р° СЂРёСЃСѓРµРјРѕРіРѕ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°РјРё
 	glTexCoord2f(0.0, 1.0); glVertex2f(-0.25, -0.25);
 	glTexCoord2f(0.0, 0.0); glVertex2f(-0.25, 0.25);
 	glTexCoord2f(1.0, 0.0); glVertex2f(0.25, 0.25);
 	glTexCoord2f(1.0, 1.0); glVertex2f(0.25, -0.25);
-	glEnd(); // Конец обьекта рисуемого треугольниками
+	glEnd(); // РљРѕРЅРµС† РѕР±СЊРµРєС‚Р° СЂРёСЃСѓРµРјРѕРіРѕ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°РјРё
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
-
-	glutSwapBuffers(); // Замена буфера на вновь отрисованный 
+	glutSwapBuffers(); // Р—Р°РјРµРЅР° Р±СѓС„РµСЂР° РЅР° РІРЅРѕРІСЊ РѕС‚СЂРёСЃРѕРІР°РЅРЅС‹Р№ 
 }
 
-// Регистрация изменения размеров окна
+// Р РµРіРёСЃС‚СЂР°С†РёСЏ РёР·РјРµРЅРµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ РѕРєРЅР°
 void reshape_win_size(int w, int h)
 {
-	// Определяем окно просмотра
+	// РћРїСЂРµРґРµР»СЏРµРј РѕРєРЅРѕ РїСЂРѕСЃРјРѕС‚СЂР°
 	glViewport(0, 0, w, h);
-	printf("w - %d, h - %d \n", w, h); // вывод текущего размера окна в консоль
+	printf("w - %d, h - %d \n", w, h); // РІС‹РІРѕРґ С‚РµРєСѓС‰РµРіРѕ СЂР°Р·РјРµСЂР° РѕРєРЅР° РІ РєРѕРЅСЃРѕР»СЊ
 }
 
 void NormalKeys(unsigned char key, int x, int y)

@@ -1,20 +1,20 @@
-#include "core.h"
+п»ї#include "core.h"
 
 int main(int argc, char **argv)
 {
-	// Инициализация главного окна
+	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°
 	initGL(argc, argv);
 
-	// Отрисовка
+	// РћС‚СЂРёСЃРѕРІРєР°
 	glutDisplayFunc(render);
 
-	// Регистрация обработанных данных
-	//Изменение
+	// Р РµРіРёСЃС‚СЂР°С†РёСЏ РѕР±СЂР°Р±РѕС‚Р°РЅРЅС‹С… РґР°РЅРЅС‹С…
+	//РР·РјРµРЅРµРЅРёРµ
 	glutReshapeFunc(reshape_win_size);
-	// Клавиатура
+	// РљР»Р°РІРёР°С‚СѓСЂР°
 	glutKeyboardFunc(NormalKeys);
 	glutSpecialFunc(SpecialKeys);
-	// Основной цикл
+	// РћСЃРЅРѕРІРЅРѕР№ С†РёРєР»
 	glutMainLoop();
 
 	return 0;
