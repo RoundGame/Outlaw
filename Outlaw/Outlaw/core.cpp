@@ -5,6 +5,42 @@
 
 //текстура
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
+enum Action { NO, LEFT, RIGHT, UP, DOWN };
+Action action = NO;
+
+struct Player
+{
+	double X, Y;
+	Player()
+	{
+		X = 0;
+		Y = 0;
+	}
+};
+Player MainPlayer = Player();
+
+void Update(int value)
+{
+	glutPostRedisplay();
+	switch (action)
+	{
+	case LEFT:
+		MainPlayer.X -= 0.01;
+		break;
+	case RIGHT:
+		MainPlayer.X += 0.01;
+		break;
+	case UP:
+		MainPlayer.Y += 0.01;
+		break;
+	case DOWN:
+		MainPlayer.Y -= 0.01;
+		break;
+	default:
+		break;
+	}
+	glutTimerFunc(25, Update, 0);
+}
 
 						  // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
 void InitTexture(unsigned int& texture1, const char name[])
@@ -60,7 +96,7 @@ void render()
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
 	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glBegin(GL_TRIANGLE_FAN); // Начало обьекта рисуемого треугольниками
+	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
 	glTexCoord2f(0.0, 1.0); glVertex3f(-0.5, -0.5, 0.7);
 	glTexCoord2f(0.0, 0.0); glVertex3f(-0.5, 0.5, 0.7);
 	glTexCoord2f(1.0, 0.0); glVertex3f(0.5, 0.5, 0.7);
@@ -68,11 +104,11 @@ void render()
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glBindTexture(GL_TEXTURE_2D, Textures[1]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glBegin(GL_TRIANGLE_FAN); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(0.0, 1.0); glVertex2f(-0.25, -0.25);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-0.25, 0.25);
-	glTexCoord2f(1.0, 0.0); glVertex2f(0.25, 0.25);
-	glTexCoord2f(1.0, 1.0); glVertex2f(0.25, -0.25);
+	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
+	glTexCoord2f(0.0, 1.0); glVertex2f(-0.25 + MainPlayer.X, -0.25 + MainPlayer.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-0.25 + MainPlayer.X, 0.25 + MainPlayer.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(0.25 + MainPlayer.X, 0.25 + MainPlayer.Y);
+	glTexCoord2f(1.0, 1.0); glVertex2f(0.25 + MainPlayer.X, -0.25 + MainPlayer.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glDisable(GL_TEXTURE_2D);
@@ -88,10 +124,49 @@ void reshape_win_size(int w, int h)
 	printf("w - %d, h - %d \n", w, h); // вывод текущего размера окна в консоль
 }
 
+void NormalKeysUp(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case KEY_ESC: exit(0);
+		break;
+	case KEY_A:
+		action = NO;
+		break;
+	case KEY_D:
+		action = NO;
+		break;
+	case KEY_W:
+		action = NO;
+		break;
+	case KEY_S:
+		action = NO;
+		break;
+	default:
+		break;
+	}
+}
+
 void NormalKeys(unsigned char key, int x, int y)
 {
-	switch (key) {
-	case KEY_ESC: exit(0); break;
+	switch (key)
+	{
+	case KEY_ESC: exit(0);
+		break;
+	case KEY_A:
+		action = LEFT;
+		break;
+	case KEY_D:
+		action = RIGHT;
+		break;
+	case KEY_W:
+		action = UP;
+		break;
+	case KEY_S:
+		action = DOWN;
+		break;
+	default:
+		break;
 	}
 }
 

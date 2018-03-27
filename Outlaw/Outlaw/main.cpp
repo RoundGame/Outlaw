@@ -7,12 +7,14 @@ int main(int argc, char **argv)
 
 	// Отрисовка
 	glutDisplayFunc(render);
-
+	//Цикл по подсчету координат
+	glutTimerFunc(25, Update, 0);
 	// Регистрация обработанных данных
 	//Изменение
 	glutReshapeFunc(reshape_win_size);
 	// Клавиатура
 	glutKeyboardFunc(NormalKeys);
+	glutKeyboardUpFunc(NormalKeysUp);
 	glutSpecialFunc(SpecialKeys);
 	// Основной цикл
 	glutMainLoop();
