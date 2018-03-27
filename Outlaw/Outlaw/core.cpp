@@ -9,9 +9,9 @@ unsigned int Textures[6]; // Максимально доступное кол-во текстур
 void InitTexture(unsigned int& texture1, const char name[])
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	int *width = new int(0),
-		*height = new int(0);
-	unsigned char* image = SOIL_load_image(name, width, height, 0, SOIL_LOAD_RGB);
+
+	int width, height, channels;
+	unsigned char* image = SOIL_load_image(name, &width, &height, &channels, SOIL_LOAD_RGBA);
 	if (image == 0)
 		printf("InitTexture ERROR : %s \n", name);
 
@@ -19,13 +19,11 @@ void InitTexture(unsigned int& texture1, const char name[])
 
 	// Установка параметров
 	glBindTexture(GL_TEXTURE_2D, texture1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Создание миникарты
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, (*width), (*height), GL_RGB, GL_UNSIGNED_BYTE, image);
-	delete width;
-	delete height;
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image);
 }
 
 // Инициализация главного окна
@@ -42,8 +40,8 @@ void initGL(int argc, char **argv)
 
 									 // Инициализация текстур
 	InitTexture(Textures[0], "test.jpg");
-	InitTexture(Textures[1], "test.bmp");
-	InitTexture(Textures[2], "a3.jpg");
+	InitTexture(Textures[1], "test.png");
+	//InitTexture(Textures[2], "a3.jpg");
 	//InitTexture(Textures[3], "b.bmp");
 	//InitTexture(Textures[4], "c.png");
 
