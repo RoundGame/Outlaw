@@ -1,7 +1,6 @@
 #pragma once
 #include <cmath>
 #include <GL/glut.h>
-#include <iostream>
 using namespace std;
 
 struct Vector
@@ -37,34 +36,20 @@ struct Vector
 class character
 {
 public:
-	double	speed = 0.03; // Множитель скорости изменения координат (скорость передвижения)
-	double	CurrentFrame = 0; // Текуший кадр анимации
-	double	CurrentAnimation = 0;	//Текущая анимация 0 - стоим, 1 - идем
+	double	speed; // Множитель скорости изменения координат (скорость передвижения)
+	double	CurrentFrame; // Текуший кадр анимации
+	double	CurrentAnimation;	//Текущая анимация 0 - стоим, 1 - идем
 	Vector	Position, // Позиция
 			Velocity; // Скорость
 			/*ЕБАНОЕ УСКОРЕНИЕ*/
-
-	void Velocity_null()
-	{
-		Velocity.X = 0;
-		Velocity.Y = 0;
-		Velocity.Len = 0;
-	}
-	static void StaticUpdate(int value) {
+	static void StaticAnimation(int value) {
 		character *thePtr = reinterpret_cast<character*>(value);
-		thePtr->Update();
+		thePtr->Animation();
 	}
 
-	void Update();
-	//void Animation(int value) //Обновляем Кадры исходя из текущей анимации
-	//{
-	//	if (player.CurrentAnimation == 1)
-	//	{
-	//		player.CurrentFrame++;
-	//		if (player.CurrentFrame > 4) //В анимации пять кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за 4
-	//			player.CurrentFrame = 0;
-	//	}
-	//	glutTimerFunc(100, Animation, 1); //Задержка 100 мс перед новым вызовом функции
-	//}
+	void Animation();
+
 private:
 };
+
+void Update();

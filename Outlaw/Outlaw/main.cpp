@@ -10,9 +10,9 @@ int main(int argc, char **argv)
 	// Отрисовка
 	glutDisplayFunc(render);
 	// Цикл по подсчету координат
-	glutTimerFunc(20, character::StaticUpdate, 0);
+
 	// Анимация
-	//glutTimerFunc(100, Animation, 0);
+	glutTimerFunc(100, character::StaticAnimation, 1);
 	// Регистрация обработанных данных
 	// Изменение
 	glutReshapeFunc(reshape_win_size);

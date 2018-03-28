@@ -6,6 +6,23 @@
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
 
 character player;
+void Update(int Value) {
+	glutPostRedisplay(); //Обновляем экран
+	Vector velocity = player.Velocity.GetNormalize(); //Нормализуем вектор скорости
+	if (velocity.Len != 0) //Если есть скорость то
+	{
+		player.CurrentAnimation = 1; //Включаем анимацию передвижения
+		player.Position.X += velocity.X * player.speed; //Добавляем к вектору игрока вектор его скорости
+		player.Position.Y += velocity.Y * player.speed;
+	}
+	else //Иначе
+	{
+		player.CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
+		player.CurrentAnimation = 0; //Текущая анимация нулевая (стоим)
+	}
+	glutTimerFunc(20, Update, 0); // Задержка 20 мс перед новым вызовом функции
+}
+
 // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
 void InitTexture(unsigned int& texture1, const char name[])
 {
