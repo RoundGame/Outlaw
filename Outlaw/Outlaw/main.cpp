@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 	// Отрисовка
 	glutDisplayFunc(render);
 	//Цикл по подсчету координат
-	glutTimerFunc(25, Update, 0);
+	glutTimerFunc(20, Update, 0);
 	// Регистрация обработанных данных
 	//Изменение
 	glutReshapeFunc(reshape_win_size);

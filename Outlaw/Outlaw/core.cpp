@@ -2,19 +2,51 @@
 #include "key.h"
 #include <soil.h>
 #include <cstdio>
+#include <cmath>
 
 //текстура
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
 enum Action { NO, LEFT, RIGHT, UP, DOWN };
 Action action = NO;
 
-struct Player
+struct Vector
 {
-	double X, Y;
-	Player()
+	double X, Y, Len;
+	Vector()
 	{
 		X = 0;
 		Y = 0;
+		Len = 0;
+	}
+	Vector(double x, double y)
+	{
+		X = x;
+		Y = y;
+		Len = GetLength();
+	}
+	double GetLength()
+	{
+		double len = sqrt(X * X + Y * Y);
+		return len;
+	}
+	Vector GetNormalize()
+	{
+		double len = GetLength();
+		if (len == 0)
+			return Vector();
+		double x = X / len;
+		double y = Y / len;
+		return Vector(x, y);
+	}
+};
+
+struct Player
+{
+	Vector Position, Velocity;
+	Player()
+	{
+		Position = Vector(0.0, 0.0);
+		Velocity = Vector(0.0, 0.0);
 	}
 };
 Player MainPlayer = Player();
@@ -22,24 +54,10 @@ Player MainPlayer = Player();
 void Update(int value)
 {
 	glutPostRedisplay();
-	switch (action)
-	{
-	case LEFT:
-		MainPlayer.X -= 0.01;
-		break;
-	case RIGHT:
-		MainPlayer.X += 0.01;
-		break;
-	case UP:
-		MainPlayer.Y += 0.01;
-		break;
-	case DOWN:
-		MainPlayer.Y -= 0.01;
-		break;
-	default:
-		break;
-	}
-	glutTimerFunc(25, Update, 0);
+	Vector velocity = MainPlayer.Velocity.GetNormalize();
+	MainPlayer.Position.X += velocity.X / 100;
+	MainPlayer.Position.Y += velocity.Y / 100;
+	glutTimerFunc(20, Update, 0);
 }
 
 						  // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
@@ -105,10 +123,10 @@ void render()
 
 	glBindTexture(GL_TEXTURE_2D, Textures[1]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(0.0, 1.0); glVertex2f(-0.25 + MainPlayer.X, -0.25 + MainPlayer.Y);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-0.25 + MainPlayer.X, 0.25 + MainPlayer.Y);
-	glTexCoord2f(1.0, 0.0); glVertex2f(0.25 + MainPlayer.X, 0.25 + MainPlayer.Y);
-	glTexCoord2f(1.0, 1.0); glVertex2f(0.25 + MainPlayer.X, -0.25 + MainPlayer.Y);
+	glTexCoord2f(0.0, 1.0); glVertex2f(-0.25 + MainPlayer.Position.X, -0.25 + MainPlayer.Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-0.25 + MainPlayer.Position.X, 0.25 + MainPlayer.Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(0.25 + MainPlayer.Position.X, 0.25 + MainPlayer.Position.Y);
+	glTexCoord2f(1.0, 1.0); glVertex2f(0.25 + MainPlayer.Position.X, -0.25 + MainPlayer.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glDisable(GL_TEXTURE_2D);
@@ -131,16 +149,16 @@ void NormalKeysUp(unsigned char key, int x, int y)
 	case KEY_ESC: exit(0);
 		break;
 	case KEY_A:
-		action = NO;
+		MainPlayer.Velocity.X = 0;
 		break;
 	case KEY_D:
-		action = NO;
+		MainPlayer.Velocity.X = 0;
 		break;
 	case KEY_W:
-		action = NO;
+		MainPlayer.Velocity.Y = 0;
 		break;
 	case KEY_S:
-		action = NO;
+		MainPlayer.Velocity.Y = 0;
 		break;
 	default:
 		break;
@@ -154,16 +172,16 @@ void NormalKeys(unsigned char key, int x, int y)
 	case KEY_ESC: exit(0);
 		break;
 	case KEY_A:
-		action = LEFT;
+		MainPlayer.Velocity.X = -1;
 		break;
 	case KEY_D:
-		action = RIGHT;
+		MainPlayer.Velocity.X = 1;
 		break;
 	case KEY_W:
-		action = UP;
+		MainPlayer.Velocity.Y = 1;
 		break;
 	case KEY_S:
-		action = DOWN;
+		MainPlayer.Velocity.Y = -1;
 		break;
 	default:
 		break;
