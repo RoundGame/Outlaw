@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 
 void Update(int value);
+void Animation(int value);
 
 // Инициализация главного окна
 void initGL(int argc, char **argv);

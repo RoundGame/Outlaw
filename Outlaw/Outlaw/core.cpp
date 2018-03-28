@@ -4,9 +4,12 @@
 #include <cstdio>
 #include <cmath>
 
+const double speed = 0.02;
+
 //текстура
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
 double CurrentFrame = 0;
+double CurrentAnimation = 0;
 
 struct Vector
 {
@@ -51,13 +54,27 @@ void Update(int value)
 	Vector velocity = MainPlayer.Velocity.GetNormalize();
 	if (velocity.Len != 0)
 	{
+		CurrentAnimation = 1;
+		MainPlayer.Position.X += velocity.X * speed;
+		MainPlayer.Position.Y += velocity.Y * speed;
+	}
+	else
+	{
+		CurrentFrame = 0;
+		CurrentAnimation = 0;
+	}
+	glutTimerFunc(20, Update, 0);
+}
+
+void Animation(int value)
+{
+	if (CurrentAnimation == 1)
+	{
 		CurrentFrame++;
 		if (CurrentFrame > 4)
 			CurrentFrame = 0;
-		MainPlayer.Position.X += velocity.X / 100;
-		MainPlayer.Position.Y += velocity.Y / 100;
 	}
-	glutTimerFunc(20, Update, 0);
+	glutTimerFunc(100, Animation, 0);
 }
 
 						  // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
