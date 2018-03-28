@@ -1,13 +1,14 @@
-﻿  core.cpp
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(54): warning C4305: аргумент: усечение из "double" в "GLclampf"
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(58): warning C4305: аргумент: усечение из "double" в "GLfloat"
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(59): warning C4305: аргумент: усечение из "double" в "GLfloat"
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(60): warning C4305: аргумент: усечение из "double" в "GLfloat"
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(61): warning C4305: аргумент: усечение из "double" в "GLfloat"
-  main.cpp
+﻿  main.cpp
+  core.cpp
+c:\users\user\desktop\новая папка (2)\outlaw\outlaw\core.cpp(54): warning C4305: аргумент: усечение из "double" в "GLclampf"
+c:\users\user\desktop\новая папка (2)\outlaw\outlaw\core.cpp(58): warning C4305: аргумент: усечение из "double" в "GLfloat"
+c:\users\user\desktop\новая папка (2)\outlaw\outlaw\core.cpp(59): warning C4305: аргумент: усечение из "double" в "GLfloat"
+c:\users\user\desktop\новая папка (2)\outlaw\outlaw\core.cpp(60): warning C4305: аргумент: усечение из "double" в "GLfloat"
+c:\users\user\desktop\новая папка (2)\outlaw\outlaw\core.cpp(61): warning C4305: аргумент: усечение из "double" в "GLfloat"
   Создание кода...
-soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_DXT.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_helper.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(SOIL.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(stb_image_aug.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-  Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Debug\Outlaw.exe
+soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(image_DXT.obj)" или на "C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(image_helper.obj)" или на "C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(SOIL.obj)" или на "C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(stb_image_aug.obj)" или на "C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+  Outlaw.vcxproj -> C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\Outlaw.exe
+  Outlaw.vcxproj -> C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\Outlaw.pdb (Partial PDB)
