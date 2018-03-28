@@ -4,12 +4,12 @@
 #include <cstdio>
 #include <cmath>
 
-const double speed = 0.02;
+const double speed = 0.03; //Множитель скорости изменения координат (скорость передвижения)
 
 //текстура
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
-double CurrentFrame = 0;
-double CurrentAnimation = 0;
+double CurrentFrame = 0; //Текуший кадр анимации
+double CurrentAnimation = 0; //Текущая анимация 0 - стоим, 1 - идем
 
 struct Vector
 {
@@ -20,18 +20,18 @@ struct Vector
 		Y = 0;
 		Len = 0;
 	}
-	Vector(double x, double y)
+	Vector(double x, double y) //Инициализировать вектор с данными X и Y
 	{
 		X = x;
 		Y = y;
 		Len = GetLength();
 	}
-	double GetLength()
+	double GetLength() //Получить длину текущего вектора
 	{
 		double len = sqrt(X * X + Y * Y);
 		return len;
 	}
-	Vector GetNormalize()
+	Vector GetNormalize() //Получить нормализированный вектор от текущего вектора
 	{
 		double len = GetLength();
 		if (len == 0)
@@ -42,39 +42,39 @@ struct Vector
 	}
 };
 
-struct Player
+struct Player 
 {
 	Vector Position, Velocity;
 };
 Player MainPlayer = Player();
 
-void Update(int value)
+void Update(int value) //Обробатываем данные позиции игрока и его скорости
 {
-	glutPostRedisplay();
-	Vector velocity = MainPlayer.Velocity.GetNormalize();
-	if (velocity.Len != 0)
+	glutPostRedisplay(); //Обновляем экран
+	Vector velocity = MainPlayer.Velocity.GetNormalize(); //Нормализуем вектор скорости
+	if (velocity.Len != 0) //Если есть скорость то
 	{
-		CurrentAnimation = 1;
-		MainPlayer.Position.X += velocity.X * speed;
-		MainPlayer.Position.Y += velocity.Y * speed;
+		CurrentAnimation = 1; //Включаем анимацию передвижения
+		MainPlayer.Position.X += velocity.X * speed; //Добавляем к вектору игрока вектор его скорости
+		MainPlayer.Position.Y += velocity.Y * speed; 
 	}
-	else
+	else //Иначе
 	{
-		CurrentFrame = 0;
-		CurrentAnimation = 0;
+		CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
+		CurrentAnimation = 0; //Текущая анимация нулевая (стоим)
 	}
-	glutTimerFunc(20, Update, 0);
+	glutTimerFunc(20, Update, 0); //Задержка 20 мс перед новым вызовом функции
 }
 
-void Animation(int value)
+void Animation(int value) //Обновляем Кадры исходя из текущей анимации
 {
 	if (CurrentAnimation == 1)
 	{
 		CurrentFrame++;
-		if (CurrentFrame > 4)
+		if (CurrentFrame > 4) //В анимации пять кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за 4
 			CurrentFrame = 0;
 	}
-	glutTimerFunc(100, Animation, 0);
+	glutTimerFunc(100, Animation, 0); //Задержка 100 мс перед новым вызовом функции
 }
 
 						  // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
@@ -165,16 +165,16 @@ void NormalKeysUp(unsigned char key, int x, int y)
 	{
 	case KEY_ESC: exit(0);
 		break;
-	case KEY_A:
+	case KEY_A: //Если отпущена клавиша A, то останавливаемся на оси X, так как двигались налево
 		MainPlayer.Velocity.X = 0;
 		break;
-	case KEY_D:
+	case KEY_D: //Если отпущена клавиша D, то останавливаемся на оси X, так как двигались направо
 		MainPlayer.Velocity.X = 0;
 		break;
-	case KEY_W:
+	case KEY_W: //Если отпущена клавиша W, то останавливаемся на оси Y, так как двигались вверх
 		MainPlayer.Velocity.Y = 0;
 		break;
-	case KEY_S:
+	case KEY_S: //Если отпущена клавиша S, то останавливаемся на оси Y, так как двигались вниз
 		MainPlayer.Velocity.Y = 0;
 		break;
 	default:
@@ -188,16 +188,16 @@ void NormalKeys(unsigned char key, int x, int y)
 	{
 	case KEY_ESC: exit(0);
 		break;
-	case KEY_A:
-		MainPlayer.Velocity.X = -1;
+	case KEY_A: //Если нажата клавиша A, то вектор скорости по X ставим равным -1, так как двигаемся налево
+		MainPlayer.Velocity.X = -1; 
 		break;
-	case KEY_D:
+	case KEY_D: //Если нажата клавиша D, то вектор скорости по X ставим равным 1, так как двигаемся направо
 		MainPlayer.Velocity.X = 1;
 		break;
-	case KEY_W:
+	case KEY_W: //Если нажата клавиша W, то вектор скорости по Y ставим равным 1, так как двигаемся вверх
 		MainPlayer.Velocity.Y = 1;
 		break;
-	case KEY_S:
+	case KEY_S: //Если нажата клавиша S, то вектор скорости по X ставим равным -1, так как двигаемся вниз
 		MainPlayer.Velocity.Y = -1;
 		break;
 	default:
