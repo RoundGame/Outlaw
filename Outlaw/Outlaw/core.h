@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include <GL/glut.h>
-
-void Update(int value);
-void Animation(int value);
+#include "character.h"
+#include "key.h"
 
 // Инициализация главного окна
 void initGL(int argc, char **argv);

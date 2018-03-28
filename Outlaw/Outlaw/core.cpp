@@ -1,83 +1,42 @@
 ﻿#include "core.h"
-#include "key.h"
 #include <soil.h>
 #include <cstdio>
 #include <cmath>
-
-const double speed = 0.03; //Множитель скорости изменения координат (скорость передвижения)
-
 //текстура
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
-double CurrentFrame = 0; //Текуший кадр анимации
-double CurrentAnimation = 0; //Текущая анимация 0 - стоим, 1 - идем
 
-struct Vector
-{
-	double X, Y, Len;
-	Vector()
-	{
-		X = 0;
-		Y = 0;
-		Len = 0;
-	}
-	Vector(double x, double y) //Инициализировать вектор с данными X и Y
-	{
-		X = x;
-		Y = y;
-		Len = GetLength();
-	}
-	double GetLength() //Получить длину текущего вектора
-	{
-		double len = sqrt(X * X + Y * Y);
-		return len;
-	}
-	Vector GetNormalize() //Получить нормализированный вектор от текущего вектора
-	{
-		double len = GetLength();
-		if (len == 0)
-			return Vector();
-		double x = X / len;
-		double y = Y / len;
-		return Vector(x, y);
-	}
-};
-
-struct Player 
-{
-	Vector Position, Velocity;
-};
-Player MainPlayer = Player();
+character player;
 
 void Update(int value) //Обробатываем данные позиции игрока и его скорости
 {
 	glutPostRedisplay(); //Обновляем экран
-	Vector velocity = MainPlayer.Velocity.GetNormalize(); //Нормализуем вектор скорости
+	Vector velocity = player.Velocity.GetNormalize(); //Нормализуем вектор скорости
 	if (velocity.Len != 0) //Если есть скорость то
 	{
-		CurrentAnimation = 1; //Включаем анимацию передвижения
-		MainPlayer.Position.X += velocity.X * speed; //Добавляем к вектору игрока вектор его скорости
-		MainPlayer.Position.Y += velocity.Y * speed; 
+		player.CurrentAnimation = 1; //Включаем анимацию передвижения
+		player.Position.X += velocity.X * player.speed; //Добавляем к вектору игрока вектор его скорости
+		player.Position.Y += velocity.Y * player.speed;
 	}
 	else //Иначе
 	{
-		CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
-		CurrentAnimation = 0; //Текущая анимация нулевая (стоим)
+		player.CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
+		player.CurrentAnimation = 0; //Текущая анимация нулевая (стоим)
 	}
 	glutTimerFunc(20, Update, 0); //Задержка 20 мс перед новым вызовом функции
 }
 
 void Animation(int value) //Обновляем Кадры исходя из текущей анимации
 {
-	if (CurrentAnimation == 1)
+	if (player.CurrentAnimation == 1)
 	{
-		CurrentFrame++;
-		if (CurrentFrame > 4) //В анимации пять кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за 4
-			CurrentFrame = 0;
+		player.CurrentFrame++;
+		if (player.CurrentFrame > 4) //В анимации пять кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за 4
+			player.CurrentFrame = 0;
 	}
-	glutTimerFunc(100, Animation, 0); //Задержка 100 мс перед новым вызовом функции
+	glutTimerFunc(100, Animation, 1); //Задержка 100 мс перед новым вызовом функции
 }
 
-						  // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
+// Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
 void InitTexture(unsigned int& texture1, const char name[])
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -130,20 +89,12 @@ void render()
 	glAlphaFunc(GL_GREATER, 0.5f);
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
-	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(0.0, 1.0); glVertex3f(-0.5, -0.5, 0.7);
-	glTexCoord2f(0.0, 0.0); glVertex3f(-0.5, 0.5, 0.7);
-	glTexCoord2f(1.0, 0.0); glVertex3f(0.5, 0.5, 0.7);
-	glTexCoord2f(1.0, 1.0); glVertex3f(0.5, -0.5, 0.7);
-	glEnd(); // Конец обьекта рисуемого треугольниками
-
 	glBindTexture(GL_TEXTURE_2D, Textures[1]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(CurrentFrame / 5, 0.5); glVertex2f(-0.25 + MainPlayer.Position.X, -0.25 + MainPlayer.Position.Y);
-	glTexCoord2f(CurrentFrame / 5, 0.0); glVertex2f(-0.25 + MainPlayer.Position.X, 0.25 + MainPlayer.Position.Y);
-	glTexCoord2f(CurrentFrame / 5 + 0.2, 0.0); glVertex2f(0.25 + MainPlayer.Position.X, 0.25 + MainPlayer.Position.Y);
-	glTexCoord2f(CurrentFrame / 5 + 0.2, 0.5); glVertex2f(0.25 + MainPlayer.Position.X, -0.25 + MainPlayer.Position.Y);
+	glTexCoord2f(player.CurrentFrame / 5, 0.5); glVertex2f(-0.25 + player.Position.X, -0.25 + player.Position.Y);
+	glTexCoord2f(player.CurrentFrame / 5, 0.0); glVertex2f(-0.25 + player.Position.X, 0.25 + player.Position.Y);
+	glTexCoord2f(player.CurrentFrame / 5 + 0.2, 0.0); glVertex2f(0.25 + player.Position.X, 0.25 + player.Position.Y);
+	glTexCoord2f(player.CurrentFrame / 5 + 0.2, 0.5); glVertex2f(0.25 + player.Position.X, -0.25 + player.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glDisable(GL_TEXTURE_2D);
@@ -166,16 +117,16 @@ void NormalKeysUp(unsigned char key, int x, int y)
 	case KEY_ESC: exit(0);
 		break;
 	case KEY_A: //Если отпущена клавиша A, то останавливаемся на оси X, так как двигались налево
-		MainPlayer.Velocity.X = 0;
+		player.Velocity.X = 0;
 		break;
 	case KEY_D: //Если отпущена клавиша D, то останавливаемся на оси X, так как двигались направо
-		MainPlayer.Velocity.X = 0;
+		player.Velocity.X = 0;
 		break;
 	case KEY_W: //Если отпущена клавиша W, то останавливаемся на оси Y, так как двигались вверх
-		MainPlayer.Velocity.Y = 0;
+		player.Velocity.Y = 0;
 		break;
 	case KEY_S: //Если отпущена клавиша S, то останавливаемся на оси Y, так как двигались вниз
-		MainPlayer.Velocity.Y = 0;
+		player.Velocity.Y = 0;
 		break;
 	default:
 		break;
@@ -189,16 +140,16 @@ void NormalKeys(unsigned char key, int x, int y)
 	case KEY_ESC: exit(0);
 		break;
 	case KEY_A: //Если нажата клавиша A, то вектор скорости по X ставим равным -1, так как двигаемся налево
-		MainPlayer.Velocity.X = -1; 
+		player.Velocity.X = -1;
 		break;
 	case KEY_D: //Если нажата клавиша D, то вектор скорости по X ставим равным 1, так как двигаемся направо
-		MainPlayer.Velocity.X = 1;
+		player.Velocity.X = 1;
 		break;
 	case KEY_W: //Если нажата клавиша W, то вектор скорости по Y ставим равным 1, так как двигаемся вверх
-		MainPlayer.Velocity.Y = 1;
+		player.Velocity.Y = 1;
 		break;
 	case KEY_S: //Если нажата клавиша S, то вектор скорости по X ставим равным -1, так как двигаемся вниз
-		MainPlayer.Velocity.Y = -1;
+		player.Velocity.Y = -1;
 		break;
 	default:
 		break;

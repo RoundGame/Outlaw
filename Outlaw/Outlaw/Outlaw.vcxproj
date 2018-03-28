@@ -114,6 +114,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="character.cpp" />
     <ClCompile Include="core.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -121,6 +122,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="character.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="key.h" />
   </ItemGroup>
