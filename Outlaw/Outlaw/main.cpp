@@ -5,14 +5,14 @@ int main(int argc, char **argv)
 	// Инициализация главного окна
 	initGL(argc, argv);
 
-	glutTimerFunc(100, character::StaticUpdateCB, 1);
+
 
 	// Отрисовка
 	glutDisplayFunc(render);
 	// Цикл по подсчету координат
-	glutTimerFunc(20, Update, 0);
+	glutTimerFunc(20, character::StaticUpdate, 0);
 	// Анимация
-	glutTimerFunc(100, Animation, 0);
+	//glutTimerFunc(100, Animation, 0);
 	// Регистрация обработанных данных
 	// Изменение
 	glutReshapeFunc(reshape_win_size);

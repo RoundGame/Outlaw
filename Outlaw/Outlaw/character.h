@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include <iostream>
 using namespace std;
+
 struct Vector
 {
 	double X, Y, Len;
@@ -33,7 +34,6 @@ struct Vector
 		return Vector(x, y);
 	}
 };
-
 class character
 {
 public:
@@ -44,17 +44,42 @@ public:
 			Velocity; // Скорость
 			/*ЕБАНОЕ УСКОРЕНИЕ*/
 
-	static void StaticUpdateCB(int value) {
+	void Velocity_null()
+	{
+		Velocity.X = 0;
+		Velocity.Y = 0;
+		Velocity.Len = 0;
+	}
+	static void StaticUpdate(int value) {
 		character *thePtr = reinterpret_cast<character*>(value);
-		thePtr->UpdateCB();
+		thePtr->Update();
 	}
 
-	void UpdateCB() {
-		cout << "a\n";
-		glutTimerFunc(100, character::StaticUpdateCB, 1);
+	void Update() {
+		glutPostRedisplay(); //Обновляем экран
+		Vector velocity = Velocity.GetNormalize(); //Нормализуем вектор скорости
+		if (velocity.Len != 0) //Если есть скорость то
+		{
+			CurrentAnimation = 1; //Включаем анимацию передвижения
+			Position.X += velocity.X * speed; //Добавляем к вектору игрока вектор его скорости
+			Position.Y += velocity.Y * speed;
+		}
+		else //Иначе
+		{
+			CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
+			CurrentAnimation = 0; //Текущая анимация нулевая (стоим)
+		}
+		glutTimerFunc(200, character::StaticUpdate, 0); // Задержка 20 мс перед новым вызовом функции
 	}
+	//void Animation(int value) //Обновляем Кадры исходя из текущей анимации
+	//{
+	//	if (player.CurrentAnimation == 1)
+	//	{
+	//		player.CurrentFrame++;
+	//		if (player.CurrentFrame > 4) //В анимации пять кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за 4
+	//			player.CurrentFrame = 0;
+	//	}
+	//	glutTimerFunc(100, Animation, 1); //Задержка 100 мс перед новым вызовом функции
+	//}
 private:
 };
-
-void Update(int value);
-void Animation(int value);
