@@ -6,8 +6,7 @@
 
 //текстура
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
-enum Action { NO, LEFT, RIGHT, UP, DOWN };
-Action action = NO;
+double CurrentFrame = 0;
 
 struct Vector
 {
@@ -43,11 +42,6 @@ struct Vector
 struct Player
 {
 	Vector Position, Velocity;
-	Player()
-	{
-		Position = Vector(0.0, 0.0);
-		Velocity = Vector(0.0, 0.0);
-	}
 };
 Player MainPlayer = Player();
 
@@ -55,8 +49,14 @@ void Update(int value)
 {
 	glutPostRedisplay();
 	Vector velocity = MainPlayer.Velocity.GetNormalize();
-	MainPlayer.Position.X += velocity.X / 100;
-	MainPlayer.Position.Y += velocity.Y / 100;
+	if (velocity.Len != 0)
+	{
+		CurrentFrame++;
+		if (CurrentFrame > 4)
+			CurrentFrame = 0;
+		MainPlayer.Position.X += velocity.X / 100;
+		MainPlayer.Position.Y += velocity.Y / 100;
+	}
 	glutTimerFunc(20, Update, 0);
 }
 
@@ -123,10 +123,10 @@ void render()
 
 	glBindTexture(GL_TEXTURE_2D, Textures[1]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(0.0, 1.0); glVertex2f(-0.25 + MainPlayer.Position.X, -0.25 + MainPlayer.Position.Y);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-0.25 + MainPlayer.Position.X, 0.25 + MainPlayer.Position.Y);
-	glTexCoord2f(1.0, 0.0); glVertex2f(0.25 + MainPlayer.Position.X, 0.25 + MainPlayer.Position.Y);
-	glTexCoord2f(1.0, 1.0); glVertex2f(0.25 + MainPlayer.Position.X, -0.25 + MainPlayer.Position.Y);
+	glTexCoord2f(CurrentFrame / 5, 0.5); glVertex2f(-0.25 + MainPlayer.Position.X, -0.25 + MainPlayer.Position.Y);
+	glTexCoord2f(CurrentFrame / 5, 0.0); glVertex2f(-0.25 + MainPlayer.Position.X, 0.25 + MainPlayer.Position.Y);
+	glTexCoord2f(CurrentFrame / 5 + 0.2, 0.0); glVertex2f(0.25 + MainPlayer.Position.X, 0.25 + MainPlayer.Position.Y);
+	glTexCoord2f(CurrentFrame / 5 + 0.2, 0.5); glVertex2f(0.25 + MainPlayer.Position.X, -0.25 + MainPlayer.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glDisable(GL_TEXTURE_2D);
