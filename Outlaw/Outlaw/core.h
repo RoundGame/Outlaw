@@ -21,5 +21,3 @@ void SpecialKeys(int key, int x, int y);
 
 void Animation(int Value);
 void Update(int Value);
-
-
