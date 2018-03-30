@@ -110,7 +110,7 @@ void NormalKeysUp(unsigned char key, int x, int y)
 		player.Velocity.Y = 0;
 		break;
 	case KEY_S: //Если отпущена клавиша S, то останавливаемся на оси Y, так как двигались вниз
-		player.Velocity.Y = 0;
+		player.Velocity.Y = 0;		
 		break;
 	default:
 		break;
@@ -140,7 +140,28 @@ void NormalKeys(unsigned char key, int x, int y)
 	}
 }
 
+bool fullScreen = false;	// Состояние прилржения 
+							// false - окно
+							// true - полный экран
 void SpecialKeys(int key, int x, int y)
 {
+	switch (key)
+	{
+	case GLUT_KEY_F1:
+		if (!fullScreen)
+		{
+			glutFullScreen();
+			fullScreen = !fullScreen;
+		}
+		else 
+		{
+			glutReshapeWindow(800, 600);
+			glutPositionWindow(0, 0);
+			fullScreen = !fullScreen;
+		}
+		break;
+	default:
+		break;
+	}
 
 }

@@ -3,7 +3,7 @@
 #define KEY_UNKNOWN            -1
 
 /* Function keys */
-#define KEY_ESC					256
+#define KEY_ESC					27
 #define KEY_ENTER				257
 #define KEY_TAB					258
 #define KEY_BACKSPACE			259
@@ -69,4 +69,3 @@
 #define KEY_X 					120
 #define KEY_Y 					121
 #define KEY_Z 					122
-
