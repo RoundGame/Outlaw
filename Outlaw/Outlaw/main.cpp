@@ -5,8 +5,6 @@ int main(int argc, char **argv)
 	// Инициализация главного окна
 	initGL(argc, argv);
 
-
-
 	// Отрисовка
 	glutDisplayFunc(render);
 	// Цикл по подсчету координат
@@ -25,3 +23,6 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+
+// Вопросы
+// 1. Как правильно считывать нажатие клавиш (не считывается при изменении языка или зажатом Shift)

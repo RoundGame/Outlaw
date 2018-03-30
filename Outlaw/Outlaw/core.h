@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <GL/glut.h>
-#include <cmath>
 #include "character.h"
 #include "key.h"
 

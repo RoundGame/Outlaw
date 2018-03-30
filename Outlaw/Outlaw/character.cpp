@@ -9,6 +9,7 @@ void character::Animation()
 			CurrentFrame = 0;
 	}
 }
+
 void character::Update() 
 {
 	Vector velocity = Velocity.GetNormalize(); //Нормализуем вектор скорости
