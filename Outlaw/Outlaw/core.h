@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <GL/glut.h>
+#include <cmath>
 #include "character.h"
 #include "key.h"
 
@@ -18,3 +19,8 @@ void InitTexture(unsigned int& texture1, const char name[]);
 void NormalKeysUp(unsigned char key, int x, int y);
 void NormalKeys(unsigned char key, int x, int y);
 void SpecialKeys(int key, int x, int y);
+
+void Animation(int Value);
+void Update(int Value);
+
+

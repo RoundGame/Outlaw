@@ -1,7 +1,8 @@
 ﻿#include "core.h"
 #include <soil.h>
 #include <cstdio>
-#include <cmath>
+#include <iostream>
+using namespace std;
 //текстура
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
 
@@ -20,8 +21,19 @@ void Update(int Value) {
 		player.CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
 		player.CurrentAnimation = 0; //Текущая анимация нулевая (стоим)
 	}
+
 	glutTimerFunc(20, Update, 0); // Задержка 20 мс перед новым вызовом функции
 }
+void Animation(int Value)
+{
+	if (player.CurrentAnimation == 1)
+	{
+		player.CurrentFrame++;
+		if (player.CurrentFrame > 4) //В анимации пять кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за 4
+			player.CurrentFrame = 0;
+	}
+	glutTimerFunc(100, Animation, 1); //Задержка 100 мс перед новым вызовом функции
+};
 
 // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
 void InitTexture(unsigned int& texture1, const char name[])
