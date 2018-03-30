@@ -9,29 +9,14 @@ unsigned int Textures[6]; // Максимально доступное кол-в
 character player;
 void Update(int Value) {
 	glutPostRedisplay(); //Обновляем экран
-	Vector velocity = player.Velocity.GetNormalize(); //Нормализуем вектор скорости
-	if (velocity.Len != 0) //Если есть скорость то
-	{
-		player.CurrentAnimation = 1; //Включаем анимацию передвижения
-		player.Position.X += velocity.X * player.speed; //Добавляем к вектору игрока вектор его скорости
-		player.Position.Y += velocity.Y * player.speed;
-	}
-	else //Иначе
-	{
-		player.CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
-		player.CurrentAnimation = 0; //Текущая анимация нулевая (стоим)
-	}
+
+	player.Update(); // Изменение позиции игрока
 
 	glutTimerFunc(20, Update, 0); // Задержка 20 мс перед новым вызовом функции
 }
 void Animation(int Value)
 {
-	if (player.CurrentAnimation == 1)
-	{
-		player.CurrentFrame++;
-		if (player.CurrentFrame > 4) //В анимации пять кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за 4
-			player.CurrentFrame = 0;
-	}
+	player.Animation(); // Анимация игрока
 	glutTimerFunc(100, Animation, 1); //Задержка 100 мс перед новым вызовом функции
 };
 

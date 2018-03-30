@@ -47,7 +47,8 @@ public:
 	//	character *thePtr = reinterpret_cast<character*>(value);
 	//	thePtr->Animation();
 	//}
-	//void Animation();
+	void Animation();
+	void Update();
 
 private:
 };
