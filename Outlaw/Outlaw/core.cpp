@@ -7,17 +7,16 @@ using namespace std;
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
 
 character player;
+
 void Update(int Value) {
-	glutPostRedisplay(); //Обновляем экран
-
 	player.Update(); // Изменение позиции игрока
-
-	glutTimerFunc(20, Update, 0); // Задержка 20 мс перед новым вызовом функции
+	glutPostRedisplay(); // Обновляем экран
+	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
 }
 void Animation(int Value)
 {
-	player.Animation(); // Анимация игрока
-	glutTimerFunc(100, Animation, 1); //Задержка 100 мс перед новым вызовом функции
+	player.Animation(4); // Анимация игрока
+	glutTimerFunc(timer_animation, Animation, 1); //Задержка 100 мс перед новым вызовом функции
 };
 
 // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
@@ -98,8 +97,6 @@ void NormalKeysUp(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-	case KEY_ESC: exit(0);
-		break;
 	case KEY_A: //Если отпущена клавиша A, то останавливаемся на оси X, так как двигались налево
 		player.Velocity.X = 0;
 		break;
@@ -147,21 +144,20 @@ void SpecialKeys(int key, int x, int y)
 {
 	switch (key)
 	{
-	case GLUT_KEY_F1:
+	case GLUT_KEY_F1: // Включает и отключает полноэкранный режим
 		if (!fullScreen)
 		{
-			glutFullScreen();
+			glutFullScreen();	// Запуск полноэкранного режима
 			fullScreen = !fullScreen;
 		}
 		else 
 		{
-			glutReshapeWindow(800, 600);
-			glutPositionWindow(0, 0);
+			glutReshapeWindow(800, 600);	 // Установка размеров окна в 800х600
+			glutPositionWindow(0, 0);	// Перемещение окна в левый верхний угол
 			fullScreen = !fullScreen;
 		}
 		break;
 	default:
 		break;
 	}
-
 }

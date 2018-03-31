@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include "character.h"
 #include "key.h"
+#include "config.h"
 
 // Инициализация главного окна
 void initGL(int argc, char **argv);

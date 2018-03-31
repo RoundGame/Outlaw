@@ -1,5 +1,5 @@
 ﻿#include "core.h"
-
+using namespace std;
 int main(int argc, char **argv)
 {
 	// Инициализация главного окна
@@ -7,22 +7,27 @@ int main(int argc, char **argv)
 
 	// Отрисовка
 	glutDisplayFunc(render);
-	// Цикл по подсчету координат
-	glutTimerFunc(20, Update, 0);
-	// Анимация
-	glutTimerFunc(100, Animation, 1); //Задержка 100 мс перед новым вызовом функции
-	// Регистрация обработанных данных
-	// Изменение
+
+	/*Цикл по подсчету координат перемещения персонажей и объектов
+	timer_update - Частота обновления
+	Update - Вызываемая функция
+	value - Параметр значения обратного вызова */
+	glutTimerFunc(timer_update, Update, 0);
+
+	/*Цикл по анимаций персонажей
+	timer_update - Частота обновления
+	Animation - Вызываемая функция
+	value - Параметр значения обратного вызова */
+	glutTimerFunc(timer_animation, Animation, 0);
+
+	// Регистрация изменение размеров окна
 	glutReshapeFunc(reshape_win_size);
 	// Клавиатура
 	glutKeyboardFunc(NormalKeys);
 	glutKeyboardUpFunc(NormalKeysUp);
 	glutSpecialFunc(SpecialKeys);
-	// Основной цикл
-	glutMainLoop();
 
+	// Главный цикл
+	glutMainLoop();
 	return 0;
 }
-
-// Вопросы
-// 1. Как правильно считывать нажатие клавиш (не считывается при изменении языка или зажатом Shift)

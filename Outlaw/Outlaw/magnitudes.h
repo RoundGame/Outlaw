@@ -3,19 +3,16 @@
 struct Vector
 {
 	double	X,
-			Y,	
-			Len; /*Длина*/
+			Y;
 	Vector()
 	{
 		X = 0;
 		Y = 0;
-		Len = 0;
 	}
 	Vector(double x, double y)
 	{
 		X = x;
 		Y = y;
-		Len = GetLength();
 	}
 
 	/*Получение длины вектора*/
@@ -27,11 +24,10 @@ struct Vector
 	/*Нормализация вектора*/
 	Vector GetNormalize()
 	{
-		double len = GetLength();
-		if (len == 0)
+		if (GetLength() == 0)
 			return Vector();
-		double x = X / len;
-		double y = Y / len;
+		double x = X / GetLength();
+		double y = Y / GetLength();
 		return Vector(x, y);
 	}
 };

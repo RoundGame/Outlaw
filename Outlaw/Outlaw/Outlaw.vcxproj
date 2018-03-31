@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="character.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="magnitudes.h" />
