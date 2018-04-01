@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include <GL/glut.h>
-#include "character.h"
 #include "key.h"
 #include "config.h"
+#include <GL/glut.h>
+#include "character.h"
 
 // Инициализация главного окна
 void initGL(int argc, char **argv);

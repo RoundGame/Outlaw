@@ -7,7 +7,7 @@ struct character
 {
 	double	speed = 0.02; // Множитель скорости изменения координат (скорость передвижения)
 	double	CurrentFrame = 0; // Текуший кадр анимации
-	float	CurrentAnimation = 0;	//Текущая анимация 0 - стоим, 1 - идем
+	bool	CurrentAnimation = 0;	//Текущая анимация 0 - стоим, 1 - идем
 	Vector	Position, // Позиция
 			Velocity; // Скорость
 					  /* УСКОРЕНИЕ*/

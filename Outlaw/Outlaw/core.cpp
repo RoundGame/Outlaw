@@ -98,7 +98,7 @@ void NormalKeysUp(unsigned char key, int x, int y)
 	switch (key)
 	{
 	case KEY_A: //Если отпущена клавиша A, то останавливаемся на оси X, так как двигались налево
-		player.Velocity.X = 0;
+		//player.Velocity.X = 0;
 		break;
 	case KEY_D: //Если отпущена клавиша D, то останавливаемся на оси X, так как двигались направо
 		player.Velocity.X = 0;
@@ -133,17 +133,21 @@ void NormalKeys(unsigned char key, int x, int y)
 		player.Velocity.Y = -1;
 		break;
 	default:
+		cout << key << '\n';
 		break;
 	}
 }
+/* Состояние прилржения 
+   false - окно			
+   true - полный экран */
+bool fullScreen = false;	
 
-bool fullScreen = false;	// Состояние прилржения 
-							// false - окно
-							// true - полный экран
 void SpecialKeys(int key, int x, int y)
 {
 	switch (key)
 	{
+
+
 	case GLUT_KEY_F1: // Включает и отключает полноэкранный режим
 		if (!fullScreen)
 		{
@@ -156,8 +160,10 @@ void SpecialKeys(int key, int x, int y)
 			glutPositionWindow(0, 0);	// Перемещение окна в левый верхний угол
 			fullScreen = !fullScreen;
 		}
+		cout << key << '\n';
 		break;
 	default:
+		cout << key << '\n';
 		break;
 	}
 }
