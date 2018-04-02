@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <Windows.h>
 #include "key.h"
 #include "config.h"
 #include <GL/glut.h>
@@ -22,3 +23,5 @@ void SpecialKeys(int key, int x, int y);
 
 void Animation(int Value);
 void Update(int Value);
+
+LRESULT __stdcall HookProc(int code, WPARAM wParam, LPARAM lParam);

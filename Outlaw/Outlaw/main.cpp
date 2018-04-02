@@ -1,5 +1,8 @@
 ﻿#include "core.h"
 using namespace std;
+
+HHOOK KeyboardHook; //Хэндл хука клавиатуры
+
 int main(int argc, char **argv)
 {
 	// Инициализация главного окна
@@ -26,9 +29,12 @@ int main(int argc, char **argv)
 	h - высота окна*/ 
 	glutReshapeFunc(reshape_win_size);
 	// Клавиатура
-	glutKeyboardFunc(NormalKeys); // Замечает нажитие клавиш печати (1-0, а-Я, a-Z)
-	glutKeyboardUpFunc(NormalKeysUp); // Замечает отпускание клавиш печати
+	//glutKeyboardFunc(NormalKeys); // Замечает нажитие клавиш печати (1-0, а-Я, a-Z)
+	//glutKeyboardUpFunc(NormalKeysUp); // Замечает отпускание клавиш печати
 	glutSpecialFunc(SpecialKeys);	// Зачечает нажитие функциональных клавиш (F1-F12, tab ...) (эти клавиши не используют ascii)
+
+	KeyboardHook = SetWindowsHookExA(WH_KEYBOARD_LL, HookProc, NULL, 0);
+
 	// Главный цикл
 	glutMainLoop();
 	return 0;

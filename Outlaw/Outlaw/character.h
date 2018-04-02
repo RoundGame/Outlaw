@@ -1,5 +1,4 @@
 #pragma once
-#include "core.h"
 #include <GL/glut.h>
 #include "magnitudes.h"
 

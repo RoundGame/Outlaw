@@ -25,10 +25,10 @@
 //#define KEY_SEMICOLON			59  /* ; */
 //#define KEY_EQUAL				61  /* = */
 
-#define KEY_A					97
+#define KEY_A					0x41//97
 #define KEY_B					98
 #define KEY_C 					99
-#define KEY_D 					100
+#define KEY_D 					0x44//100
 #define KEY_E 					101
 #define KEY_F 					102
 #define KEY_G 					103
@@ -43,11 +43,11 @@
 #define KEY_P 					112
 #define KEY_Q 					113
 #define KEY_R 					114
-#define KEY_S 					115
+#define KEY_S 					0x53//115
 #define KEY_T 					116
 #define KEY_U 					117
 #define KEY_V 					118
-#define KEY_W 					119
+#define KEY_W 					0x57//119
 #define KEY_X 					120
 #define KEY_Y 					121
 #define KEY_Z 					122
