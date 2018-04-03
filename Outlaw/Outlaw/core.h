@@ -5,11 +5,13 @@
 #include <GL/glut.h>
 #include "character.h"
 
+static HHOOK Keyboard_Hook; //Хэндл хука клавиатуры
+
 // Инициализация главного окна
 void initGL(int argc, char **argv);
 
 // Отрисовка
-void render();
+void Render();
 
 // Регистрация изменения размеров окна
 void reshape_win_size(int w, int h);

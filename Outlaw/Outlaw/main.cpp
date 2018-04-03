@@ -1,15 +1,13 @@
 ﻿#include "core.h"
 using namespace std;
 
-HHOOK KeyboardHook; //Хэндл хука клавиатуры
-
 int main(int argc, char **argv)
 {
 	// Инициализация главного окна
 	initGL(argc, argv);
 
 	// Отрисовка
-	glutDisplayFunc(render);
+	glutDisplayFunc(Render);
 
 	/*Цикл по подсчету координат перемещения персонажей и объектов
 	timer_update - Частота обновления
@@ -30,7 +28,7 @@ int main(int argc, char **argv)
 	glutReshapeFunc(reshape_win_size);
 
 	//Пробрасываем хук клавиатуры на текущий поток и записываем хендл хука в KeyboardHook
-	KeyboardHook = SetWindowsHookExA(WH_KEYBOARD_LL, KeybdHookProc, NULL, 0);
+	Keyboard_Hook = SetWindowsHookExA(WH_KEYBOARD_LL, KeybdHookProc, NULL, 0);
 
 	// Главный цикл
 	glutMainLoop();

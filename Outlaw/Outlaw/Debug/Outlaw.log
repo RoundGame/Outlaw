@@ -1,11 +1,4 @@
-﻿  core.cpp
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(70): warning C4305: аргумент: усечение из "double" в "GLclampf"
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(78): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(79): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(80): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(81): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-  main.cpp
-  Создание кода...
+﻿  character.cpp
 soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_DXT.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
 soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_helper.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
 soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(SOIL.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї

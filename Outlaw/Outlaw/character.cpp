@@ -1,6 +1,6 @@
 ﻿#include "character.h"
 
-void character::Animation(int frame)
+void Character::Animation(int frame)
 {
 	if (CurrentAnimation)
 	{
@@ -10,14 +10,16 @@ void character::Animation(int frame)
 	}
 }
 
-void character::Update() 
+void Character::Update() 
 {
-	Vector velocity = Velocity.GetNormalize(); //Нормализуем вектор скорости
-	if (velocity.GetLength() != 0) //Если есть скорость то
+	//Vector velocity = Velocity.GetNormalize(); //Нормализуем вектор скорости
+	if (Velocity.GetLength() > 0.01 || Velocity.GetLength() < -0.01) //Если есть скорость то
 	{
 		CurrentAnimation = true; //Включаем анимацию передвижения
-		Position.X += velocity.X * speed; //Добавляем к вектору игрока вектор его скорости
-		Position.Y += velocity.Y * speed;
+		Position.X += Velocity.X;// * speed; //Добавляем к вектору игрока вектор его скорости
+		Position.Y += Velocity.Y;// * speed;
+		Velocity.X -= Velocity.X * 0.2;
+		Velocity.Y -= Velocity.Y * 0.2;
 	}
 	else //Иначе
 	{

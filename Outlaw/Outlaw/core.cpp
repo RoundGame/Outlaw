@@ -6,17 +6,33 @@ using namespace std;
 //текстура
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
 
-character player;
-HHOOK extern KeyboardHook; //Хэндл хука клавиатуры
+Character Player;
+//HHOOK extern KeyboardHook; //Хэндл хука клавиатуры
 
 void Update(int Value) {
-	player.Update(); // Изменение позиции игрока
+	if (key[LEFT].isPressed)
+	{
+		Player.Velocity.X -= 0.01;
+	}
+	if (key[RIGHT].isPressed)
+	{
+		Player.Velocity.X += 0.01;
+	}
+	if (key[UP].isPressed)
+	{
+		Player.Velocity.Y += 0.01;
+	}
+	if (key[DOWN].isPressed)
+	{
+		Player.Velocity.Y -= 0.01;
+	}
+	Player.Update(); // Изменение позиции игрока
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
 }
 void Animation(int Value)
 {
-	player.Animation(4); // Анимация игрока
+	Player.Animation(4); // Анимация игрока
 	glutTimerFunc(timer_animation, Animation, 1); //Задержка 100 мс перед новым вызовом функции
 };
 
@@ -61,10 +77,15 @@ void initGL(int argc, char **argv)
 	//InitTexture(Textures[4], "c.png");
 
 	//printf("InitGL - complete\n"); // Нужно сделаь проверку создания окна
+	//Биндим клавиши
+	key[LEFT].Nominal = KEY_A;
+	key[RIGHT].Nominal = KEY_D;
+	key[UP].Nominal = KEY_W;
+	key[DOWN].Nominal = KEY_S;
 }
 
 // Отрисовка
-void render()
+void Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Очистка буферов глубины и цвета
 	glClearColor(0.2, 0.2, 0.5, 1);
@@ -75,10 +96,10 @@ void render()
 
 	glBindTexture(GL_TEXTURE_2D, Textures[1]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(player.CurrentFrame / 5, 0.5); glVertex2f(-0.25 + player.Position.X, -0.25 + player.Position.Y);
-	glTexCoord2f(player.CurrentFrame / 5, 0.0); glVertex2f(-0.25 + player.Position.X, 0.25 + player.Position.Y);
-	glTexCoord2f(player.CurrentFrame / 5 + 0.2, 0.0); glVertex2f(0.25 + player.Position.X, 0.25 + player.Position.Y);
-	glTexCoord2f(player.CurrentFrame / 5 + 0.2, 0.5); glVertex2f(0.25 + player.Position.X, -0.25 + player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 5, 0.5); glVertex2f(-0.25 + Player.Position.X, -0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 5, 0.0); glVertex2f(-0.25 + Player.Position.X, 0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 5 + 0.2, 0.0); glVertex2f(0.25 + Player.Position.X, 0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 5 + 0.2, 0.5); glVertex2f(0.25 + Player.Position.X, -0.25 + Player.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glDisable(GL_TEXTURE_2D);
@@ -123,53 +144,16 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 	if (code >= 0) //Если нет ошибок и событие вызвано клавиатурой
 	{
-		if (wParam == WM_KEYDOWN) //Если клавиша нажата
+		for (int i = 0; i < key_length; i++)
 		{
-			switch (KEY->vkCode) //Получаем вирутальный код нажатой клавишы
+			if (key[i].Nominal == KEY->vkCode)
 			{
-			case VK_F1: //Если нажата клавиша F1 развернуть окно на весь экран или наоборот вернуть из полного экрана в окно
-				SetFullScreen();
-				break;
-			case VK_ESCAPE: //Если нажата клавиша ESC, выйти из приложения
-				exit(0);
-				break;
-			case KEY_A: //Если нажата клавиша A, то вектор скорости по X ставим равным -1, так как двигаемся налево
-				player.Velocity.X = -1;
-				break;
-			case KEY_D: //Если нажата клавиша D, то вектор скорости по X ставим равным 1, так как двигаемся направо
-				player.Velocity.X = 1;
-				break;
-			case KEY_W: //Если нажата клавиша W, то вектор скорости по Y ставим равным 1, так как двигаемся вверх
-				player.Velocity.Y = 1;
-				break;
-			case KEY_S: //Если нажата клавиша S, то вектор скорости по X ставим равным -1, так как двигаемся вниз
-				player.Velocity.Y = -1;
-				break;
-			default:
-				cout << KEY->vkCode << '\n';
-				break;
-			}
-		}
-		else if (wParam == WM_KEYUP) //Если клавиша отпущена
-		{
-			switch (KEY->vkCode) //Получаем вирутальный код отпущенной клавишы
-			{
-			case KEY_A: //Если отпущена клавиша A, то останавливаемся на оси X, так как двигались налево
-				player.Velocity.X = 0;
-				break;
-			case KEY_D: //Если отпущена клавиша D, то останавливаемся на оси X, так как двигались направо
-				player.Velocity.X = 0;
-				break;
-			case KEY_W: //Если отпущена клавиша W, то останавливаемся на оси Y, так как двигались вверх
-				player.Velocity.Y = 0;
-				break;
-			case KEY_S: //Если отпущена клавиша S, то останавливаемся на оси Y, так как двигались вниз
-				player.Velocity.Y = 0;
-				break;
-			default:
-				break;
+				if (wParam == WM_KEYDOWN)
+					key[i].isPressed = true;
+				else
+					key[i].isPressed = false;
 			}
 		}
 	}
-	return CallNextHookEx(KeyboardHook, code, wParam, lParam); //Пробрасываем хук дальше
+	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
 }
