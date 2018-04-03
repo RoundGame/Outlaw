@@ -28,12 +28,9 @@ int main(int argc, char **argv)
 	w - ширина окна
 	h - высота окна*/ 
 	glutReshapeFunc(reshape_win_size);
-	// Клавиатура
-	//glutKeyboardFunc(NormalKeys); // Замечает нажитие клавиш печати (1-0, а-Я, a-Z)
-	//glutKeyboardUpFunc(NormalKeysUp); // Замечает отпускание клавиш печати
-	glutSpecialFunc(SpecialKeys);	// Зачечает нажитие функциональных клавиш (F1-F12, tab ...) (эти клавиши не используют ascii)
 
-	KeyboardHook = SetWindowsHookExA(WH_KEYBOARD_LL, HookProc, NULL, 0);
+	//Пробрасываем хук клавиатуры на текущий поток и записываем хендл хука в KeyboardHook
+	KeyboardHook = SetWindowsHookExA(WH_KEYBOARD_LL, KeybdHookProc, NULL, 0);
 
 	// Главный цикл
 	glutMainLoop();

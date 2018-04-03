@@ -97,45 +97,41 @@ void reshape_win_size(int w, int h)
 /* Состояние прилржения 
    false - окно			
    true - полный экран */
-bool fullScreen = false;	
+bool IsFullScreen = false;
 
-void SpecialKeys(int key, int x, int y)
+void SetFullScreen() //Функция установки полного экрана или возвращения в окно
 {
-	switch (key)
+	if (!IsFullScreen)
 	{
-
-
-	case GLUT_KEY_F1: // Включает и отключает полноэкранный режим
-		if (!fullScreen)
-		{
-			glutFullScreen();	// Запуск полноэкранного режима
-			fullScreen = !fullScreen;
-		}
-		else 
-		{
-			glutReshapeWindow(800, 600);	 // Установка размеров окна в 800х600
-			glutPositionWindow(0, 0);	// Перемещение окна в левый верхний угол
-			fullScreen = !fullScreen;
-		}
-		cout << key << '\n';
-		break;
-	default:
-		cout << key << '\n';
-		break;
+		glutFullScreen();	// Запуск полноэкранного режима
+		IsFullScreen = !IsFullScreen;
+	}
+	else
+	{
+		glutReshapeWindow(800, 600);	 // Установка размеров окна в 800х600
+		glutPositionWindow(GetSystemMetrics(SM_CXSCREEN) / 2 - 400, GetSystemMetrics(SM_CYSCREEN) / 2 - 300);	// Перемещение окна в центр экрана
+		IsFullScreen = !IsFullScreen;
 	}
 }
 
-LRESULT __stdcall HookProc(int code, WPARAM wParam, LPARAM lParam)
+//Функция, которая вызывается при изменении состоянии клавиатуры
+//Если code < 0, то нужно пробросить хук дальше, wParam хранит данные о том, нажата клавиша или отпущена, lParam хранит указатель на структуру KBDLLHOOKSTRUCT
+LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 {
+	//Данная структура хранит информацию о клавише
 	KBDLLHOOKSTRUCT *KEY = (KBDLLHOOKSTRUCT*)lParam; //Получаем указатель на структуру данных о нажатой клавише
 
 	if (code >= 0) //Если нет ошибок и событие вызвано клавиатурой
 	{
 		if (wParam == WM_KEYDOWN) //Если клавиша нажата
 		{
-			switch (KEY->vkCode)
+			switch (KEY->vkCode) //Получаем вирутальный код нажатой клавишы
 			{
-			case VK_ESCAPE: exit(0);
+			case VK_F1: //Если нажата клавиша F1 развернуть окно на весь экран или наоборот вернуть из полного экрана в окно
+				SetFullScreen();
+				break;
+			case VK_ESCAPE: //Если нажата клавиша ESC, выйти из приложения
+				exit(0);
 				break;
 			case KEY_A: //Если нажата клавиша A, то вектор скорости по X ставим равным -1, так как двигаемся налево
 				player.Velocity.X = -1;
@@ -156,7 +152,7 @@ LRESULT __stdcall HookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		else if (wParam == WM_KEYUP) //Если клавиша отпущена
 		{
-			switch (KEY->vkCode)
+			switch (KEY->vkCode) //Получаем вирутальный код отпущенной клавишы
 			{
 			case KEY_A: //Если отпущена клавиша A, то останавливаемся на оси X, так как двигались налево
 				player.Velocity.X = 0;
@@ -175,5 +171,5 @@ LRESULT __stdcall HookProc(int code, WPARAM wParam, LPARAM lParam)
 			}
 		}
 	}
-	return CallNextHookEx(KeyboardHook, code, wParam, lParam);
+	return CallNextHookEx(KeyboardHook, code, wParam, lParam); //Пробрасываем хук дальше
 }

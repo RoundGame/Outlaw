@@ -1,28 +1,28 @@
-#include "character.h"
+п»ї#include "character.h"
 
 void character::Animation(int frame)
 {
 	if (CurrentAnimation)
 	{
 		CurrentFrame++;
-		if (CurrentFrame > frame) //В анимации пять кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за 4
+		if (CurrentFrame > frame) //Р’ Р°РЅРёРјР°С†РёРё РїСЏС‚СЊ РєР°РґСЂРѕРІ, РїРѕСЌС‚РѕРјСѓ СЃР±СЂР°СЃС‹РІР°РµРј СЃС‡РµС‚С‡РёРє РЅР° 0, РєР°Рє С‚РѕР»СЊРєРѕ РѕРЅ РїРµСЂРµРІР°Р»РёР» Р·Р° 4
 			CurrentFrame = 0;
 	}
 }
 
 void character::Update() 
 {
-	Vector velocity = Velocity.GetNormalize(); //Нормализуем вектор скорости
-	if (velocity.GetLength() != 0) //Если есть скорость то
+	Vector velocity = Velocity.GetNormalize(); //РќРѕСЂРјР°Р»РёР·СѓРµРј РІРµРєС‚РѕСЂ СЃРєРѕСЂРѕСЃС‚Рё
+	if (velocity.GetLength() != 0) //Р•СЃР»Рё РµСЃС‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ С‚Рѕ
 	{
-		CurrentAnimation = true; //Включаем анимацию передвижения
-		Position.X += velocity.X * speed; //Добавляем к вектору игрока вектор его скорости
+		CurrentAnimation = true; //Р’РєР»СЋС‡Р°РµРј Р°РЅРёРјР°С†РёСЋ РїРµСЂРµРґРІРёР¶РµРЅРёСЏ
+		Position.X += velocity.X * speed; //Р”РѕР±Р°РІР»СЏРµРј Рє РІРµРєС‚РѕСЂСѓ РёРіСЂРѕРєР° РІРµРєС‚РѕСЂ РµРіРѕ СЃРєРѕСЂРѕСЃС‚Рё
 		Position.Y += velocity.Y * speed;
 	}
-	else //Иначе
+	else //РРЅР°С‡Рµ
 	{
-		CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
-		CurrentAnimation = false; //Текущая анимация нулевая (стоим)
+		CurrentFrame = 0; //РўРµРєСѓС‰РёР№ РєР°РґСЂ - РЅСѓР»РµРІРѕР№ (СЃС‚РѕРёРј)
+		CurrentAnimation = false; //РўРµРєСѓС‰Р°СЏ Р°РЅРёРјР°С†РёСЏ РЅСѓР»РµРІР°СЏ (СЃС‚РѕРёРј)
 	}
 }
 

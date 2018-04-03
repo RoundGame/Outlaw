@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <cmath>
 struct Vector
 {
@@ -15,13 +15,13 @@ struct Vector
 		Y = y;
 	}
 
-	/*Получение длины вектора*/
+	/*РџРѕР»СѓС‡РµРЅРёРµ РґР»РёРЅС‹ РІРµРєС‚РѕСЂР°*/
 	double GetLength()
 	{
 		double len = sqrt(X * X + Y * Y);
 		return len;
 	}
-	/*Нормализация вектора*/
+	/*РќРѕСЂРјР°Р»РёР·Р°С†РёСЏ РІРµРєС‚РѕСЂР°*/
 	Vector GetNormalize()
 	{
 		if (GetLength() == 0)
