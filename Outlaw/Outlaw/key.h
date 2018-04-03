@@ -26,10 +26,10 @@
 //#define KEY_EQUAL				61  /* = */
 
 #define KEY_A					0x41//97
-#define KEY_B					98
-#define KEY_C 					99
+#define KEY_B					0x42//98
+#define KEY_C 					0x43//99
 #define KEY_D 					0x44//100
-#define KEY_E 					101
+#define KEY_E 					0x45//101
 #define KEY_F 					102
 #define KEY_G 					103
 #define KEY_H 					104
@@ -42,7 +42,7 @@
 #define KEY_O 					111
 #define KEY_P 					112
 #define KEY_Q 					113
-#define KEY_R 					114
+#define KEY_R 					0x52//114
 #define KEY_S 					0x53//115
 #define KEY_T 					116
 #define KEY_U 					117

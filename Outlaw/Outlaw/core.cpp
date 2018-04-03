@@ -7,7 +7,7 @@ using namespace std;
 unsigned int Textures[6]; // Максимально доступное кол-во текстур
 
 Character Player;
-//HHOOK extern KeyboardHook; //Хэндл хука клавиатуры
+int volume;
 
 void Update(int Value) {
 	if (key[LEFT].isPressed)
@@ -70,7 +70,7 @@ void initGL(int argc, char **argv)
 	glutCreateWindow("Roggame");	 // Имя окна
 
 									 // Инициализация текстур
-	InitTexture(Textures[0], "test.jpg");
+	InitTexture(Textures[0], "latest.png");
 	InitTexture(Textures[1], "test.png");
 	//InitTexture(Textures[2], "a3.jpg");
 	//InitTexture(Textures[3], "b.bmp");
@@ -82,6 +82,7 @@ void initGL(int argc, char **argv)
 	key[RIGHT].Nominal = KEY_D;
 	key[UP].Nominal = KEY_W;
 	key[DOWN].Nominal = KEY_S;
+	waveOutGetVolume(0, (LPDWORD)&volume);
 }
 
 // Отрисовка
@@ -93,6 +94,14 @@ void Render()
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.5f);
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
+
+	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
+	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
+	glTexCoord2f(0.0, 1.0); glVertex2f(-0.3 + Player.Position.X, -0.3 + Player.Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-0.3 + Player.Position.X, 0.3 + Player.Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(0.3 + Player.Position.X, 0.3 + Player.Position.Y);
+	glTexCoord2f(1.0, 1.0); glVertex2f(0.3 + Player.Position.X, -0.3 + Player.Position.Y);
+	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, Textures[1]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
@@ -153,6 +162,16 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 				else
 					key[i].isPressed = false;
 			}
+		}
+		if (KEY->vkCode == KEY_R)
+		{
+			volume += 134219776;
+			waveOutSetVolume(0, volume);
+		}
+		if (KEY->vkCode == KEY_E)
+		{
+			volume -= 134219776;
+			waveOutSetVolume(0, volume);
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
