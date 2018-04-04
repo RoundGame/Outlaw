@@ -1,16 +1,6 @@
 ﻿#pragma once
 /* The unknown key */
-#define KEY_UNKNOWN            -1
-
-/* Function keys */
-#define KEY_BACK				0x08
-#define KEY_TAB					0x09
-#define ENTER					0x0D
-#define KEY_SHIFT				0x10
-#define KEY_CTRL				0x11
-#define KEY_ALT					0x12
-#define KEY_ESC					0x1B
-#define KEY_SPACE				0x20
+#define KEY_UNKNOWN				-1
 
 /* Function keys */
 #define KEY_0					0x30
@@ -50,14 +40,3 @@
 #define KEY_X 					0x58
 #define KEY_Y 					0x59
 #define KEY_Z 					0x5A
-
-#define KEYNUM_0				0x60
-#define KEYNUM_1				0x61
-#define KEYNUM_2				0x62
-#define KEYNUM_3				0x63
-#define KEYNUM_4				0x64
-#define KEYNUM_5				0x65
-#define KEYNUM_6				0x66
-#define KEYNUM_7				0x67
-#define KEYNUM_8				0x68
-#define KEYNUM_9				0x69

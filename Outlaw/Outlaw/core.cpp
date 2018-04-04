@@ -16,8 +16,8 @@ void Update(int Value)
 	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; 
 	Player.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;
 	Player.Acceleration = Player.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
-
 	Player.Update(); // Изменение позиции игрока
+
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
 }
@@ -25,7 +25,7 @@ void Update(int Value)
 //Функция анимации персонажей
 void Animation(int Value)
 {
-	Player.Animation(4); // Анимация игрока
+	Player.Animation(7); // Анимация игрока
 	glutTimerFunc(timer_animation, Animation, 1); //Задержка 100 мс перед новым вызовом функции
 };
 
@@ -63,8 +63,8 @@ void initGL(int argc, char **argv)
 	glutCreateWindow("Roggame");	 // Имя окна
 
 									 // Инициализация текстур
-	InitTexture(Textures[0], "latest.png");
-	InitTexture(Textures[1], "test.png");
+	//InitTexture(Textures[1], "latest.png");
+	InitTexture(Textures[0], "Character.png");
 	//InitTexture(Textures[2], "a3.jpg");
 	//InitTexture(Textures[3], "b.bmp");
 	//InitTexture(Textures[4], "c.png");
@@ -90,18 +90,10 @@ void Render()
 
 	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(0.0, 1.0); glVertex2f(-0.3 + Player.Position.X, -0.3 + Player.Position.Y);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-0.3 + Player.Position.X, 0.3 + Player.Position.Y);
-	glTexCoord2f(1.0, 0.0); glVertex2f(0.3 + Player.Position.X, 0.3 + Player.Position.Y);
-	glTexCoord2f(1.0, 1.0); glVertex2f(0.3 + Player.Position.X, -0.3 + Player.Position.Y);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, Textures[1]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(Player.CurrentFrame / 5, 0.5); glVertex2f(-0.25 + Player.Position.X, -0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 5, 0.0); glVertex2f(-0.25 + Player.Position.X, 0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 5 + 0.2, 0.0); glVertex2f(0.25 + Player.Position.X, 0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 5 + 0.2, 0.5); glVertex2f(0.25 + Player.Position.X, -0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8, 0.125); glVertex2f(-0.25 + Player.Position.X, -0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8, 0.0); glVertex2f(-0.25 + Player.Position.X, 0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, 0.0); glVertex2f(0.25 + Player.Position.X, 0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, 0.125); glVertex2f(0.25 + Player.Position.X, -0.25 + Player.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glDisable(GL_TEXTURE_2D);
@@ -121,18 +113,26 @@ void reshape_win_size(int w, int h)
    false - окно			
    true - полный экран */
 bool IsFullScreen = false;
+int Window_X, Window_Y, Window_Width, Window_Height; //Данные окна
 
 void SetFullScreen() //Функция установки полного экрана или возвращения в окно
 {
 	if (!IsFullScreen)
 	{
+		RECT rect = RECT(); //Прямоугольник
+		//Извлекает размеры ограничивающего прямоугольника указанного окна. Размеры указаны в координатах экрана, которые относятся к верхнему левому углу экрана.
+		GetWindowRect(GetActiveWindow(), &rect); //Записываем прямоугольник окна в rect
+		Window_X = rect.left; //Координаты левого верхнего угла
+		Window_Y = rect.top;
+		Window_Width = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
+		Window_Height = rect.bottom - rect.top;
 		glutFullScreen();	// Запуск полноэкранного режима
 		IsFullScreen = !IsFullScreen;
 	}
 	else
 	{
-		glutReshapeWindow(800, 600);	 // Установка размеров окна в 800х600
-		glutPositionWindow(GetSystemMetrics(SM_CXSCREEN) / 2 - 400, GetSystemMetrics(SM_CYSCREEN) / 2 - 300);	// Перемещение окна в центр экрана
+		glutReshapeWindow(Window_Width, Window_Height);	 // Установка первоначальных размеров окна
+		glutPositionWindow(Window_X, Window_Y);	// Перемещение окна в первоначальное положение
 		IsFullScreen = !IsFullScreen;
 	}
 }
@@ -173,6 +173,8 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 			else
 				Player.boost = 4;
 		}
+		if (KEY->vkCode == VK_F11 && wParam == WM_KEYUP)
+			SetFullScreen();
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
 }
