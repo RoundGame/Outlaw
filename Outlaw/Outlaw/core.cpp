@@ -9,23 +9,12 @@ unsigned int Textures[6]; // Максимально доступное кол-в
 Character Player;
 int volume;
 
-void Update(int Value) {
-	if (key[LEFT].isPressed)
-	{
-		Player.Velocity.X -= 0.01;
-	}
-	if (key[RIGHT].isPressed)
-	{
-		Player.Velocity.X += 0.01;
-	}
-	if (key[UP].isPressed)
-	{
-		Player.Velocity.Y += 0.01;
-	}
-	if (key[DOWN].isPressed)
-	{
-		Player.Velocity.Y -= 0.01;
-	}
+void Update(int Value) 
+{
+	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; 
+	Player.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;
+	Player.Acceleration = Player.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
+
 	Player.Update(); // Изменение позиции игрока
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
@@ -172,6 +161,13 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 		{
 			volume -= 134219776;
 			waveOutSetVolume(0, volume);
+		}
+		if (KEY->vkCode == KEY_C && wParam == WM_KEYUP)
+		{
+			if (Player.boost == 4)
+				Player.boost = 0.1;
+			else
+				Player.boost = 4;
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
