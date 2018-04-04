@@ -9,6 +9,8 @@ unsigned int Textures[6]; // Максимально доступное кол-в
 Character Player;
 int volume;
 
+
+/*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
 {
 	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; 
@@ -19,6 +21,8 @@ void Update(int Value)
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
 }
+
+//Функция анимации персонажей
 void Animation(int Value)
 {
 	Player.Animation(4); // Анимация игрока
