@@ -15,13 +15,16 @@ void Update(int Value)
 {
 	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed;
 	Player.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;
-	Player.Direction = 2 * key[LEFT].isPressed + key[RIGHT].isPressed + 4 * key[UP].isPressed + 3 * key[DOWN].isPressed - 3 * key[LEFT].isPressed * key[RIGHT].isPressed + key[LEFT].isPressed * key[UP].isPressed + 3 * key[LEFT].isPressed * key[DOWN].isPressed + 2 * key[RIGHT].isPressed * key[DOWN].isPressed - 7 * key[UP].isPressed * key[DOWN].isPressed - 4 * key[LEFT].isPressed * key[RIGHT].isPressed * key[UP].isPressed - 6 * key[LEFT].isPressed * key[RIGHT].isPressed * key[DOWN].isPressed - 3 * key[LEFT].isPressed * key[UP].isPressed * key[DOWN].isPressed + key[RIGHT].isPressed * key[UP].isPressed * key[DOWN].isPressed + 6 * key[LEFT].isPressed * key[RIGHT].isPressed * key[UP].isPressed * key[DOWN].isPressed;
-	if (prevDir != Player.Direction)
-	{
-		prevDir = Player.Direction;
-		printf("Direction: %d\n", prevDir);
-	}
+
 	Player.Acceleration = Player.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
+	if (Player.Acceleration.GetLength() != 0)
+	{
+		if (Player.Acceleration.Y >= 0)
+			Player.Direction = round(-2 * Player.Acceleration.X + 3);
+		else
+			Player.Direction = round(2 * Player.Acceleration.X + 7);
+	}
+
 	Player.Update(); // Изменение позиции игрока
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
@@ -95,10 +98,10 @@ void Render()
 
 	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(Player.CurrentFrame / 8, ((double)Player.Direction - 1) / 8 + 0.125); glVertex2f(-0.25 + Player.Position.X, -0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8, ((double)Player.Direction - 1) / 8); glVertex2f(-0.25 + Player.Position.X, 0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, ((double)Player.Direction - 1) / 8); glVertex2f(0.25 + Player.Position.X, 0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, ((double)Player.Direction - 1) / 8 + 0.125); glVertex2f(0.25 + Player.Position.X, -0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8, (Player.Direction - 1) / 8 + 0.125); glVertex2f(-0.25 + Player.Position.X, -0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8, (Player.Direction - 1) / 8); glVertex2f(-0.25 + Player.Position.X, 0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, (Player.Direction - 1) / 8); glVertex2f(0.25 + Player.Position.X, 0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, (Player.Direction - 1) / 8 + 0.125); glVertex2f(0.25 + Player.Position.X, -0.25 + Player.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glDisable(GL_TEXTURE_2D);
