@@ -8,7 +8,6 @@ unsigned int Textures[6]; // Максимально доступное кол-в
 
 Character Player;
 int volume;
-int prevDir = 0;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -17,7 +16,7 @@ void Update(int Value)
 	Player.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;
 
 	Player.Acceleration = Player.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
-	if (Player.Acceleration.GetLength() != 0)
+	if (Player.Acceleration.GetLength() != 0) //Если длина вектора равна нулю, то мы стоим и не нужно считать новое направление
 	{
 		if (Player.Acceleration.Y >= 0)
 			Player.Direction = round(-2 * Player.Acceleration.X + 3);
