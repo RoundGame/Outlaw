@@ -6,6 +6,7 @@
 #include "character.h"
 
 static HHOOK Keyboard_Hook; //Хэндл хука клавиатуры
+static HWND Main_Window_Handle;
 
 // Инициализация главного окна
 void initGL(int argc, char **argv);

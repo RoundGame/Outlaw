@@ -8,16 +8,21 @@ unsigned int Textures[6]; // Максимально доступное кол-в
 
 Character Player;
 int volume;
-
+int prevDir = 0;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
 {
-	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; 
+	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed;
 	Player.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;
+	Player.Direction = 2 * key[LEFT].isPressed + key[RIGHT].isPressed + 4 * key[UP].isPressed + 3 * key[DOWN].isPressed - 3 * key[LEFT].isPressed * key[RIGHT].isPressed + key[LEFT].isPressed * key[UP].isPressed + 3 * key[LEFT].isPressed * key[DOWN].isPressed + 2 * key[RIGHT].isPressed * key[DOWN].isPressed - 7 * key[UP].isPressed * key[DOWN].isPressed - 4 * key[LEFT].isPressed * key[RIGHT].isPressed * key[UP].isPressed - 6 * key[LEFT].isPressed * key[RIGHT].isPressed * key[DOWN].isPressed - 3 * key[LEFT].isPressed * key[UP].isPressed * key[DOWN].isPressed + key[RIGHT].isPressed * key[UP].isPressed * key[DOWN].isPressed + 6 * key[LEFT].isPressed * key[RIGHT].isPressed * key[UP].isPressed * key[DOWN].isPressed;
+	if (prevDir != Player.Direction)
+	{
+		prevDir = Player.Direction;
+		printf("Direction: %d\n", prevDir);
+	}
 	Player.Acceleration = Player.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
 	Player.Update(); // Изменение позиции игрока
-
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
 }
@@ -61,7 +66,7 @@ void initGL(int argc, char **argv)
 	glutInitWindowSize(800, 600);	 // Размер экрана в пикселях
 	glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
 	glutCreateWindow("Roggame");	 // Имя окна
-
+	Main_Window_Handle = GetActiveWindow();
 									 // Инициализация текстур
 	//InitTexture(Textures[1], "latest.png");
 	InitTexture(Textures[0], "Character.png");
@@ -90,10 +95,10 @@ void Render()
 
 	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(Player.CurrentFrame / 8, 0.125); glVertex2f(-0.25 + Player.Position.X, -0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8, 0.0); glVertex2f(-0.25 + Player.Position.X, 0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, 0.0); glVertex2f(0.25 + Player.Position.X, 0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, 0.125); glVertex2f(0.25 + Player.Position.X, -0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8, ((double)Player.Direction - 1) / 8 + 0.125); glVertex2f(-0.25 + Player.Position.X, -0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8, ((double)Player.Direction - 1) / 8); glVertex2f(-0.25 + Player.Position.X, 0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, ((double)Player.Direction - 1) / 8); glVertex2f(0.25 + Player.Position.X, 0.25 + Player.Position.Y);
+	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, ((double)Player.Direction - 1) / 8 + 0.125); glVertex2f(0.25 + Player.Position.X, -0.25 + Player.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 
 	glDisable(GL_TEXTURE_2D);
@@ -120,7 +125,8 @@ void SetFullScreen() //Функция установки полного экра
 	if (!IsFullScreen)
 	{
 		RECT rect = RECT(); //Прямоугольник
-		//Извлекает размеры ограничивающего прямоугольника указанного окна. Размеры указаны в координатах экрана, которые относятся к верхнему левому углу экрана.
+		/*Извлекает размеры ограничивающего прямоугольника указанного окна.
+		Размеры указаны в координатах экрана, которые относятся к верхнему левому углу экрана.*/
 		GetWindowRect(GetActiveWindow(), &rect); //Записываем прямоугольник окна в rect
 		Window_X = rect.left; //Координаты левого верхнего угла
 		Window_Y = rect.top;
@@ -144,7 +150,7 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 	//Данная структура хранит информацию о клавише
 	KBDLLHOOKSTRUCT *KEY = (KBDLLHOOKSTRUCT*)lParam; //Получаем указатель на структуру данных о нажатой клавише
 
-	if (code >= 0) //Если нет ошибок и событие вызвано клавиатурой
+	if (code >= 0 && GetActiveWindow() == Main_Window_Handle) //Если нет ошибок и событие вызвано клавиатурой и если хэндл активного окна совпадает с хэндлом нашего окна, то активно наше оконо и можно обрабатывать нажатия
 	{
 		for (int i = 0; i < key_length; i++)
 		{
