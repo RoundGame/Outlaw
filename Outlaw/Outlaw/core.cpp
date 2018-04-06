@@ -3,28 +3,29 @@
 #include <cstdio>
 #include <iostream>
 using namespace std;
-//текстура
-unsigned int Textures[6]; // Максимально доступное кол-во текстур
 
-Character Player;
-int volume;
+Character Player; // Создаем игрока
+int volume; // Тестовая переменная громкости звука
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
 {
-	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed;
-	Player.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;
+	// Высчитывание перемещения игрока
+	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
+	Player.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
 
 	Player.Acceleration = Player.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
 	if (Player.Acceleration.GetLength() != 0) //Если длина вектора равна нулю, то мы стоим и не нужно считать новое направление
 	{
-		if (Player.Acceleration.Y >= 0)
+		if (Player.Acceleration.Y >= 0) // Считаем направление персонажа при движении (u - вперед, l - влево, r - право) u, r, l, ur, ul
 			Player.Direction = round(-2 * Player.Acceleration.X + 3);
-		else
+		else	// Считаем направление персонажа при движении (d - вниз, l - влево, r - право) d, dr, dl
 			Player.Direction = round(2 * Player.Acceleration.X + 7);
+		// Записываем получившееся число в Direction
 	}
 
 	Player.Update(); // Изменение позиции игрока
+
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
 }
@@ -32,7 +33,7 @@ void Update(int Value)
 //Функция анимации персонажей
 void Animation(int Value)
 {
-	Player.Animation(7); // Анимация игрока
+	Player.Animation(7); // Анимация игрока, принемаемый параметр количество кадров анмайии
 	glutTimerFunc(timer_animation, Animation, 1); //Задержка 100 мс перед новым вызовом функции
 };
 
@@ -67,21 +68,19 @@ void initGL(int argc, char **argv)
 																// GLUT_RGBA - цветовой канал(RGB) + альфа канал(А)
 	glutInitWindowSize(800, 600);	 // Размер экрана в пикселях
 	glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
-	glutCreateWindow("Roggame");	 // Имя окна
-	Main_Window_Handle = GetActiveWindow();
-									 // Инициализация текстур
-	//InitTexture(Textures[1], "latest.png");
-	InitTexture(Textures[0], "Character.png");
-	//InitTexture(Textures[2], "a3.jpg");
-	//InitTexture(Textures[3], "b.bmp");
-	//InitTexture(Textures[4], "c.png");
+	glutCreateWindow("Outlaw");	 // Имя окна
 
-	//printf("InitGL - complete\n"); // Нужно сделаь проверку создания окна
+	Main_Window_Handle = GetActiveWindow(); // Запоминаем главное окно, что бы в последстыии отключать обработчик клавиш если оно свернуто.
+
+	// Инициализация текстур
+	InitTexture(Player.Texture, "Character.png");
+
 	//Биндим клавиши
 	key[LEFT].Nominal = KEY_A;
 	key[RIGHT].Nominal = KEY_D;
 	key[UP].Nominal = KEY_W;
 	key[DOWN].Nominal = KEY_S;
+
 	waveOutGetVolume(0, (LPDWORD)&volume);
 }
 
@@ -92,16 +91,10 @@ void Render()
 	glClearColor(0.2, 0.2, 0.5, 1);
 	
 	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.5f);
+	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
-	glBindTexture(GL_TEXTURE_2D, Textures[0]); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(Player.CurrentFrame / 8, (Player.Direction - 1) / 8 + 0.125); glVertex2f(-0.25 + Player.Position.X, -0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8, (Player.Direction - 1) / 8); glVertex2f(-0.25 + Player.Position.X, 0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, (Player.Direction - 1) / 8); glVertex2f(0.25 + Player.Position.X, 0.25 + Player.Position.Y);
-	glTexCoord2f(Player.CurrentFrame / 8 + 0.125, (Player.Direction - 1) / 8 + 0.125); glVertex2f(0.25 + Player.Position.X, -0.25 + Player.Position.Y);
-	glEnd(); // Конец обьекта рисуемого треугольниками
+	Player.Draw(); // Рисуем игрока
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);

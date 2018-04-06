@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "key.h"
 #include <cmath>
 struct Vector
 {
@@ -32,14 +33,13 @@ struct Vector
 	}
 };
 
-enum { LEFT, RIGHT, UP, DOWN };
 struct Key
 {
 	int Nominal;
 	bool isPressed;
 	Key()
 	{
-		Nominal = -1;
+		Nominal = KEY_UNKNOWN;
 		isPressed = false;
 	}
 };

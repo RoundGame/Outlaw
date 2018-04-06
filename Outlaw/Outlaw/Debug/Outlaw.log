@@ -1,11 +1,14 @@
-﻿  core.cpp
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(92): warning C4305: аргумент: усечение из "double" в "GLclampf"
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(100): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(101): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(102): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(103): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_DXT.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_helper.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(SOIL.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(stb_image_aug.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-  Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Debug\Outlaw.exe
+﻿  character.cpp
+c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\character.cpp(35): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\character.cpp(36): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\character.cpp(37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\character.cpp(38): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  core.cpp
+c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\core.cpp(91): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+  main.cpp
+  Generating Code...
+soil.lib(image_DXT.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(image_DXT.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
+soil.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(image_helper.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
+soil.lib(SOIL.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(SOIL.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
+soil.lib(stb_image_aug.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(stb_image_aug.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
+  Outlaw.vcxproj -> C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\Outlaw.exe

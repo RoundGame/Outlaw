@@ -7,6 +7,9 @@ static int timer_update = 20;
 // Частота вызова функции изменения анимации персонажей
 static int timer_animation = 100; 
 
-// Количество 
-const int key_length = 4; 
+// Обращение к клавишам управления
+enum gamekey { LEFT, RIGHT, UP, DOWN };
+
+// Количество игровых клавиш
+const int key_length = sizeof(gamekey);
 static Key key[key_length];
