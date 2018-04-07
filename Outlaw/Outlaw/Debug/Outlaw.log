@@ -1,12 +1,5 @@
-﻿  character.cpp
-c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\character.cpp(35): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\character.cpp(36): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\character.cpp(37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\character.cpp(38): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-  core.cpp
+﻿  core.cpp
 c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\core.cpp(91): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-  main.cpp
-  Generating Code...
 soil.lib(image_DXT.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(image_DXT.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
 soil.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(image_helper.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
 soil.lib(SOIL.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(SOIL.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info

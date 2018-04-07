@@ -27,14 +27,14 @@ void Update(int Value)
 	Player.Update(); // Изменение позиции игрока
 
 	glutPostRedisplay(); // Обновляем экран
-	glutTimerFunc(timer_update, Update, 0); // Задержка 20 мс перед новым вызовом функции
+	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
 }
 
 //Функция анимации персонажей
 void Animation(int Value)
 {
 	Player.Animation(7); // Анимация игрока, принемаемый параметр количество кадров анмайии
-	glutTimerFunc(timer_animation, Animation, 1); //Задержка 100 мс перед новым вызовом функции
+	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 };
 
 // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
@@ -88,9 +88,9 @@ void initGL(int argc, char **argv)
 void Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Очистка буферов глубины и цвета
-	glClearColor(0.2, 0.2, 0.5, 1);
+	glClearColor(0.2, 0.2, 0.5, 1); // Устанавливаем цвет фона
 	
-	glEnable(GL_ALPHA_TEST);
+	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
@@ -105,14 +105,15 @@ void Render()
 void reshape_win_size(int w, int h)
 {
 	// Определяем окно просмотра
-	glViewport(0, 0, w, h);
-	printf("w - %d, h - %d \n", w, h); // вывод текущего размера окна в консоль
+	glViewport(0, 0, w, h); // Функци устанавливает область отрисовки внутри окна
+	//printf("w - %d, h - %d \n", w, h); // вывод текущего размера окна в консоль
 }
 
 /* Состояние прилржения 
    false - окно			
    true - полный экран */
 bool IsFullScreen = false;
+//	позиция_х позиция_у	ширина_окна	  высота_окна
 int Window_X, Window_Y, Window_Width, Window_Height; //Данные окна
 
 void SetFullScreen() //Функция установки полного экрана или возвращения в окно
@@ -147,11 +148,11 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 	if (code >= 0 && GetActiveWindow() == Main_Window_Handle) //Если нет ошибок и событие вызвано клавиатурой и если хэндл активного окна совпадает с хэндлом нашего окна, то активно наше оконо и можно обрабатывать нажатия
 	{
-		for (int i = 0; i < key_length; i++)
+		for (int i = 0; i < key_length; i++) // Проверяем игровые клавиши на нажитие
 		{
 			if (key[i].Nominal == KEY->vkCode)
 			{
-				if (wParam == WM_KEYDOWN)
+				if (wParam == WM_KEYDOWN) // Изменяем их состояние на соответственные значения 
 					key[i].isPressed = true;
 				else
 					key[i].isPressed = false;
