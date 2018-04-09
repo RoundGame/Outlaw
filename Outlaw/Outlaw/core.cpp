@@ -7,20 +7,28 @@ using namespace std;
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
 
+struct window
+{
+	//	позиция_х позиция_у
+	Vector position;
+	// X ширина_окна	 Y высота_окна
+	Vector size;
+} window;
+
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
 {
 	// Высчитывание перемещения игрока
-	Player.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
-	Player.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
+	Player.Move.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
+	Player.Move.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
 
-	Player.Acceleration = Player.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
-	if (Player.Acceleration.GetLength() != 0) //Если длина вектора равна нулю, то мы стоим и не нужно считать новое направление
+	Player.Move.Acceleration = Player.Move.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
+	if (Player.Move.Acceleration.GetLength() != 0) //Если длина вектора равна нулю, то мы стоим и не нужно считать новое направление
 	{
-		if (Player.Acceleration.Y >= 0) // Считаем направление персонажа при движении (u - вперед, l - влево, r - право) u, r, l, ur, ul
-			Player.Direction = round(-2 * Player.Acceleration.X + 3);
+		if (Player.Move.Acceleration.Y >= 0) // Считаем направление персонажа при движении (u - вперед, l - влево, r - право) u, r, l, ur, ul
+			Player.Direction = round(-2 * Player.Move.Acceleration.X + 3);
 		else	// Считаем направление персонажа при движении (d - вниз, l - влево, r - право) d, dr, dl
-			Player.Direction = round(2 * Player.Acceleration.X + 7);
+			Player.Direction = round(2 * Player.Move.Acceleration.X + 7);
 		// Записываем получившееся число в Direction
 	}
 
@@ -29,6 +37,14 @@ void Update(int Value)
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
 }
+
+// Сохранение и выход
+void Save()
+{
+		cout << "saving\n";
+		exit(0);
+
+};
 
 //Функция анимации персонажей
 void Animation(int Value)
@@ -113,8 +129,6 @@ void reshape_win_size(int w, int h)
    false - окно			
    true - полный экран */
 bool IsFullScreen = false;
-//	позиция_х позиция_у	ширина_окна	  высота_окна
-int Window_X, Window_Y, Window_Width, Window_Height; //Данные окна
 
 void SetFullScreen() //Функция установки полного экрана или возвращения в окно
 {
@@ -124,17 +138,17 @@ void SetFullScreen() //Функция установки полного экра
 		/*Извлекает размеры ограничивающего прямоугольника указанного окна.
 		Размеры указаны в координатах экрана, которые относятся к верхнему левому углу экрана.*/
 		GetWindowRect(GetActiveWindow(), &rect); //Записываем прямоугольник окна в rect
-		Window_X = rect.left; //Координаты левого верхнего угла
-		Window_Y = rect.top;
-		Window_Width = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
-		Window_Height = rect.bottom - rect.top;
+		window.position.X = rect.left; //Координаты левого верхнего угла
+		window.position.Y = rect.top;
+		window.size.X = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
+		window.size.Y = rect.bottom - rect.top;
 		glutFullScreen();	// Запуск полноэкранного режима
 		IsFullScreen = !IsFullScreen;
 	}
 	else
 	{
-		glutReshapeWindow(Window_Width, Window_Height);	 // Установка первоначальных размеров окна
-		glutPositionWindow(Window_X, Window_Y);	// Перемещение окна в первоначальное положение
+		glutReshapeWindow(window.size.X, window.size.Y);	 // Установка первоначальных размеров окна
+		glutPositionWindow(window.position.X, window.position.Y);	// Перемещение окна в первоначальное положение
 		IsFullScreen = !IsFullScreen;
 	}
 }
@@ -148,7 +162,7 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 	if (code >= 0 && GetActiveWindow() == Main_Window_Handle) //Если нет ошибок и событие вызвано клавиатурой и если хэндл активного окна совпадает с хэндлом нашего окна, то активно наше оконо и можно обрабатывать нажатия
 	{
-		for (int i = 0; i < key_length; i++) // Проверяем игровые клавиши на нажитие
+		for (int i = 0; i < sizeof(gamekey); i++) // Проверяем игровые клавиши на нажитие, где sizeof(gamekey) - доступное кол-во клавиш
 		{
 			if (key[i].Nominal == KEY->vkCode)
 			{
@@ -170,13 +184,16 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (KEY->vkCode == KEY_C && wParam == WM_KEYUP)
 		{
-			if (Player.boost == 4)
-				Player.boost = 0.1;
+			if (Player.Boost == 4)
+				Player.Boost = 0.1;
 			else
-				Player.boost = 4;
+				Player.Boost = 4;
 		}
 		if (KEY->vkCode == VK_F11 && wParam == WM_KEYUP)
 			SetFullScreen();
+		if (KEY->vkCode == VK_ESCAPE)
+			Save();
+
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
 }

@@ -23,5 +23,6 @@ void InitTexture(unsigned int& texture1, const char name[]);
 
 void Animation(int Value); // Главная функция анимации
 void Update(int Value);	// Главнвя функция изменения позиции
+void Save(); // Сохранение и выход
 
 LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam); // Для считываения нажатия клавиш 

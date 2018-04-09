@@ -13,11 +13,11 @@ void Character::Animation(int frame)
 
 void Character::Update() 
 {
-	Velocity.X += (Acceleration.X * 0.01 - Velocity.X * 0.1) * boost; //Добавлем к вектору скорости вектор ускорения. boost - коэффициент ускорения
-	Velocity.Y += (Acceleration.Y * 0.01 - Velocity.Y * 0.1) * boost; //Вычитаем из вектора ускорения вектор текущей скорости, тем самым имитируем трение
-	Position.X += Velocity.X * speed; //Добавляем к вектору текущей позиции вектор текущей скорости
-	Position.Y += Velocity.Y * speed;
-	if (Velocity.GetLength() > 0.01 || Velocity.GetLength() < -0.01) //Если есть скорость то
+	Move.Velocity.X += (Move.Acceleration.X * 0.01 - Move.Velocity.X * 0.1) * Boost; //Добавлем к вектору скорости вектор ускорения. boost - коэффициент ускорения
+	Move.Velocity.Y += (Move.Acceleration.Y * 0.01 - Move.Velocity.Y * 0.1) * Boost; //Вычитаем из вектора ускорения вектор текущей скорости, тем самым имитируем трение
+	Move.Position.X += Move.Velocity.X * Speed; //Добавляем к вектору текущей позиции вектор текущей скорости
+	Move.Position.Y += Move.Velocity.Y * Speed;
+	if (Move.Velocity.GetLength() > 0.01 || Move.Velocity.GetLength() < -0.01) //Если есть скорость то
 	{
 		CurrentAnimation = true; //Включаем анимацию передвижения
 	}
@@ -32,9 +32,9 @@ void Character::Draw()
 {
 	glBindTexture(GL_TEXTURE_2D, Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(CurrentFrame / 8, (Direction - 1) / 8 + 0.125); glVertex2f(-0.25 + Position.X, -0.25 + Position.Y);
-	glTexCoord2f(CurrentFrame / 8, (Direction - 1) / 8); glVertex2f(-0.25 + Position.X, 0.25 + Position.Y);
-	glTexCoord2f(CurrentFrame / 8 + 0.125, (Direction - 1) / 8); glVertex2f(0.25 + Position.X, 0.25 + Position.Y);
-	glTexCoord2f(CurrentFrame / 8 + 0.125, (Direction - 1) / 8 + 0.125); glVertex2f(0.25 + Position.X, -0.25 + Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(-0.25 + Move.Position.X, -0.25 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(-0.25 + Move.Position.X, 0.25 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame + 1/texture_frame/*1/кол-во кадров (ширина кадра) */, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(0.25 + Move.Position.X, 0.25 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame + 1 / texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(0.25 + Move.Position.X, -0.25 + Move.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 }

@@ -1,7 +1,11 @@
 ﻿  core.cpp
-c:\users\_buzz0n\source\repos\outlaw\outlaw\outlaw\core.cpp(91): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-soil.lib(image_DXT.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(image_DXT.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
-soil.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(image_helper.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
-soil.lib(SOIL.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(SOIL.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
-soil.lib(stb_image_aug.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(stb_image_aug.obj)' or at 'C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
-  Outlaw.vcxproj -> C:\Users\_buzz0n\source\repos\Outlaw\Outlaw\Debug\Outlaw.exe
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(107): warning C4305: аргумент: усечение из "double" в "GLclampf"
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(150): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(151): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  main.cpp
+  Создание кода...
+soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB
+  Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe
