@@ -6,6 +6,7 @@
 #include "character.h"
 
 static HHOOK Keyboard_Hook; // Хэндл хука клавиатуры
+static HHOOK Mouse_Hook; // Хэндл хука мыши
 static HWND Main_Window_Handle; // Хэндл главного окна, для последующего отключения обработчика нажатия клавиш
 
 // Инициализация главного окна
@@ -26,3 +27,4 @@ void Update(int Value);	// Главнвя функция изменения по
 void Save(); // Сохранение и выход
 
 LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam); // Для считываения нажатия клавиш 
+LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam); // Для считываения событий мыши

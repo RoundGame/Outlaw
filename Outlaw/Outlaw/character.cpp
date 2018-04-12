@@ -40,11 +40,26 @@ void Character::Update()
 
 void Character::Draw()
 {
-	glBindTexture(GL_TEXTURE_2D, Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
+	glBindTexture(GL_TEXTURE_2D, Texture1); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(CurrentFrame / texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(-0.25 + Move.Position.X, -0.25 + Move.Position.Y);
-	glTexCoord2f(CurrentFrame / texture_frame, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(-0.25 + Move.Position.X, 0.25 + Move.Position.Y);
-	glTexCoord2f(CurrentFrame / texture_frame + 1 / (double)texture_frame/*1/кол-во кадров (ширина кадра) */, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(0.25 + Move.Position.X, 0.25 + Move.Position.Y);
-	glTexCoord2f(CurrentFrame / texture_frame + 1 / (double)texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(0.25 + Move.Position.X, -0.25 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(-0.3 + Move.Position.X, -0.3 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(-0.3 + Move.Position.X, 0.3 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame + 1 / (double)texture_frame/*1/кол-во кадров (ширина кадра) */, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(0.3 + Move.Position.X, 0.3 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame + 1 / (double)texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(0.3 + Move.Position.X, -0.3 + Move.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
+
+	glBindTexture(GL_TEXTURE_2D, Texture2); // Привязываем текстуру, далее будет использоваться она, до новой привязки
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslated(Move.Position.X, Move.Position.Y, 0);
+	glRotated(-Angle * 180 / M_PI - 90, 0, 0, 1);
+	glTranslated(-Move.Position.X, -Move.Position.Y, 0);
+	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
+	glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + Move.Position.X, -0.15 + Move.Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + Move.Position.X, 0.15 + Move.Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + Move.Position.X, 0.15 + Move.Position.Y);
+	glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + Move.Position.X, -0.15 + Move.Position.Y);
+	glEnd();
+	glPopMatrix();
 }

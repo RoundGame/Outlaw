@@ -1,4 +1,5 @@
 ﻿#pragma once
+#define _USE_MATH_DEFINES
 #include "key.h"
 #include <cmath>
 struct Vector

@@ -45,6 +45,7 @@ int main(int argc, char **argv)
 	Для настольных приложений, если этот параметр равен 0, процедура hook связана со всеми существующими
 	потоками, запущенными на том же рабочем столе, что и вызывающий поток. */
 	Keyboard_Hook = SetWindowsHookExA(WH_KEYBOARD_LL, KeybdHookProc, NULL, 0);
+	Keyboard_Hook = SetWindowsHookExA(WH_MOUSE_LL, MouseHookProc, NULL, 0);
 
 	/////////// Нуждается в доработке и КОМЕНТАРИИ ////////////////////////////////////////////////////////////////////////////
 	PlaySoundA("test.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
