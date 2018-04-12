@@ -34,7 +34,7 @@ void Character::Draw()
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
 	glTexCoord2f(CurrentFrame / texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(-0.25 + Move.Position.X, -0.25 + Move.Position.Y);
 	glTexCoord2f(CurrentFrame / texture_frame, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(-0.25 + Move.Position.X, 0.25 + Move.Position.Y);
-	glTexCoord2f(CurrentFrame / texture_frame + 1/texture_frame/*1/кол-во кадров (ширина кадра) */, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(0.25 + Move.Position.X, 0.25 + Move.Position.Y);
-	glTexCoord2f(CurrentFrame / texture_frame + 1 / texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(0.25 + Move.Position.X, -0.25 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame + 1 / (double)texture_frame/*1/кол-во кадров (ширина кадра) */, (Direction - 1) / 8/*кол-во направлений*/); glVertex2f(0.25 + Move.Position.X, 0.25 + Move.Position.Y);
+	glTexCoord2f(CurrentFrame / texture_frame + 1 / (double)texture_frame, (Direction - 1) / 8/*кол-во направлений*/ + 0.125); glVertex2f(0.25 + Move.Position.X, -0.25 + Move.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 }
