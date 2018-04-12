@@ -13,6 +13,16 @@ void Character::Animation(int frame)
 
 void Character::Update() 
 {
+	Move.Acceleration = Move.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
+	if (Move.Acceleration.GetLength() != 0) //Если длина вектора равна нулю, то мы стоим и не нужно считать новое направление
+	{
+		if (Move.Acceleration.Y >= 0) // Считаем направление персонажа при движении (u - вперед, l - влево, r - право) u, r, l, ur, ul
+			Direction = round(-2 * Move.Acceleration.X + 3);
+		else	// Считаем направление персонажа при движении (d - вниз, l - влево, r - право) d, dr, dl
+			Direction = round(2 * Move.Acceleration.X + 7);
+		// Записываем получившееся число в Direction
+	}
+
 	Move.Velocity.X += (Move.Acceleration.X * 0.01 - Move.Velocity.X * 0.1) * Boost; //Добавлем к вектору скорости вектор ускорения. boost - коэффициент ускорения
 	Move.Velocity.Y += (Move.Acceleration.Y * 0.01 - Move.Velocity.Y * 0.1) * Boost; //Вычитаем из вектора ускорения вектор текущей скорости, тем самым имитируем трение
 	Move.Position.X += Move.Velocity.X * Speed; //Добавляем к вектору текущей позиции вектор текущей скорости

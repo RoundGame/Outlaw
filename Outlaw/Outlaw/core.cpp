@@ -22,16 +22,6 @@ void Update(int Value)
 	Player.Move.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
 	Player.Move.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
 
-	Player.Move.Acceleration = Player.Move.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
-	if (Player.Move.Acceleration.GetLength() != 0) //Если длина вектора равна нулю, то мы стоим и не нужно считать новое направление
-	{
-		if (Player.Move.Acceleration.Y >= 0) // Считаем направление персонажа при движении (u - вперед, l - влево, r - право) u, r, l, ur, ul
-			Player.Direction = round(-2 * Player.Move.Acceleration.X + 3);
-		else	// Считаем направление персонажа при движении (d - вниз, l - влево, r - право) d, dr, dl
-			Player.Direction = round(2 * Player.Move.Acceleration.X + 7);
-		// Записываем получившееся число в Direction
-	}
-
 	Player.Update(); // Изменение позиции игрока
 
 	glutPostRedisplay(); // Обновляем экран
