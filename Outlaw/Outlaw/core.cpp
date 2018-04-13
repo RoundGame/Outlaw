@@ -122,8 +122,8 @@ void Render()
 
 	Entity Entity; // тестовый блок
 	InitTexture(Entity.Texture, "cobblestone.png");
-	Entity.Position.Y = 0 + Entity.Size / 2; // Устанавливаем блок в правый верхний угол
-	Entity.Position.X = 0 + Entity.Size / 2;
+	Entity.Position.Y = 0.2 + Entity.Size / 2; // Устанавливаем блок в правый верхний угол
+	Entity.Position.X = 0.3 + Entity.Size / 2;
 	Entity_draw(Entity); // Рисуем
 
 	glDisable(GL_TEXTURE_2D);
@@ -135,19 +135,23 @@ void Render()
 void Generator_room(int Type, int Size, Vector Position) 
 {
 	cout << "Generator_room\n";
-
 }
 
 void Entity_draw(Entity Entity)
 {
 	glBindTexture(GL_TEXTURE_2D, Entity.Texture);
-
 	glBegin(GL_TRIANGLE_FAN);
 	glTexCoord2f(0, 1); glVertex2f((1 - Entity.Size) - Entity.Position.X * 2, (1 - Entity.Size) - Entity.Position.Y * 2);
 	glTexCoord2f(1, 1); glVertex2f((1 + Entity.Size) - Entity.Position.X * 2, (1 - Entity.Size) - Entity.Position.Y * 2);
 	glTexCoord2f(1, 0); glVertex2f((1 + Entity.Size) - Entity.Position.X * 2, (1 + Entity.Size) - Entity.Position.Y * 2);
 	glTexCoord2f(0, 0);	glVertex2f((1 - Entity.Size) - Entity.Position.X * 2, (1 + Entity.Size) - Entity.Position.Y * 2);
 	glEnd();
+
+
+	if(	Player.Move.Position.X >= Entity.Position.X - Entity.Size && Player.Move.Position.X <= Entity.Position.X + Entity.Size
+		||
+		Player.Move.Position.Y >= Entity.Position.Y + Entity.Size && Player.Move.Position.Y <= Entity.Position.Y - Entity.Size)
+		cout << "A";
 }
 // Регистрация изменения размеров окна
 void reshape_win_size(int w, int h)
