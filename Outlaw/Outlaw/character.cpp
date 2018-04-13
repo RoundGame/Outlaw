@@ -13,6 +13,7 @@ void Character::Animation(int frame)
 
 void Character::Update() 
 {
+
 	Move.Acceleration = Move.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
 	if (Move.Acceleration.GetLength() != 0) //Если длина вектора равна нулю, то мы стоим и не нужно считать новое направление
 	{

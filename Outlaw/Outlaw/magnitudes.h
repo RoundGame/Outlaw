@@ -2,6 +2,10 @@
 #define _USE_MATH_DEFINES
 #include "key.h"
 #include <cmath>
+
+// Обращение к клавишам управления
+enum gamekey { LEFT, RIGHT, UP, DOWN };
+
 struct Vector
 {
 	double	X,
@@ -42,5 +46,24 @@ struct Key
 	{
 		Nominal = KEY_UNKNOWN;
 		isPressed = false;
+	}
+};
+
+struct Room
+{
+	unsigned int Texture;
+	float Size;
+};
+
+struct Entity
+{
+	float Size;
+	unsigned int Texture;
+	bool Barrier; // Является преградой? 
+	Vector Position;
+	Entity()
+	{
+		Size = 0.1;
+		Barrier = false;
 	}
 };

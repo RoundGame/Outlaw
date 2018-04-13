@@ -12,6 +12,10 @@ static HWND Main_Window_Handle; // Хэндл главного окна, для 
 // Инициализация главного окна
 void initGL(int argc, char **argv);
 
+// Генерация комнаты
+void Generator_room(int Type, int Size, Vector Position);
+void Entity_draw(Entity Entity);
+
 // Отрисовка
 void Render();
 

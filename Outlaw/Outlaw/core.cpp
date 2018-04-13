@@ -11,7 +11,7 @@ POINT Cross;
 struct window
 {
 	//	позиция_х позиция_у
-	Vector position;
+	Vector Position;
 	// X ширина_окна	 Y высота_окна
 	Vector size;
 } window;
@@ -23,8 +23,8 @@ void Update(int Value)
 						/*Извлекает размеры ограничивающего прямоугольника указанного окна.
 						Размеры указаны в координатах экрана, которые относятся к верхнему левому углу экрана.*/
 	GetWindowRect(GetActiveWindow(), &rect); //Записываем прямоугольник окна в rect
-	window.position.X = rect.left; //Координаты левого верхнего угла
-	window.position.Y = rect.top;
+	window.Position.X = rect.left; //Координаты левого верхнего угла
+	window.Position.Y = rect.top;
 	window.size.X = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
 	window.size.Y = rect.bottom - rect.top;
 
@@ -34,7 +34,7 @@ void Update(int Value)
 
 	Player.Update(); // Изменение позиции игрока
 
-	Vector way = Vector(Cross.x - window.position.X - (Player.Move.Position.X + 1.0) * window.size.X / 2, Cross.y - window.position.Y + (Player.Move.Position.Y - 1.0) * window.size.Y / 2);
+	Vector way = Vector(Cross.x - window.Position.X - (Player.Move.Position.X + 1.0) * window.size.X / 2, Cross.y - window.Position.Y + (Player.Move.Position.Y - 1.0) * window.size.Y / 2);
 	way = way.GetNormalize();
 	if (way.Y >= 0)
 		Player.Angle = acos(way.X);
@@ -112,7 +112,7 @@ void initGL(int argc, char **argv)
 void Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Очистка буферов глубины и цвета
-	glClearColor(0.2, 0.2, 0.5, 1); // Устанавливаем цвет фона
+	glClearColor(0.1, 0.2, 0.2, 1); // Устанавливаем цвет фона
 	
 	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
@@ -120,11 +120,35 @@ void Render()
 
 	Player.Draw(); // Рисуем игрока
 
+	Entity Entity; // тестовый блок
+	InitTexture(Entity.Texture, "cobblestone.png");
+	Entity.Position.Y = 0 + Entity.Size / 2; // Устанавливаем блок в правый верхний угол
+	Entity.Position.X = 0 + Entity.Size / 2;
+	Entity_draw(Entity); // Рисуем
+
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
 	glutSwapBuffers(); // Замена буфера на вновь отрисованный 
 }
 
+// Генерация комнаты
+void Generator_room(int Type, int Size, Vector Position) 
+{
+	cout << "Generator_room\n";
+
+}
+
+void Entity_draw(Entity Entity)
+{
+	glBindTexture(GL_TEXTURE_2D, Entity.Texture);
+
+	glBegin(GL_TRIANGLE_FAN);
+	glTexCoord2f(0, 1); glVertex2f((1 - Entity.Size) - Entity.Position.X * 2, (1 - Entity.Size) - Entity.Position.Y * 2);
+	glTexCoord2f(1, 1); glVertex2f((1 + Entity.Size) - Entity.Position.X * 2, (1 - Entity.Size) - Entity.Position.Y * 2);
+	glTexCoord2f(1, 0); glVertex2f((1 + Entity.Size) - Entity.Position.X * 2, (1 + Entity.Size) - Entity.Position.Y * 2);
+	glTexCoord2f(0, 0);	glVertex2f((1 - Entity.Size) - Entity.Position.X * 2, (1 + Entity.Size) - Entity.Position.Y * 2);
+	glEnd();
+}
 // Регистрация изменения размеров окна
 void reshape_win_size(int w, int h)
 {
@@ -148,7 +172,7 @@ void SetFullScreen() //Функция установки полного экра
 	else
 	{
 		glutReshapeWindow(window.size.X, window.size.Y);	 // Установка первоначальных размеров окна
-		glutPositionWindow(window.position.X, window.position.Y);	// Перемещение окна в первоначальное положение
+		glutPositionWindow(window.Position.X, window.Position.Y);	// Перемещение окна в первоначальное положение
 		IsFullScreen = !IsFullScreen;
 	}
 }
