@@ -54,7 +54,7 @@ void Character::Draw()
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslated(Move.Position.X, Move.Position.Y, 0);
-	glRotated(-Angle * 180 / M_PI - 90, 0, 0, 1);
+	glRotated(-Move.Angle * 180 / M_PI - 90, 0, 0, 1);
 	glTranslated(-Move.Position.X, -Move.Position.Y, 0);
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
 	glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + Move.Position.X, -0.15 + Move.Position.Y);

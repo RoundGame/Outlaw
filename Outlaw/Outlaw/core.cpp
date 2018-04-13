@@ -4,6 +4,8 @@
 #include <iostream>
 using namespace std;
 
+Entity entity; // тестовый блок
+Object bullet;
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
 POINT Cross;
@@ -34,12 +36,15 @@ void Update(int Value)
 
 	Player.Update(); // Изменение позиции игрока
 
+	bullet.Position.X += bullet.Velocity.X;
+	bullet.Position.Y += bullet.Velocity.Y;
+
 	Vector way = Vector(Cross.x - window.Position.X - (Player.Move.Position.X + 1.0) * window.size.X / 2, Cross.y - window.Position.Y + (Player.Move.Position.Y - 1.0) * window.size.Y / 2);
 	way = way.GetNormalize();
 	if (way.Y >= 0)
-		Player.Angle = acos(way.X);
+		Player.Move.Angle = acos(way.X);
 	else
-		Player.Angle = -acos(way.X);
+		Player.Move.Angle = -acos(way.X);
 
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
@@ -95,9 +100,13 @@ void initGL(int argc, char **argv)
 
 	Main_Window_Handle = GetActiveWindow(); // Запоминаем главное окно, что бы в последстыии отключать обработчик клавиш если оно свернуто.
 
+	bullet.Position.Y = 2.0;
+
 	// Инициализация текстур
 	InitTexture(Player.Texture1, "Character.png");
 	InitTexture(Player.Texture2, "test.jpg");
+	InitTexture(entity.Texture, "cobblestone.png");
+	InitTexture(bullet.Texture, "bullet.png");
 
 	//Биндим клавиши
 	key[LEFT].Nominal = KEY_A;
@@ -120,11 +129,24 @@ void Render()
 
 	Player.Draw(); // Рисуем игрока
 
-	Entity Entity; // тестовый блок
-	InitTexture(Entity.Texture, "cobblestone.png");
-	Entity.Position.Y = 0 + Entity.Size / 2; // Устанавливаем блок в правый верхний угол
-	Entity.Position.X = 0 + Entity.Size / 2;
-	Entity_draw(Entity); // Рисуем
+	glBindTexture(GL_TEXTURE_2D, bullet.Texture);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslated(bullet.Position.X, bullet.Position.Y, 0);
+	glRotated(-bullet.Angle * 180 / M_PI - 90, 0, 0, 1);
+	glTranslated(-bullet.Position.X, -bullet.Position.Y, 0);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + bullet.Position.X, -0.15 + bullet.Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + bullet.Position.X, 0.15 + bullet.Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + bullet.Position.X, 0.15 + bullet.Position.Y);
+	glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + bullet.Position.X, -0.15 + bullet.Position.Y);
+	glEnd();
+	glPopMatrix();
+
+	entity.Position.Y = 0 + entity.Size / 2; // Устанавливаем блок в правый верхний угол
+	entity.Position.X = 0 + entity.Size / 2;
+	Entity_draw(entity); // Рисуем
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
@@ -142,7 +164,7 @@ void Entity_draw(Entity Entity)
 {
 	glBindTexture(GL_TEXTURE_2D, Entity.Texture);
 
-	glBegin(GL_TRIANGLE_FAN);
+	glBegin(GL_QUADS);
 	glTexCoord2f(0, 1); glVertex2f((1 - Entity.Size) - Entity.Position.X * 2, (1 - Entity.Size) - Entity.Position.Y * 2);
 	glTexCoord2f(1, 1); glVertex2f((1 + Entity.Size) - Entity.Position.X * 2, (1 - Entity.Size) - Entity.Position.Y * 2);
 	glTexCoord2f(1, 0); glVertex2f((1 + Entity.Size) - Entity.Position.X * 2, (1 + Entity.Size) - Entity.Position.Y * 2);
@@ -231,6 +253,14 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		if (wParam == WM_MOUSEMOVE)
 		{
 			Cross = MOUSE->pt;
+		}
+		if (wParam == WM_LBUTTONDOWN)
+		{
+			bullet.Position.X = Player.Move.Position.X;
+			bullet.Position.Y = Player.Move.Position.Y;
+			bullet.Angle = Player.Move.Angle;
+			bullet.Velocity.X = sin(bullet.Angle + M_PI / 2) * 0.2;
+			bullet.Velocity.Y = cos(bullet.Angle + M_PI / 2) * 0.2;
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
