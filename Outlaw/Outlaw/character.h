@@ -4,7 +4,7 @@
 
 struct Object 
 {
-	bool isExist;
+	bool isExist = false;
 	unsigned int Texture;
 	double Angle = 0; //Угол поворота относительно вектора с координатами (0, 1)
 	Vector	Position, // Позиция

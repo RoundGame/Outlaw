@@ -5,10 +5,12 @@
 using namespace std;
 
 Entity entity; // тестовый блок
-Object bullet;
+const int bullet_count = 10;
+Object bullet[bullet_count];
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
 POINT Cross;
+double bullet_Speed = 0.2;
 
 struct window
 {
@@ -36,8 +38,16 @@ void Update(int Value)
 
 	Player.Update(); // Изменение позиции игрока
 
-	bullet.Position.X += bullet.Velocity.X;
-	bullet.Position.Y += bullet.Velocity.Y;
+	for (int i = 0; i < bullet_count; i++)
+	{
+		if (bullet[i].isExist)
+		{
+			bullet[i].Position.X += bullet[i].Velocity.X;
+			bullet[i].Position.Y += bullet[i].Velocity.Y;
+			if (bullet[i].Position.X >= 2.0 || bullet[i].Position.X <= -2.0 || bullet[i].Position.Y >= 2.0 || bullet[i].Position.Y <= -2.0)
+				bullet[i].isExist = false;
+		}
+	}
 
 	Vector way = Vector(Cross.x - window.Position.X - (Player.Move.Position.X + 1.0) * window.size.X / 2, Cross.y - window.Position.Y + (Player.Move.Position.Y - 1.0) * window.size.Y / 2);
 	way = way.GetNormalize();
@@ -100,13 +110,16 @@ void initGL(int argc, char **argv)
 
 	Main_Window_Handle = GetActiveWindow(); // Запоминаем главное окно, что бы в последстыии отключать обработчик клавиш если оно свернуто.
 
-	bullet.Position.Y = 2.0;
 
 	// Инициализация текстур
 	InitTexture(Player.Texture1, "Character.png");
 	InitTexture(Player.Texture2, "test.jpg");
 	InitTexture(entity.Texture, "cobblestone.png");
-	InitTexture(bullet.Texture, "bullet.png");
+	for (int i = 0; i < bullet_count; i++)
+	{
+		InitTexture(bullet[i].Texture, "bullet.png");
+		bullet[i].Position.Y = 2.0;
+	}
 
 	//Биндим клавиши
 	key[LEFT].Nominal = KEY_A;
@@ -129,20 +142,26 @@ void Render()
 
 	Player.Draw(); // Рисуем игрока
 
-	glBindTexture(GL_TEXTURE_2D, bullet.Texture);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	glTranslated(bullet.Position.X, bullet.Position.Y, 0);
-	glRotated(-bullet.Angle * 180 / M_PI - 90, 0, 0, 1);
-	glTranslated(-bullet.Position.X, -bullet.Position.Y, 0);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + bullet.Position.X, -0.15 + bullet.Position.Y);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + bullet.Position.X, 0.15 + bullet.Position.Y);
-	glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + bullet.Position.X, 0.15 + bullet.Position.Y);
-	glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + bullet.Position.X, -0.15 + bullet.Position.Y);
-	glEnd();
-	glPopMatrix();
+	for (int i = 0; i < bullet_count; i++)
+	{
+		if (bullet[i].isExist)
+		{
+			glBindTexture(GL_TEXTURE_2D, bullet[i].Texture);
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			glLoadIdentity();
+			glTranslated(bullet[i].Position.X, bullet[i].Position.Y, 0);
+			glRotated(-bullet[i].Angle * 180 / M_PI - 90, 0, 0, 1);
+			glTranslated(-bullet[i].Position.X, -bullet[i].Position.Y, 0);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + bullet[i].Position.X, -0.15 + bullet[i].Position.Y);
+			glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + bullet[i].Position.X, 0.15 + bullet[i].Position.Y);
+			glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + bullet[i].Position.X, 0.15 + bullet[i].Position.Y);
+			glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + bullet[i].Position.X, -0.15 + bullet[i].Position.Y);
+			glEnd();
+			glPopMatrix();
+		}
+	}
 
 	entity.Position.Y = 0 + entity.Size / 2; // Устанавливаем блок в правый верхний угол
 	entity.Position.X = 0 + entity.Size / 2;
@@ -256,11 +275,29 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
-			bullet.Position.X = Player.Move.Position.X;
-			bullet.Position.Y = Player.Move.Position.Y;
-			bullet.Angle = Player.Move.Angle;
-			bullet.Velocity.X = sin(bullet.Angle + M_PI / 2) * 0.2;
-			bullet.Velocity.Y = cos(bullet.Angle + M_PI / 2) * 0.2;
+			int k = -1;
+			for (int i = 0; i < bullet_count && k == -1; i++)
+			{
+				if (!bullet[i].isExist)
+				{
+					bullet[i].isExist = true;
+					k = i;
+				}
+			}
+			if (k == -1) 
+				k = 0;
+			bullet[k].Position.X = Player.Move.Position.X;
+			bullet[k].Position.Y = Player.Move.Position.Y;
+			bullet[k].Angle = Player.Move.Angle;
+			bullet[k].Velocity.X = sin(bullet[k].Angle + M_PI / 2) * bullet_Speed;
+			bullet[k].Velocity.Y = cos(bullet[k].Angle + M_PI / 2) * bullet_Speed;
+		}
+		if (wParam == WM_RBUTTONDOWN)
+		{
+			if (bullet_Speed == 0.2)
+				bullet_Speed = 0.02;
+			else if (bullet_Speed == 0.02)
+				bullet_Speed = 0.2;
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
