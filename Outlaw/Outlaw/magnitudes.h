@@ -1,6 +1,9 @@
 ﻿#pragma once
 #define _USE_MATH_DEFINES
+#include <GL/glut.h>
 #include "key.h"
+#include <cstdio>
+#include <soil.h>
 #include <cmath>
 
 // Обращение к клавишам управления
@@ -63,7 +66,48 @@ struct Entity
 	Vector Position;
 	Entity()
 	{
-		Size = 0.1;
+		Size = 0.1f;
 		Barrier = false;
 	}
+};
+
+struct Sprite
+{
+	unsigned int Texture;
+
+	int AnimationSize;	// Возвращает Кол - во кадров анимаций		(условие текстуры - кадры расположены слеава на право с размером 32x32)
+	int AnimationNumber; // Возвращает Кол - во анимаций в текстуре (условие текстуры - кадры расположены слеава на право с размером 32x32)
+	const int FrameSize = 32;	// Размер анимационного кадра
+
+	void load(const char Name[]) // Загрузка текстуры
+	{
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		int width, height, channels;
+		unsigned char* image = SOIL_load_image(Name, &width, &height, &channels, SOIL_LOAD_RGBA);
+
+		AnimationSize = width / FrameSize;		// Кол - во кадров анимаций
+		AnimationNumber = height / FrameSize;	// Кол - во анимаций в текстуре
+
+		if (image == 0) // Проверяем удалось ли загрузить изображение
+			printf("InitTexture ERROR : %s \n", Name); // При ошибке показываем название файла, загрузка которого не удалась
+		else
+		{
+			glGenTextures(1, &Texture); // Генерация текстуры			
+			glBindTexture(GL_TEXTURE_2D, Texture);// Установка параметров
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // Устанавливаем пиксельный фильтр
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // На любой размер изображения 
+			gluBuild2DMipmaps(GL_TEXTURE_2D, 4, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image);// Создание миникарты
+		}
+	}
+};
+
+struct Object
+{
+	bool isExist = false;
+	unsigned int Texture;
+	double Angle = 0; //Угол поворота относительно вектора с координатами (0, 1)
+	Vector	Position, // Позиция
+		Velocity, // Скорость
+		Acceleration; // Ускорение
 };
