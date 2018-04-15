@@ -2,8 +2,6 @@
 #include <soil.h>
 #include <cstdio>
 
-
-
 Entity entity; // тестовый блок
 const int bullet_count = 25;
 Object bullet[bullet_count];
@@ -35,8 +33,15 @@ void Update(int Value)
 	// Высчитывание перемещения игрока
 	Player.Physics.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
 	Player.Physics.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
-
-	Player.Update(); // Изменение позиции игрока
+	Player.Physics.Acceleration = Player.Physics.Acceleration.GetNormalize();
+	if (Player.Physics.Acceleration.GetLength() != 0)
+	{
+		if (Player.Physics.Acceleration.Y >= 0)
+			Player.Direction = acos(Player.Physics.Acceleration.X);
+		else
+			Player.Direction = -acos(Player.Physics.Acceleration.X);
+	}
+	Player.Physics.Update(true); // Изменение позиции игрока
 
 	for (int i = 0; i < bullet_count; i++)
 	{
@@ -111,8 +116,8 @@ void initGL(int argc, char **argv)
 
 	// Инициализация текстур
 	InitTexture(entity.Texture, "cobblestone.png");
-	Player.Leg.Load("Character.png");
-	Player.Body.Load("test.jpg");
+	Player.Legs.Load("Legs.png");
+	Player.Body.Load("Body.png");
 	for (int i = 0; i < bullet_count; i++)
 	{
 
