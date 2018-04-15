@@ -14,7 +14,7 @@ void Physical_component::Update(bool isAcceleration)
 // Функция прокрутки анимации персонажа, принемаемый параметр frame - максимальное кол-во кадров анимации
 void Character::Animation()
 {
-	if (Move.Velocity.GetLength() > 0.01 || Move.Velocity.GetLength() < -0.01) //Если есть скорость то
+	if (Physics.Velocity.GetLength() > 0.01 || Physics.Velocity.GetLength() < -0.01) //Если есть скорость то
 	{	//Включаем анимацию передвижения
 		CurrentFrame++;
 		if (CurrentFrame > Leg.AnimationSize && CurrentFrame < 0) //В анимации frame + 1 кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за frame
@@ -24,8 +24,9 @@ void Character::Animation()
 	{
 		CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
 	}
+}
 
-void Character::Update() 
+void Character::Update()
 {
 	Physics.Acceleration = Physics.Acceleration.GetNormalize(); //Нормализуем полученный вектор ускорения
 	if (Physics.Acceleration.GetLength() != 0) //Если длина вектора равна нулю, то мы стоим и не нужно считать новое направление
@@ -36,6 +37,7 @@ void Character::Update()
 			Direction = round(2 * Physics.Acceleration.X + 7);
 		// Записываем получившееся число в Direction
 
+	}
 }
 
 //void Character::Update() 
@@ -57,9 +59,9 @@ void Character::Draw()
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	glTranslated(Move.Position.X, Move.Position.Y, 0);
-	glRotated(-Move.Angle * 180 / M_PI - 90, 0, 0, 1);
-	glTranslated(-Move.Position.X, -Move.Position.Y, 0);
+	glTranslated(Physics.Position.X, Physics.Position.Y, 0);
+	glRotated(-Physics.Angle * 180 / M_PI - 90, 0, 0, 1);
+	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0);
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
 	glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + Physics.Position.X, -0.15 + Physics.Position.Y);
 	glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + Physics.Position.X, 0.15 + Physics.Position.Y);
@@ -103,7 +105,7 @@ void bullet::draw() // сейявс не используется
 	}
 }
 
-void bullet::update() 
+void bullet::update()
 {
 
 }*/

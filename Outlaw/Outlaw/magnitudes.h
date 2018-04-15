@@ -79,7 +79,7 @@ struct Sprite
 	int AnimationNumber; // Возвращает Кол - во анимаций в текстуре (условие текстуры - кадры расположены слеава на право с размером 32x32)
 	const int FrameSize = 32;	// Размер анимационного кадра
 
-	void load(const char Name[]) // Загрузка текстуры
+	void Load(const char Name[]) // Загрузка текстуры
 	{
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -100,14 +100,4 @@ struct Sprite
 			gluBuild2DMipmaps(GL_TEXTURE_2D, 4, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image);// Создание миникарты
 		}
 	}
-};
-
-struct Object
-{
-	bool isExist = false;
-	unsigned int Texture;
-	double Angle = 0; //Угол поворота относительно вектора с координатами (0, 1)
-	Vector	Position, // Позиция
-		Velocity, // Скорость
-		Acceleration; // Ускорение
 };

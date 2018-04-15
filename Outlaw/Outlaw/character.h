@@ -14,10 +14,10 @@ struct Physical_component
 	void Update(bool isAcceleration);
 };
 
-struct Object 
+struct Object
 {
 	bool isExist = false;
-	unsigned int Texture;
+	Sprite Body;
 	Physical_component Physics;
 };
 

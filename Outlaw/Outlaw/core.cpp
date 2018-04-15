@@ -111,11 +111,12 @@ void initGL(int argc, char **argv)
 
 	// Инициализация текстур
 	InitTexture(entity.Texture, "cobblestone.png");
-	Player.Leg.load("Character.png");
-	Player.Body.load("test.jpg");
+	Player.Leg.Load("Character.png");
+	Player.Body.Load("test.jpg");
 	for (int i = 0; i < bullet_count; i++)
 	{
-		InitTexture(bullet[i].Texture, "bullet.png");
+
+		bullet[i].Body.Load("bullet.png");
 		bullet[i].Physics.Position.Y = 2.0;
 	}
 
@@ -152,7 +153,7 @@ void Render()
 	{
 		if (bullet[i].isExist)
 		{
-			glBindTexture(GL_TEXTURE_2D, bullet[i].Texture);
+			glBindTexture(GL_TEXTURE_2D, bullet[i].Body.Texture);
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 			glLoadIdentity();
@@ -192,31 +193,15 @@ void Entity_draw(Entity Entity)
 	glTexCoord2f(0, 0);	glVertex2f((1 - Entity.Size) - Entity.Position.X * 2, (1 + Entity.Size) - Entity.Position.Y * 2);
 	glEnd();
 }
+
 // Регистрация изменения размеров окна
 void reshape_win_size(int w, int h)
 {
 	// Определяем окно просмотра
 	if (w * win_heigh > h * win_width)
-	{
 		glViewport((w - h * win_width / win_heigh) / 2, 0, h * win_width / win_heigh, h);
-	}
 	else
-	{
 		glViewport(0, (h - w * win_heigh / win_width) / 2, w, w * win_heigh / win_width); // Функци устанавливает область отрисовки внутри окна
-	}
-
-//	if (w * rh > h * rw)
-//	{
-//		glViewport((w - h * rw / rh) / 2, 0, h * rw / rh, h);
-//	}
-//	else
-//	{
-//		glViewport(0, (h - w * rh / rw) / 2, w, w * rh / rw);
-//	}
-
-
-
-	//printf("w - %d, h - %d \n", w, h); // вывод текущего размера окна в консоль
 }
 
 /* Состояние прилржения 
