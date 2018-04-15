@@ -102,6 +102,8 @@ struct Sprite
 	}
 };
 
+
+
 struct Object
 {
 	bool isExist = false;

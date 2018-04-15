@@ -108,7 +108,7 @@ void initGL(int argc, char **argv)
 
 
 	// Инициализация текстур
-	InitTexture(entity.Texture, "cobblestone.png");
+	//InitTexture(entity.Texture, "cobblestone.png");
 	Player.Leg.load("Character.png");
 	Player.Body.load("test.jpg");
 	for (int i = 0; i < bullet_count; i++)
@@ -134,10 +134,10 @@ void Render()
 
 	// Фон
 	glBegin(GL_QUADS);
-	glTexCoord2f(0, 1); glVertex2f(-1, -1);
-	glTexCoord2f(1, 1); glVertex2f(1, -1);
-	glTexCoord2f(1, 0); glVertex2f(1, 1);
-	glTexCoord2f(0, 0); glVertex2f(-1, 1);
+		glTexCoord2f(0, 1); glVertex2f(-1, -1);
+		glTexCoord2f(1, 1); glVertex2f(1, -1);
+		glTexCoord2f(1, 0); glVertex2f(1, 1);
+		glTexCoord2f(0, 0); glVertex2f(-1, 1);
 	glEnd();
 
 	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
@@ -157,6 +157,7 @@ void Render()
 			glTranslated(bullet[i].Position.X, bullet[i].Position.Y, 0);
 			glRotated(-bullet[i].Angle * 180 / M_PI - 90, 0, 0, 1);
 			glTranslated(-bullet[i].Position.X, -bullet[i].Position.Y, 0);
+
 			glBegin(GL_QUADS);
 			glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + bullet[i].Position.X, -0.15 + bullet[i].Position.Y);
 			glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + bullet[i].Position.X, 0.15 + bullet[i].Position.Y);
@@ -166,10 +167,6 @@ void Render()
 			glPopMatrix();
 		}
 	}
-
-	entity.Position.Y = 0 + entity.Size / 2; // Устанавливаем блок в правый верхний угол
-	entity.Position.X = 0 + entity.Size / 2;
-	Entity_draw(entity); // Рисуем
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);

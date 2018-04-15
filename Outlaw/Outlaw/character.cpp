@@ -24,7 +24,7 @@ void Character::Animation()
 	}
 }
 
-void Character::Update() 
+void Character::Update()
 {
 	Move.Update(); // Изменяем позицию персонажа
 }
@@ -64,4 +64,32 @@ void Physical_component::Update()
 
 	Position.X += Velocity.X * Speed; //Добавляем к вектору текущей позиции вектор текущей скорости
 	Position.Y += Velocity.Y * Speed;
+}
+
+void Bullet::Draw() // Сейявс не используется
+{
+	if (isExist)
+	{
+		glBindTexture(GL_TEXTURE_2D, Body.Texture);
+		glMatrixMode(GL_MODELVIEW);
+
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslated(Move.Position.X, Move.Position.Y, 0);
+		glRotated(-Move.Angle * 180 / M_PI - 90, 0, 0, 1);
+		glTranslated(-Move.Position.X, -Move.Position.Y, 0);
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + Move.Position.X, -0.15 + Move.Position.Y);
+			glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + Move.Position.X, 0.15 + Move.Position.Y);
+			glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + Move.Position.X, 0.15 + Move.Position.Y);
+			glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + Move.Position.X, -0.15 + Move.Position.Y);
+		glEnd();
+		glPopMatrix();
+	}
+}
+
+void Bullet::Update() 
+{
+
 }

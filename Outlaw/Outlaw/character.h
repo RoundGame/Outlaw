@@ -13,6 +13,15 @@ struct Physical_component
 	void Update();	// Подсчет координат перемещения
 };
 
+struct Bullet
+{
+	bool isExist = false; // Задействованна ли сейчас пуля?
+	Physical_component Move; // Передвижение 
+	Sprite Body;	// Текстура
+
+	void Update();
+	void Draw();
+};
 
 struct Character
 {
@@ -20,8 +29,8 @@ struct Character
 	/*Механикуа перерабатывается*/ double	CurrentFrame = 0;	// Текуший кадр анимации
 	/*Механикуа перерабатывается*/ bool		CurrentAnimation = 0;	// Текущая анимация 0 - стоим, 1 - идем
 	
-	Sprite Leg, Body;	// Текстура персонажа
 	Physical_component Move; // Физический компонент персонажа (Позция, Скорость, Ускорение)
+	Sprite Leg, Body;	// Текстура персонажа
 
 	void Animation();	// Анимаций персонажа
 	void Update();		// Подсчет координат перемещения персонажа
