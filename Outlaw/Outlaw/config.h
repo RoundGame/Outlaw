@@ -9,3 +9,7 @@ const int timer_animation = 100;
 
 // Массив доступных игровых клавиш
 static Key key[sizeof(gamekey)];
+
+// Соотношение строн
+static	int win_width = 16,
+		win_heigh = 9;

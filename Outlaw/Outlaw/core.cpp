@@ -5,7 +5,7 @@
 using namespace std;
 
 Entity entity; // тестовый блок
-const int bullet_count = 10;
+const int bullet_count = 25;
 Object bullet[bullet_count];
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
@@ -21,7 +21,7 @@ struct window
 } window;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
-void Update(int Value) 
+void Update(int Value)
 {
 	RECT rect = RECT(); //Прямоугольник
 						/*Извлекает размеры ограничивающего прямоугольника указанного окна.
@@ -63,8 +63,8 @@ void Update(int Value)
 // Сохранение и выход
 void Save()
 {
-		cout << "saving\n";
-		exit(0);
+	cout << "saving\n";
+	exit(0);
 
 };
 
@@ -104,7 +104,7 @@ void initGL(int argc, char **argv)
 																// GLUT_DEPTH - разрешение глубины
 																// GLUT_DOUBLE - режим двойной буферизации
 																// GLUT_RGBA - цветовой канал(RGB) + альфа канал(А)
-	glutInitWindowSize(800, 600);	 // Размер экрана в пикселях
+	glutInitWindowSize(800, 800);	 // Размер экрана в пикселях
 	glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
 	glutCreateWindow("Outlaw");	 // Имя окна
 
@@ -134,8 +134,16 @@ void initGL(int argc, char **argv)
 void Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Очистка буферов глубины и цвета
-	glClearColor(0.1, 0.2, 0.2, 1); // Устанавливаем цвет фона
-	
+	glClearColor(0, 0, 0, 1); // Устанавливаем цвет фона
+
+	// Фон
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 1); glVertex2f(-1, -1);
+	glTexCoord2f(1, 1); glVertex2f(1, -1);
+	glTexCoord2f(1, 0); glVertex2f(1, 1);
+	glTexCoord2f(0, 0); glVertex2f(-1, 1);
+	glEnd();
+
 	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
@@ -173,7 +181,7 @@ void Render()
 }
 
 // Генерация комнаты
-void Generator_room(int Type, int Size, Vector Position) 
+void Generator_room(int Type, int Size, Vector Position)
 {
 	cout << "Generator_room\n";
 
@@ -194,12 +202,31 @@ void Entity_draw(Entity Entity)
 void reshape_win_size(int w, int h)
 {
 	// Определяем окно просмотра
-	glViewport(0, 0, w, h); // Функци устанавливает область отрисовки внутри окна
+	if (w * win_heigh > h * win_width)
+	{
+		glViewport((w - h * win_width / win_heigh) / 2, 0, h * win_width / win_heigh, h);
+	}
+	else
+	{
+		glViewport(0, (h - w * win_heigh / win_width) / 2, w, w * win_heigh / win_width); // Функци устанавливает область отрисовки внутри окна
+	}
+
+//	if (w * rh > h * rw)
+//	{
+//		glViewport((w - h * rw / rh) / 2, 0, h * rw / rh, h);
+//	}
+//	else
+//	{
+//		glViewport(0, (h - w * rh / rw) / 2, w, w * rh / rw);
+//	}
+
+
+
 	//printf("w - %d, h - %d \n", w, h); // вывод текущего размера окна в консоль
 }
 
-/* Состояние прилржения 
-   false - окно			
+/* Состояние прилржения
+   false - окно
    true - полный экран */
 bool IsFullScreen = false;
 
@@ -284,7 +311,7 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 					k = i;
 				}
 			}
-			if (k == -1) 
+			if (k == -1)
 				k = 0;
 			bullet[k].Position.X = Player.Move.Position.X;
 			bullet[k].Position.Y = Player.Move.Position.Y;
