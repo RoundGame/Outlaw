@@ -10,7 +10,7 @@ Object bullet[bullet_count];
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
 POINT Cross;
-double bullet_Speed = 0.2;
+double bullet_Speed = 0.3;
 
 struct window
 {
@@ -33,8 +33,8 @@ void Update(int Value)
 	window.size.Y = rect.bottom - rect.top;
 
 	// Высчитывание перемещения игрока
-	Player.Move.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
-	Player.Move.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
+	Player.Physics.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
+	Player.Physics.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
 
 	Player.Update(); // Изменение позиции игрока
 
@@ -42,19 +42,18 @@ void Update(int Value)
 	{
 		if (bullet[i].isExist)
 		{
-			bullet[i].Position.X += bullet[i].Velocity.X;
-			bullet[i].Position.Y += bullet[i].Velocity.Y;
-			if (bullet[i].Position.X >= 2.0 || bullet[i].Position.X <= -2.0 || bullet[i].Position.Y >= 2.0 || bullet[i].Position.Y <= -2.0)
+			bullet[i].Physics.Update(false);
+			if (bullet[i].Physics.Position.X >= 2.0 || bullet[i].Physics.Position.X <= -2.0 || bullet[i].Physics.Position.Y >= 2.0 || bullet[i].Physics.Position.Y <= -2.0)
 				bullet[i].isExist = false;
 		}
 	}
 
-	Vector way = Vector(Cross.x - window.Position.X - (Player.Move.Position.X + 1.0) * window.size.X / 2, Cross.y - window.Position.Y + (Player.Move.Position.Y - 1.0) * window.size.Y / 2);
+	Vector way = Vector(Cross.x - window.Position.X - (Player.Physics.Position.X + 1.0) * window.size.X / 2, Cross.y - window.Position.Y + (Player.Physics.Position.Y - 1.0) * window.size.Y / 2);
 	way = way.GetNormalize();
 	if (way.Y >= 0)
-		Player.Move.Angle = acos(way.X);
+		Player.Physics.Angle = acos(way.X);
 	else
-		Player.Move.Angle = -acos(way.X);
+		Player.Physics.Angle = -acos(way.X);
 
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
@@ -118,7 +117,7 @@ void initGL(int argc, char **argv)
 	for (int i = 0; i < bullet_count; i++)
 	{
 		InitTexture(bullet[i].Texture, "bullet.png");
-		bullet[i].Position.Y = 2.0;
+		bullet[i].Physics.Position.Y = 2.0;
 	}
 
 	//Биндим клавиши
@@ -150,14 +149,14 @@ void Render()
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 			glLoadIdentity();
-			glTranslated(bullet[i].Position.X, bullet[i].Position.Y, 0);
-			glRotated(-bullet[i].Angle * 180 / M_PI - 90, 0, 0, 1);
-			glTranslated(-bullet[i].Position.X, -bullet[i].Position.Y, 0);
+			glTranslated(bullet[i].Physics.Position.X, bullet[i].Physics.Position.Y, 0);
+			glRotated(-bullet[i].Physics.Angle * 180 / M_PI - 90, 0, 0, 1);
+			glTranslated(-bullet[i].Physics.Position.X, -bullet[i].Physics.Position.Y, 0);
 			glBegin(GL_QUADS);
-			glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + bullet[i].Position.X, -0.15 + bullet[i].Position.Y);
-			glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + bullet[i].Position.X, 0.15 + bullet[i].Position.Y);
-			glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + bullet[i].Position.X, 0.15 + bullet[i].Position.Y);
-			glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + bullet[i].Position.X, -0.15 + bullet[i].Position.Y);
+			glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + bullet[i].Physics.Position.X, -0.15 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + bullet[i].Physics.Position.X, 0.15 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + bullet[i].Physics.Position.X, 0.15 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + bullet[i].Physics.Position.X, -0.15 + bullet[i].Physics.Position.Y);
 			glEnd();
 			glPopMatrix();
 		}
@@ -249,10 +248,10 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (KEY->vkCode == KEY_C && wParam == WM_KEYUP)
 		{
-			if (Player.Boost == 4)
-				Player.Boost = 0.1;
+			if (Player.Physics.Boost == 4)
+				Player.Physics.Boost = 0.1;
 			else
-				Player.Boost = 4;
+				Player.Physics.Boost = 4;
 		}
 		if (KEY->vkCode == VK_F11 && wParam == WM_KEYUP)
 			SetFullScreen();
@@ -265,7 +264,7 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 {
-	if (code >= 0)
+	if (code >= 0 && GetActiveWindow() == Main_Window_Handle) //Если нет ошибок и событие вызвано мышью и если хэндл активного окна совпадает с хэндлом нашего окна, то активно наше оконо и можно обрабатывать события мыши
 	{
 		MSLLHOOKSTRUCT *MOUSE = (MSLLHOOKSTRUCT*)lParam;
 
@@ -286,18 +285,18 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 			}
 			if (k == -1) 
 				k = 0;
-			bullet[k].Position.X = Player.Move.Position.X;
-			bullet[k].Position.Y = Player.Move.Position.Y;
-			bullet[k].Angle = Player.Move.Angle;
-			bullet[k].Velocity.X = sin(bullet[k].Angle + M_PI / 2) * bullet_Speed;
-			bullet[k].Velocity.Y = cos(bullet[k].Angle + M_PI / 2) * bullet_Speed;
+			bullet[k].Physics.Position.X = Player.Physics.Position.X;
+			bullet[k].Physics.Position.Y = Player.Physics.Position.Y;
+			bullet[k].Physics.Angle = Player.Physics.Angle;
+			bullet[k].Physics.Velocity.X = sin(bullet[k].Physics.Angle + M_PI / 2) * bullet_Speed;
+			bullet[k].Physics.Velocity.Y = cos(bullet[k].Physics.Angle + M_PI / 2) * bullet_Speed;
 		}
 		if (wParam == WM_RBUTTONDOWN)
 		{
-			if (bullet_Speed == 0.2)
-				bullet_Speed = 0.02;
-			else if (bullet_Speed == 0.02)
-				bullet_Speed = 0.2;
+			if (bullet_Speed == 0.3)
+				bullet_Speed = 0.03;
+			else 
+				bullet_Speed = 0.3;
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
