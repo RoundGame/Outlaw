@@ -1,7 +1,4 @@
 ﻿#include "core.h"
-#include <soil.h>
-#include <cstdio>
-#include <iostream>
 using namespace std;
 
 Entity entity; // тестовый блок
@@ -63,15 +60,14 @@ void Update(int Value)
 // Сохранение и выход
 void Save()
 {
-	cout << "saving\n";
+	printf("saving\n");
 	exit(0);
-
 };
 
 //Функция анимации персонажей
 void Animation(int Value)
 {
-	Player.Animation(7); // Анимация игрока, принемаемый параметр количество кадров анмайии
+	Player.Animation(); // Анимация игрока, принемаемый параметр количество кадров анмайии
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 };
 
@@ -112,9 +108,9 @@ void initGL(int argc, char **argv)
 
 
 	// Инициализация текстур
-	InitTexture(Player.Texture1, "Character.png");
-	InitTexture(Player.Texture2, "test.jpg");
 	InitTexture(entity.Texture, "cobblestone.png");
+	Player.Leg.load("Character.png");
+	Player.Body.load("test.jpg");
 	for (int i = 0; i < bullet_count; i++)
 	{
 		InitTexture(bullet[i].Texture, "bullet.png");
@@ -183,7 +179,7 @@ void Render()
 // Генерация комнаты
 void Generator_room(int Type, int Size, Vector Position)
 {
-	cout << "Generator_room\n";
+	printf("Generator_room\n");
 
 }
 
@@ -276,10 +272,10 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (KEY->vkCode == KEY_C && wParam == WM_KEYUP)
 		{
-			if (Player.Boost == 4)
-				Player.Boost = 0.1;
+			if (Player.Move.Boost == 4)
+				Player.Move.Boost = 0.1;
 			else
-				Player.Boost = 4;
+				Player.Move.Boost = 4;
 		}
 		if (KEY->vkCode == VK_F11 && wParam == WM_KEYUP)
 			SetFullScreen();
@@ -292,7 +288,7 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 {
-	if (code >= 0)
+	if (code >= 0 && GetActiveWindow() == Main_Window_Handle)
 	{
 		MSLLHOOKSTRUCT *MOUSE = (MSLLHOOKSTRUCT*)lParam;
 
