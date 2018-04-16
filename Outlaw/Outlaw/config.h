@@ -11,5 +11,5 @@ const int timer_animation = 100;
 static Key key[sizeof(gamekey)];
 
 // Соотношение строн
-static	int win_width = 16,
+static	int win_width = 9,
 			win_heigh = 9;
