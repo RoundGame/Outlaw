@@ -17,6 +17,8 @@ struct Window
 	Vector Position;
 	// X ширина_окна	 Y высота_окна
 	Vector Size;
+	Vector Render_Position; // Позиция отрисовываемой области
+	Vector Render_Size; // Размер отрисовываемой области
 } Window;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
@@ -75,7 +77,7 @@ void Update(int Value)
 		Player.Physics.Angle = -acos(way.X);
 	else
 		Player.Physics.Angle = acos(way.X);
-	printf("%d\n", (int)(Player.Physics.Angle * 180 / M_PI));
+	//printf("%d\n", (int)(Player.Physics.Angle * 180 / M_PI));
 
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
@@ -220,9 +222,20 @@ void reshape_win_size(int w, int h)
 {
 	// Определяем окно просмотра
 	if (w * win_heigh > h * win_width)
-		glViewport((w - h * win_width / win_heigh) / 2, 0, h * win_width / win_heigh, h);
+	{
+		Window.Render_Position.X = (w - h * win_width / win_heigh) / 2; // Задаем отступ отрисовываемой поверхности по X
+		Window.Render_Position.Y = 0;	// Задаем отступ отрисовываемой поверхности по Y
+		Window.Render_Size.X = h * win_width / win_heigh; // Задаем размер отрисовываемой области по X (Ширина)
+		Window.Render_Size.Y = h; // Задаем размер отрисовываемой области по Y (Высота)
+	}
 	else
-		glViewport(0, (h - w * win_heigh / win_width) / 2, w, w * win_heigh / win_width); // Функци устанавливает область отрисовки внутри окна
+	{
+		Window.Render_Position.Y = (h - w * win_heigh / win_width) / 2;	// Задаем отступ отрисовываемой поверхности по X
+		Window.Render_Position.X = 0;	// Задаем отступ отрисовываемой поверхности по Y
+		Window.Render_Size.X = w;	// Задаем размер отрисовываемой области по X (Ширина)
+		Window.Render_Size.Y = w * win_heigh / win_width;	// Задаем размер отрисовываемой области по Y (Высота)
+	}
+	glViewport(Window.Render_Position.X, Window.Render_Position.Y, Window.Render_Size.X, Window.Render_Size.Y); // Устанавливает область отрисовки внутри окна
 }
 
 /* Состояние прилржения 
