@@ -21,11 +21,17 @@ struct Object
 	Physical_component Physics;
 };
 
+struct Static_Object
+{
+	bool isExist = false;
+	Sprite Body;
+	Vector Position;
+};
+
 struct Character
 {
 	/*Механикуа перерабатывается*/ double	Direction = 0;	// Началное направление персонажа (3 - смотрит вперед) 
 	/*Механикуа перерабатывается*/ double	CurrentFrame = 0;	// Текуший кадр анимации
-	/*Механикуа перерабатывается*/ bool		CurrentAnimation = 0;	// Текущая анимация 0 - стоим, 1 - идем
 	
 	Physical_component Physics; // Физический компонент персонажа (Позция, Скорость, Ускорение)
 	Sprite Legs, Body;	// Текстура персонажа

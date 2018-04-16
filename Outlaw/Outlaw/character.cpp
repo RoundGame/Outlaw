@@ -14,7 +14,7 @@ void Physical_component::Update(bool isAcceleration)
 // Функция прокрутки анимации персонажа, принемаемый параметр frame - максимальное кол-во кадров анимации
 void Character::Animation()
 {
-	if (Physics.Velocity.GetLength() > 0.01 || Physics.Velocity.GetLength() < -0.01) //Если есть скорость то
+	if (Physics.Acceleration.GetLength() != 0) //Если есть скорость то
 	{	//Включаем анимацию передвижения
 		CurrentFrame++;
 		if (CurrentFrame > Legs.AnimationSize) //В анимации frame + 1 кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за frame
@@ -36,10 +36,10 @@ void Character::Draw()
 	glRotated(Direction * 180 / M_PI, 0, 0, 1);
 	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0);
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.125); glVertex2f(-0.35 + Physics.Position.X, -0.35 + Physics.Position.Y);
-	glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.0); glVertex2f(-0.35 + Physics.Position.X, 0.35 + Physics.Position.Y);
-	glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize/*1/кол-во кадров (ширина кадра) */, 0.0); glVertex2f(0.35 + Physics.Position.X, 0.35 + Physics.Position.Y);
-	glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 0.125); glVertex2f(0.35 + Physics.Position.X, -0.35 + Physics.Position.Y);
+	glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.125); glVertex2f(-0.2 + Physics.Position.X, -0.2 + Physics.Position.Y);
+	glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.0); glVertex2f(-0.2 + Physics.Position.X, 0.2 + Physics.Position.Y);
+	glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 0.0); glVertex2f(0.2 + Physics.Position.X, 0.2 + Physics.Position.Y);
+	glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 0.125); glVertex2f(0.2 + Physics.Position.X, -0.2 + Physics.Position.Y);
 	glEnd(); // Конец обьекта рисуемого треугольниками
 	glPopMatrix();
 
@@ -51,10 +51,10 @@ void Character::Draw()
 	glRotated(Physics.Angle * 180 / M_PI, 0, 0, 1);
 	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0);
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-	glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + Physics.Position.X, -0.15 + Physics.Position.Y);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + Physics.Position.X, 0.15 + Physics.Position.Y);
-	glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + Physics.Position.X, 0.15 + Physics.Position.Y);
-	glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + Physics.Position.X, -0.15 + Physics.Position.Y);
+	glTexCoord2f(0.0, 1.0); glVertex2f(-0.45 + Physics.Position.X, -0.45 + Physics.Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-0.45 + Physics.Position.X, 0.45 + Physics.Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(0.45 + Physics.Position.X, 0.45 + Physics.Position.Y);
+	glTexCoord2f(1.0, 1.0); glVertex2f(0.45 + Physics.Position.X, -0.45 + Physics.Position.Y);
 	glEnd();
 	glPopMatrix();
 }

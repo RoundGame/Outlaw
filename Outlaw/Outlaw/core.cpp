@@ -8,8 +8,7 @@ Object bullet[bullet_count];
 Object Cross;
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
-double bullet_Speed = 0.3;
-bool temp_legs = false;
+double bullet_Speed = 0.5;
 
 struct Window
 {
@@ -52,7 +51,7 @@ void Update(int Value)
 		if (bullet[i].isExist)
 		{
 			bullet[i].Physics.Update(false);
-			if (bullet[i].Physics.Position.X >= 2.0 || bullet[i].Physics.Position.X <= -2.0 || bullet[i].Physics.Position.Y >= 2.0 || bullet[i].Physics.Position.Y <= -2.0)
+			if (bullet[i].Physics.Position.X >= 1.5 || bullet[i].Physics.Position.X <= -1.5 || bullet[i].Physics.Position.Y >= 1.5 || bullet[i].Physics.Position.Y <= -1.5)
 				bullet[i].isExist = false;
 		}
 	}
@@ -127,10 +126,7 @@ void initGL(int argc, char **argv)
 	Player.Body.Load("Body.png");
 	Cross.Body.Load("Cross.png");
 	for (int i = 0; i < bullet_count; i++)
-	{
 		bullet[i].Body.Load("Bullet.png");
-		bullet[i].Physics.Position.Y = 2.0;
-	}
 
 	//Биндим клавиши
 	key[LEFT].Nominal = KEY_A;
@@ -175,10 +171,10 @@ void Render()
 			glRotated(bullet[i].Physics.Angle * 180 / M_PI, 0, 0, 1);
 			glTranslated(-bullet[i].Physics.Position.X, -bullet[i].Physics.Position.Y, 0);
 			glBegin(GL_QUADS);
-			glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + bullet[i].Physics.Position.X, -0.15 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(0.0, 0.0); glVertex2f(-0.15 + bullet[i].Physics.Position.X, 0.15 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(1.0, 0.0); glVertex2f(0.15 + bullet[i].Physics.Position.X, 0.15 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(1.0, 1.0); glVertex2f(0.15 + bullet[i].Physics.Position.X, -0.15 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(0.0, 1.0); glVertex2f(-0.05 + bullet[i].Physics.Position.X, -0.05 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(0.0, 0.0); glVertex2f(-0.05 + bullet[i].Physics.Position.X, 0.05 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(1.0, 0.0); glVertex2f(0.05 + bullet[i].Physics.Position.X, 0.05 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(1.0, 1.0); glVertex2f(0.05 + bullet[i].Physics.Position.X, -0.05 + bullet[i].Physics.Position.Y);
 			glEnd();
 			glPopMatrix();
 		}
@@ -276,8 +272,6 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 					key[i].isPressed = false;
 			}
 		}
-		if (KEY->vkCode == KEY_Q && wParam == WM_KEYUP)
-			temp_legs = !temp_legs;
 		if (KEY->vkCode == KEY_R)
 		{
 			volume += 134219776;
@@ -336,10 +330,10 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == WM_RBUTTONDOWN)
 		{
-			if (bullet_Speed == 0.3)
-				bullet_Speed = 0.03;
+			if (bullet_Speed == 0.5)
+				bullet_Speed = 0.05;
 			else 
-				bullet_Speed = 0.3;
+				bullet_Speed = 0.5;
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
