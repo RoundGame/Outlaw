@@ -8,15 +8,16 @@ Object bullet[bullet_count];
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
 POINT Cross;
-double bullet_Speed = 0.2;
+double bullet_Speed = 0.3;
+bool temp_legs = false;
 
-struct window
+struct Window
 {
 	//	позиция_х позиция_у
 	Vector Position;
 	// X ширина_окна	 Y высота_окна
-	Vector size;
-} window;
+	Vector Size;
+} Window;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -25,21 +26,35 @@ void Update(int Value)
 						/*Извлекает размеры ограничивающего прямоугольника указанного окна.
 						Размеры указаны в координатах экрана, которые относятся к верхнему левому углу экрана.*/
 	GetWindowRect(GetActiveWindow(), &rect); //Записываем прямоугольник окна в rect
-	window.Position.X = rect.left; //Координаты левого верхнего угла
-	window.Position.Y = rect.top;
-	window.size.X = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
-	window.size.Y = rect.bottom - rect.top;
+	Window.Position.X = rect.left; //Координаты левого верхнего угла
+	Window.Position.Y = rect.top;
+	Window.Size.X = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
+	Window.Size.Y = rect.bottom - rect.top;
 
 	// Высчитывание перемещения игрока
 	Player.Physics.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
 	Player.Physics.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
 	Player.Physics.Acceleration = Player.Physics.Acceleration.GetNormalize();
-	if (Player.Physics.Acceleration.GetLength() != 0)
+	Vector temp = Player.Physics.Velocity.GetNormalize();
+	if (temp_legs)
 	{
-		if (Player.Physics.Acceleration.Y >= 0)
-			Player.Direction = acos(Player.Physics.Acceleration.X);
-		else
-			Player.Direction = -acos(Player.Physics.Acceleration.X);
+		if (Player.Physics.Acceleration.GetLength() != 0)
+		{
+			if (temp.Y >= 0)
+				Player.Direction = acos(temp.X);
+			else
+				Player.Direction = -acos(temp.X);
+		}
+	}
+	else
+	{
+		if (Player.Physics.Acceleration.GetLength() != 0)
+		{
+			if (Player.Physics.Acceleration.Y >= 0)
+				Player.Direction = acos(Player.Physics.Acceleration.X);
+			else
+				Player.Direction = -acos(Player.Physics.Acceleration.X);
+		}
 	}
 	Player.Physics.Update(true); // Изменение позиции игрока
 
@@ -53,12 +68,14 @@ void Update(int Value)
 		}
 	}
 
-	Vector way = Vector(Cross.x - window.Position.X - (Player.Physics.Position.X + 1.0) * window.size.X / 2, Cross.y - window.Position.Y + (Player.Physics.Position.Y - 1.0) * window.size.Y / 2);
+	Vector way = Vector(Cross.x - Window.Position.X - (Player.Physics.Position.X + 1.0) * Window.Size.X / 2, Cross.y - Window.Position.Y + (Player.Physics.Position.Y - 1.0) * Window.Size.Y / 2);
+	way.X *= (double)win_heigh / win_width;
 	way = way.GetNormalize();
 	if (way.Y >= 0)
-		Player.Physics.Angle = acos(way.X);
-	else
 		Player.Physics.Angle = -acos(way.X);
+	else
+		Player.Physics.Angle = acos(way.X);
+	printf("%d\n", (int)(Player.Physics.Angle * 180 / M_PI));
 
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
@@ -107,7 +124,7 @@ void initGL(int argc, char **argv)
 																// GLUT_DEPTH - разрешение глубины
 																// GLUT_DOUBLE - режим двойной буферизации
 																// GLUT_RGBA - цветовой канал(RGB) + альфа канал(А)
-	glutInitWindowSize(800, 600);	 // Размер экрана в пикселях
+	glutInitWindowSize(960, 540);	 // Размер экрана в пикселях
 	glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
 	glutCreateWindow("Outlaw");	 // Имя окна
 
@@ -120,8 +137,7 @@ void initGL(int argc, char **argv)
 	Player.Body.Load("Body.png");
 	for (int i = 0; i < bullet_count; i++)
 	{
-
-		bullet[i].Body.Load("bullet.png");
+		bullet[i].Body.Load("Bullet.png");
 		bullet[i].Physics.Position.Y = 2.0;
 	}
 
@@ -163,7 +179,7 @@ void Render()
 			glPushMatrix();
 			glLoadIdentity();
 			glTranslated(bullet[i].Physics.Position.X, bullet[i].Physics.Position.Y, 0);
-			glRotated(-bullet[i].Physics.Angle * 180 / M_PI - 90, 0, 0, 1);
+			glRotated(bullet[i].Physics.Angle * 180 / M_PI, 0, 0, 1);
 			glTranslated(-bullet[i].Physics.Position.X, -bullet[i].Physics.Position.Y, 0);
 			glBegin(GL_QUADS);
 			glTexCoord2f(0.0, 1.0); glVertex2f(-0.15 + bullet[i].Physics.Position.X, -0.15 + bullet[i].Physics.Position.Y);
@@ -223,8 +239,8 @@ void SetFullScreen() //Функция установки полного экра
 	}
 	else
 	{
-		glutReshapeWindow(window.size.X, window.size.Y);	 // Установка первоначальных размеров окна
-		glutPositionWindow(window.Position.X, window.Position.Y);	// Перемещение окна в первоначальное положение
+		glutReshapeWindow(Window.Size.X, Window.Size.Y);	 // Установка первоначальных размеров окна
+		glutPositionWindow(Window.Position.X, Window.Position.Y);	// Перемещение окна в первоначальное положение
 		IsFullScreen = !IsFullScreen;
 	}
 }
@@ -248,6 +264,8 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 					key[i].isPressed = false;
 			}
 		}
+		if (KEY->vkCode == KEY_Q && wParam == WM_KEYUP)
+			temp_legs = !temp_legs;
 		if (KEY->vkCode == KEY_R)
 		{
 			volume += 134219776;
@@ -300,8 +318,8 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 			bullet[k].Physics.Position.X = Player.Physics.Position.X;
 			bullet[k].Physics.Position.Y = Player.Physics.Position.Y;
 			bullet[k].Physics.Angle = Player.Physics.Angle;
-			bullet[k].Physics.Velocity.X = sin(bullet[k].Physics.Angle + M_PI / 2) * bullet_Speed;
-			bullet[k].Physics.Velocity.Y = cos(bullet[k].Physics.Angle + M_PI / 2) * bullet_Speed;
+			bullet[k].Physics.Velocity.X = cos(bullet[k].Physics.Angle) * bullet_Speed;
+			bullet[k].Physics.Velocity.Y = sin(bullet[k].Physics.Angle) * bullet_Speed;
 		}
 		if (wParam == WM_RBUTTONDOWN)
 		{

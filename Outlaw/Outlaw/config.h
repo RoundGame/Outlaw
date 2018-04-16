@@ -12,4 +12,4 @@ static Key key[sizeof(gamekey)];
 
 // Соотношение строн
 static	int win_width = 16,
-		win_heigh = 9;
+			win_heigh = 9;
