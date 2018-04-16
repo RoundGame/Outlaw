@@ -1,18 +1,22 @@
 ﻿  core.cpp
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(187): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(188): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(189): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(190): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(213): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(214): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(215): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(216): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(238): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(238): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(255): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(256): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB
-soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB
-soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB
-soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB
-  Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(178): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(179): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(180): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(181): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(189): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(190): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(191): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(192): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(212): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(213): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(214): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(215): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(237): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(237): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(254): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(255): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_DXT.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
+soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_helper.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
+soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(SOIL.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
+soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(stb_image_aug.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
+  Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Debug\Outlaw.exe

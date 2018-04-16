@@ -5,9 +5,9 @@
 Entity entity; // тестовый блок
 const int bullet_count = 25;
 Object bullet[bullet_count];
+Object Cross;
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
-POINT Cross;
 double bullet_Speed = 0.3;
 bool temp_legs = false;
 
@@ -37,26 +37,13 @@ void Update(int Value)
 	Player.Physics.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
 	Player.Physics.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
 	Player.Physics.Acceleration = Player.Physics.Acceleration.GetNormalize();
-	Vector temp = Player.Physics.Velocity.GetNormalize();
-	if (temp_legs)
+	Vector Velocity = Player.Physics.Velocity.GetNormalize();
+	if (Player.Physics.Acceleration.GetLength() != 0)
 	{
-		if (Player.Physics.Acceleration.GetLength() != 0)
-		{
-			if (temp.Y >= 0)
-				Player.Direction = acos(temp.X);
-			else
-				Player.Direction = -acos(temp.X);
-		}
-	}
-	else
-	{
-		if (Player.Physics.Acceleration.GetLength() != 0)
-		{
-			if (Player.Physics.Acceleration.Y >= 0)
-				Player.Direction = acos(Player.Physics.Acceleration.X);
-			else
-				Player.Direction = -acos(Player.Physics.Acceleration.X);
-		}
+		if (Velocity.Y >= 0)
+			Player.Direction = acos(Velocity.X);
+		else
+			Player.Direction = -acos(Velocity.X);
 	}
 	Player.Physics.Update(true); // Изменение позиции игрока
 
@@ -70,13 +57,14 @@ void Update(int Value)
 		}
 	}
 
-	Vector way = Vector(Cross.x - Window.Position.X - (Player.Physics.Position.X + 1.0) * Window.Size.X / 2, Cross.y - Window.Position.Y + (Player.Physics.Position.Y - 1.0) * Window.Size.Y / 2);
-	way.X *= (double)win_heigh / win_width;
+	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
+	way.X *= (double)win_heigh / win_width * Window.Render_Size.X / 2;
+	way.Y *= Window.Render_Size.Y / 2;
 	way = way.GetNormalize();
 	if (way.Y >= 0)
-		Player.Physics.Angle = -acos(way.X);
-	else
 		Player.Physics.Angle = acos(way.X);
+	else
+		Player.Physics.Angle = -acos(way.X);
 	//printf("%d\n", (int)(Player.Physics.Angle * 180 / M_PI));
 
 	glutPostRedisplay(); // Обновляем экран
@@ -137,6 +125,7 @@ void initGL(int argc, char **argv)
 	InitTexture(entity.Texture, "cobblestone.png");
 	Player.Legs.Load("Legs.png");
 	Player.Body.Load("Body.png");
+	Cross.Body.Load("Cross.png");
 	for (int i = 0; i < bullet_count; i++)
 	{
 		bullet[i].Body.Load("Bullet.png");
@@ -150,6 +139,7 @@ void initGL(int argc, char **argv)
 	key[DOWN].Nominal = KEY_S;
 
 	waveOutGetVolume(0, (LPDWORD)&volume);
+	glutSetCursor(GLUT_CURSOR_NONE);
 }
 
 // Отрисовка
@@ -171,7 +161,8 @@ void Render()
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
 	Player.Draw(); // Рисуем игрока
-
+	
+	//Отрисовка пуль
 	for (int i = 0; i < bullet_count; i++)
 	{
 		if (bullet[i].isExist)
@@ -192,6 +183,14 @@ void Render()
 			glPopMatrix();
 		}
 	}
+	//Отрисовка прицела
+	glBindTexture(GL_TEXTURE_2D, Cross.Body.Texture);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 1.0); glVertex2f(-0.1 + Cross.Physics.Position.X, -0.1 + Cross.Physics.Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-0.1 + Cross.Physics.Position.X, 0.1 + Cross.Physics.Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(0.1 + Cross.Physics.Position.X, 0.1 + Cross.Physics.Position.Y);
+	glTexCoord2f(1.0, 1.0); glVertex2f(0.1 + Cross.Physics.Position.X, -0.1 + Cross.Physics.Position.Y);
+	glEnd();
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
@@ -313,7 +312,8 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 		if (wParam == WM_MOUSEMOVE)
 		{
-			Cross = MOUSE->pt;
+			Cross.Physics.Position.X = (MOUSE->pt.x - Window.Position.X - Window.Render_Position.X) / Window.Render_Size.X * 2 - 1.0;
+			Cross.Physics.Position.Y = -(MOUSE->pt.y - Window.Position.Y - 20 - Window.Render_Position.Y) / Window.Render_Size.Y * 2 + 1.0;
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
