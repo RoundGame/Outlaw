@@ -9,7 +9,7 @@ Object Cross;
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
 double bullet_Speed = 0.6;
-int BurstMode = 0;
+int BurstMode = 0; //Режим стрельбы (0 - одиночными, 2 - очередью)
 bool isMousePressed = false;
 
 struct Window
@@ -67,20 +67,6 @@ void Update(int Value)
 	else
 		Player.Physics.Angle = -acos(way.X);
 
-	glutPostRedisplay(); // Обновляем экран
-	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
-}
-
-// Сохранение и выход
-void Save()
-{
-	printf("saving\n");
-	exit(0);
-};
-
-//Функция анимации персонажей
-void Animation(int Value)
-{
 	if (isMousePressed)
 	{
 		//printf("Pressed");
@@ -97,6 +83,21 @@ void Animation(int Value)
 		if (BurstMode == 1)
 			BurstMode = 0;
 	}
+
+	glutPostRedisplay(); // Обновляем экран
+	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
+}
+
+// Сохранение и выход
+void Save()
+{
+	printf("saving\n");
+	exit(0);
+};
+
+//Функция анимации персонажей
+void Animation(int Value)
+{
 	Player.Animation(); // Анимация игрока, принемаемый параметр количество кадров анмайии
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 };
