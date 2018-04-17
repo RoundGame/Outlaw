@@ -22,6 +22,7 @@ void Render();
 // Регистрация изменения размеров окна
 void reshape_win_size(int w, int h);
 void SetFullScreen();
+void CreateBullet();
 
 // Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
 void InitTexture(unsigned int& texture1, const char name[]);

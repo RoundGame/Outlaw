@@ -8,7 +8,9 @@ Object bullet[bullet_count];
 Object Cross;
 Character Player; // Создаем игрока
 int volume; // Тестовая переменная громкости звука
-double bullet_Speed = 0.5;
+double bullet_Speed = 0.6;
+int BurstMode = 0;
+bool isMousePressed = false;
 
 struct Window
 {
@@ -64,7 +66,6 @@ void Update(int Value)
 		Player.Physics.Angle = acos(way.X);
 	else
 		Player.Physics.Angle = -acos(way.X);
-	//printf("%d\n", (int)(Player.Physics.Angle * 180 / M_PI));
 
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
@@ -80,6 +81,22 @@ void Save()
 //Функция анимации персонажей
 void Animation(int Value)
 {
+	if (isMousePressed)
+	{
+		//printf("Pressed");
+		if (BurstMode == 0)
+		{
+			CreateBullet();
+			BurstMode = 1;
+		}
+		else if (BurstMode == 2)
+			CreateBullet();
+	}
+	else
+	{
+		if (BurstMode == 1)
+			BurstMode = 0;
+	}
 	Player.Animation(); // Анимация игрока, принемаемый параметр количество кадров анмайии
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 };
@@ -171,10 +188,10 @@ void Render()
 			glRotated(bullet[i].Physics.Angle * 180 / M_PI, 0, 0, 1);
 			glTranslated(-bullet[i].Physics.Position.X, -bullet[i].Physics.Position.Y, 0);
 			glBegin(GL_QUADS);
-			glTexCoord2f(0.0, 1.0); glVertex2f(-0.05 + bullet[i].Physics.Position.X, -0.05 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(0.0, 0.0); glVertex2f(-0.05 + bullet[i].Physics.Position.X, 0.05 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(1.0, 0.0); glVertex2f(0.05 + bullet[i].Physics.Position.X, 0.05 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(1.0, 1.0); glVertex2f(0.05 + bullet[i].Physics.Position.X, -0.05 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(0.0, 1.0); glVertex2f(-0.03 + bullet[i].Physics.Position.X, -0.03 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(0.0, 0.0); glVertex2f(-0.03 + bullet[i].Physics.Position.X, 0.03 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(1.0, 0.0); glVertex2f(0.03 + bullet[i].Physics.Position.X, 0.03 + bullet[i].Physics.Position.Y);
+			glTexCoord2f(1.0, 1.0); glVertex2f(0.03 + bullet[i].Physics.Position.X, -0.03 + bullet[i].Physics.Position.Y);
 			glEnd();
 			glPopMatrix();
 		}
@@ -253,6 +270,26 @@ void SetFullScreen() //Функция установки полного экра
 	}
 }
 
+void CreateBullet()
+{
+	int k = -1;
+	for (int i = 0; i < bullet_count && k == -1; i++)
+	{
+		if (!bullet[i].isExist)
+		{
+			bullet[i].isExist = true;
+			k = i;
+		}
+	}
+	if (k == -1)
+		return;
+	bullet[k].Physics.Position.X = Player.Physics.Position.X;
+	bullet[k].Physics.Position.Y = Player.Physics.Position.Y;
+	bullet[k].Physics.Angle = Player.Physics.Angle;
+	bullet[k].Physics.Velocity.X = cos(bullet[k].Physics.Angle) * bullet_Speed;
+	bullet[k].Physics.Velocity.Y = sin(bullet[k].Physics.Angle) * bullet_Speed;
+}
+
 //Функция, которая вызывается при изменении состоянии клавиатуры
 //Если code < 0, то нужно пробросить хук дальше, wParam хранит данные о том, нажата клавиша или отпущена, lParam хранит указатель на структуру KBDLLHOOKSTRUCT
 LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
@@ -262,7 +299,7 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 		//Данная структура хранит информацию о клавише
 		KBDLLHOOKSTRUCT *KEY = (KBDLLHOOKSTRUCT*)lParam; //Получаем указатель на структуру данных о нажатой клавише
 
-		for (int i = 0; i < sizeof(gamekey); i++) // Проверяем игровые клавиши на нажитие, где sizeof(gamekey) - доступное кол-во клавиш
+		for (int i = 0; i < gamekey_size; i++) // Проверяем игровые клавиши на нажитие, где sizeof(gamekey) - доступное кол-во клавиш
 		{
 			if (key[i].Nominal == KEY->vkCode)
 			{
@@ -311,29 +348,18 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
-			int k = -1;
-			for (int i = 0; i < bullet_count && k == -1; i++)
-			{
-				if (!bullet[i].isExist)
-				{
-					bullet[i].isExist = true;
-					k = i;
-				}
-			}
-			if (k == -1) 
-				k = 0;
-			bullet[k].Physics.Position.X = Player.Physics.Position.X;
-			bullet[k].Physics.Position.Y = Player.Physics.Position.Y;
-			bullet[k].Physics.Angle = Player.Physics.Angle;
-			bullet[k].Physics.Velocity.X = cos(bullet[k].Physics.Angle) * bullet_Speed;
-			bullet[k].Physics.Velocity.Y = sin(bullet[k].Physics.Angle) * bullet_Speed;
+			isMousePressed = true;
+		}
+		if (wParam == WM_LBUTTONUP)
+		{
+			isMousePressed = false;
 		}
 		if (wParam == WM_RBUTTONDOWN)
 		{
-			if (bullet_Speed == 0.5)
-				bullet_Speed = 0.05;
-			else 
-				bullet_Speed = 0.5;
+			if (BurstMode == 2)
+				BurstMode = 0;
+			else
+				BurstMode = 2;
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
