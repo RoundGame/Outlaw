@@ -164,10 +164,10 @@ void Render()
 
 	// Фон
 	glBegin(GL_QUADS);
-		glTexCoord2f(0, 1); glVertex2f(-1, -1);
-		glTexCoord2f(1, 1); glVertex2f(1, -1);
-		glTexCoord2f(1, 0); glVertex2f(1, 1);
-		glTexCoord2f(0, 0); glVertex2f(-1, 1);
+		glTexCoord2f(0, 1); glVertex2f(-2, -2);
+		glTexCoord2f(1, 1); glVertex2f(2, -2);
+		glTexCoord2f(1, 0); glVertex2f(2, 2);
+		glTexCoord2f(0, 0); glVertex2f(-2,2);
 	glEnd();
 
 	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
@@ -249,6 +249,13 @@ void reshape_win_size(int w, int h)
 		Window.Render_Size.Y = w * win_heigh / win_width;	// Задаем размер отрисовываемой области по Y (Высота)
 	}
 	glViewport(Window.Render_Position.X, Window.Render_Position.Y, Window.Render_Size.X, Window.Render_Size.Y); // Устанавливает область отрисовки внутри окна
+
+	// Сместим соотношение сторон для рендера
+	glMatrixMode(GL_PROJECTION);
+	///glPushMatrix;
+	glLoadIdentity();
+	//glRotated(Direction * 180 / M_PI, 0, 0, 1);
+	glScaled((double)win_heigh/10, (double)win_width/10, 0);
 }
 
 /* Состояние прилржения 
