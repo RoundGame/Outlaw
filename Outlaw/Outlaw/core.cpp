@@ -102,7 +102,15 @@ void Animation(int Value)
 {
 	Player.Animation(); // Анимация игрока, принемаемый параметр количество кадров анмайии
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
-};
+}
+
+void Turn_to_goal(Physical_component Physics)
+{
+	glTranslated(Physics.Position.X, Physics.Position.Y, 0);
+	glRotated(Physics.Angle * 180 / M_PI, 0, 0, 1);
+	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0);
+}
+
 
 // Инициализация главного окна
 void initGL(int argc, char **argv)
@@ -158,19 +166,21 @@ void Render()
 	Player.Draw(); // Рисуем игрока
 	
 	//Отрисовка пуль
-	Vector Size_Bullet(0.06, 0.06);
 	for (int i = 0; i < bullet_count; i++)
 	{
+		bullet[i].Body.Size.X = 0.06;
+		bullet[i].Body.Size.Y = 0.06;
 		if (bullet[i].isExist)
 		{
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 			glLoadIdentity();
-			glTranslated(bullet[i].Physics.Position.X, bullet[i].Physics.Position.Y, 0);
-			glRotated(bullet[i].Physics.Angle * 180 / M_PI, 0, 0, 1);
-			glTranslated(-bullet[i].Physics.Position.X, -bullet[i].Physics.Position.Y, 0);
-			Draw_Quad(bullet[i].Physics.Position, Size_Bullet, bullet[i].Body); // Рисуем пулю
+
+			Turn_to_goal(bullet[i].Physics); // Поворачиваем пулю
+			Draw_Quad(bullet[i].Physics.Position, bullet[i].Body.Size, bullet[i].Body); // Рисуем пулю
+			
 			glPopMatrix();
+
 		}
 	}
 	//Отрисовка прицела

@@ -21,6 +21,7 @@ void initGL(int argc, char **argv);
 void Render();
 void Draw_Quad(Vector Position, Vector Size, Sprite Sprite); // Рисует квадрат в позиции Position и размера Size, где рисование объекта начинается с центра
 void Animation(int Value); // Главная функция анимации
+void Turn_to_goal(Physical_component Physics); // Поворот в соответствии физическому компоненту
 
 void Update(int Value);	// Главнвя функция изменения позиции
 void CreateBullet();
