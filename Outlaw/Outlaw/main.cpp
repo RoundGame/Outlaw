@@ -3,8 +3,6 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-	Vector null;
-	Generator_room(0, 7, null);
 
 	// Инициализация GLUT
 	initGL(argc, argv);

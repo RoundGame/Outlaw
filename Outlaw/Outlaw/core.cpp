@@ -7,6 +7,7 @@ const int bullet_count = 25;
 Object bullet[bullet_count];
 Object Cross;
 Character Player; // Создаем игрока
+Sprite debugSprite;
 int volume; // Тестовая переменная громкости звука
 double bullet_Speed = 0.6;
 int BurstMode = 0; //Режим стрельбы (0 - одиночными, 2 - очередью)
@@ -46,6 +47,7 @@ void Update(int Value)
 		else
 			Player.Direction = -acos(Velocity.X);
 	}
+
 	Player.Physics.Update(true); // Изменение позиции игрока
 
 	for (int i = 0; i < bullet_count; i++)
@@ -102,27 +104,6 @@ void Animation(int Value)
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 };
 
-// Загрузка тексткуры texture1 - куда, name - путь к загружаемому файлу
-void InitTexture(unsigned int& texture1, const char name[])
-{
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	int width, height, channels;
-	unsigned char* image = SOIL_load_image(name, &width, &height, &channels, SOIL_LOAD_RGBA);
-	if (image == 0)
-		printf("InitTexture ERROR : %s \n", name);
-
-	glGenTextures(1, &texture1); // Генерация текстуры
-
-	// Установка параметров
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	// Создание миникарты
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image);
-}
-
 // Инициализация главного окна
 void initGL(int argc, char **argv)
 {
@@ -139,10 +120,10 @@ void initGL(int argc, char **argv)
 
 
 	// Инициализация текстур
-	InitTexture(entity.Texture, "cobblestone.png");
 	Player.Legs.Load("Legs.png");
 	Player.Body.Load("Body.png");
 	Cross.Body.Load("Cross.png");
+	debugSprite.Load("cobblestone.png");
 	for (int i = 0; i < bullet_count; i++)
 		bullet[i].Body.Load("Bullet.png");
 
@@ -163,12 +144,12 @@ void Render()
 	glClearColor(0, 0, 0, 1); // Устанавливаем цвет фона
 
 	// Фон
-	glBegin(GL_QUADS);
-		glTexCoord2f(0, 1); glVertex2f(-2, -2);
-		glTexCoord2f(1, 1); glVertex2f(2, -2);
-		glTexCoord2f(1, 0); glVertex2f(2, 2);
-		glTexCoord2f(0, 0); glVertex2f(-2,2);
-	glEnd();
+	//glBegin(GL_QUADS);
+	//	glTexCoord2f(0, 1); glVertex2f(-2, -2);
+	//	glTexCoord2f(1, 1); glVertex2f(2, -2);
+	//	glTexCoord2f(1, 0); glVertex2f(2, 2);
+	//	glTexCoord2f(0, 0); glVertex2f(-2,2);
+	//glEnd();
 
 	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
@@ -177,56 +158,39 @@ void Render()
 	Player.Draw(); // Рисуем игрока
 	
 	//Отрисовка пуль
+	Vector Size_Bullet(0.06, 0.06);
 	for (int i = 0; i < bullet_count; i++)
 	{
 		if (bullet[i].isExist)
 		{
-			glBindTexture(GL_TEXTURE_2D, bullet[i].Body.Texture);
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 			glLoadIdentity();
 			glTranslated(bullet[i].Physics.Position.X, bullet[i].Physics.Position.Y, 0);
 			glRotated(bullet[i].Physics.Angle * 180 / M_PI, 0, 0, 1);
 			glTranslated(-bullet[i].Physics.Position.X, -bullet[i].Physics.Position.Y, 0);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0.0, 1.0); glVertex2f(-0.03 + bullet[i].Physics.Position.X, -0.03 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(0.0, 0.0); glVertex2f(-0.03 + bullet[i].Physics.Position.X, 0.03 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(1.0, 0.0); glVertex2f(0.03 + bullet[i].Physics.Position.X, 0.03 + bullet[i].Physics.Position.Y);
-			glTexCoord2f(1.0, 1.0); glVertex2f(0.03 + bullet[i].Physics.Position.X, -0.03 + bullet[i].Physics.Position.Y);
-			glEnd();
+			Draw_Quad(bullet[i].Physics.Position, Size_Bullet, bullet[i].Body); // Рисуем пулю
 			glPopMatrix();
 		}
 	}
 	//Отрисовка прицела
-	glBindTexture(GL_TEXTURE_2D, Cross.Body.Texture);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 1.0); glVertex2f(-0.1 + Cross.Physics.Position.X, -0.1 + Cross.Physics.Position.Y);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-0.1 + Cross.Physics.Position.X, 0.1 + Cross.Physics.Position.Y);
-	glTexCoord2f(1.0, 0.0); glVertex2f(0.1 + Cross.Physics.Position.X, 0.1 + Cross.Physics.Position.Y);
-	glTexCoord2f(1.0, 1.0); glVertex2f(0.1 + Cross.Physics.Position.X, -0.1 + Cross.Physics.Position.Y);
-	glEnd();
+	Vector Size_Cross(0.2,0.2);
+	Draw_Quad(Cross.Physics.Position, Size_Cross, Cross.Body);
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
 	glutSwapBuffers(); // Замена буфера на вновь отрисованный 
 }
 
-// Генерация комнаты
-void Generator_room(int Type, int Size, Vector Position)
+// Рисует квадрат в позиции Position и размера Size, где рисование объекта начинается с центра
+void Draw_Quad(Vector Position, Vector Size, Sprite Sprite)
 {
-	printf("Generator_room\n");
-
-}
-
-void Entity_draw(Entity Entity)
-{
-	glBindTexture(GL_TEXTURE_2D, Entity.Texture);
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 1); glVertex2f((1 - Entity.Size) - Entity.Position.X * 2, (1 - Entity.Size) - Entity.Position.Y * 2);
-	glTexCoord2f(1, 1); glVertex2f((1 + Entity.Size) - Entity.Position.X * 2, (1 - Entity.Size) - Entity.Position.Y * 2);
-	glTexCoord2f(1, 0); glVertex2f((1 + Entity.Size) - Entity.Position.X * 2, (1 + Entity.Size) - Entity.Position.Y * 2);
-	glTexCoord2f(0, 0);	glVertex2f((1 - Entity.Size) - Entity.Position.X * 2, (1 + Entity.Size) - Entity.Position.Y * 2);
+	glBindTexture(GL_TEXTURE_2D, Sprite.Texture); // Укажем текстуру, далее будет использоваться она
+	glBegin(GL_QUADS); // Выбираем метод отрисовки
+	glTexCoord2f(0.0, 1.0); glVertex2f(-Size.X/2 + Position.X, -Size.Y/2 + Position.Y); // Задаем координаты декстур и позиции объекта
+	glTexCoord2f(1.0, 1.0); glVertex2f( Size.X/2 + Position.X, -Size.Y/2 + Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f( Size.X/2 + Position.X,  Size.Y/2 + Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-Size.X/2 + Position.X,  Size.Y/2 + Position.Y);
 	glEnd();
 }
 
@@ -252,9 +216,7 @@ void reshape_win_size(int w, int h)
 
 	// Сместим соотношение сторон для рендера
 	glMatrixMode(GL_PROJECTION);
-	///glPushMatrix;
 	glLoadIdentity();
-	//glRotated(Direction * 180 / M_PI, 0, 0, 1);
 	glScaled((double)win_heigh/10, (double)win_width/10, 0);
 }
 
