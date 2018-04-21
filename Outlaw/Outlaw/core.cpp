@@ -50,7 +50,7 @@ void Update(int Value)
 
 	//Player.Target_TO(Cross.Physics.Position); // Настроить 
 	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
-	way.X *= (double)win_heigh / win_width * Window.Render_Size.X / 2;
+	way.X *= (double)win_height / win_width * Window.Render_Size.X / 2;
 	way.Y *= Window.Render_Size.Y / 2;
 	way = way.GetNormalize();
 
@@ -234,26 +234,26 @@ void Draw_Quad(Vector Position, Vector Size, Sprite Sprite)
 void reshape_win_size(int w, int h)
 {
 	// Определяем окно просмотра
-	if (w * win_heigh > h * win_width)
+	if (w * win_height > h * win_width)
 	{
-		Window.Render_Position.X = (w - h * win_width / win_heigh) / 2; // Задаем отступ отрисовываемой поверхности по X
+		Window.Render_Position.X = (w - h * win_width / win_height) / 2; // Задаем отступ отрисовываемой поверхности по X
 		Window.Render_Position.Y = 0;	// Задаем отступ отрисовываемой поверхности по Y
-		Window.Render_Size.X = h * win_width / win_heigh; // Задаем размер отрисовываемой области по X (Ширина)
+		Window.Render_Size.X = h * win_width / win_height; // Задаем размер отрисовываемой области по X (Ширина)
 		Window.Render_Size.Y = h; // Задаем размер отрисовываемой области по Y (Высота)
 	}
 	else
 	{
-		Window.Render_Position.Y = (h - w * win_heigh / win_width) / 2;	// Задаем отступ отрисовываемой поверхности по X
+		Window.Render_Position.Y = (h - w * win_height / win_width) / 2;	// Задаем отступ отрисовываемой поверхности по X
 		Window.Render_Position.X = 0;	// Задаем отступ отрисовываемой поверхности по Y
 		Window.Render_Size.X = w;	// Задаем размер отрисовываемой области по X (Ширина)
-		Window.Render_Size.Y = w * win_heigh / win_width;	// Задаем размер отрисовываемой области по Y (Высота)
+		Window.Render_Size.Y = w * win_height / win_width;	// Задаем размер отрисовываемой области по Y (Высота)
 	}
 	glViewport(Window.Render_Position.X, Window.Render_Position.Y, Window.Render_Size.X, Window.Render_Size.Y); // Устанавливает область отрисовки внутри окна
 
 	// Сместим соотношение сторон для рендера
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glScaled((double)win_heigh/10, (double)win_width/10, 0);
+	glScaled((double)win_height/10, (double)win_width/10, 0);
 }
 
 /* Состояние прилржения 
@@ -361,8 +361,8 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 		if (wParam == WM_MOUSEMOVE)
 		{
-			Cross.Physics.Position.X = (MOUSE->pt.x - Window.Position.X - Window.Render_Position.X) / Window.Render_Size.X * 2 - 1.0;
-			Cross.Physics.Position.Y = -(MOUSE->pt.y - Window.Position.Y - 20 - Window.Render_Position.Y) / Window.Render_Size.Y * 2 + 1.0;
+			Cross.Physics.Position.X = ((MOUSE->pt.x - Window.Position.X - Window.Render_Position.X) / Window.Render_Size.X * 2 - 1.0) * 10 / win_height;
+			Cross.Physics.Position.Y = (-(MOUSE->pt.y - Window.Position.Y - 20 - Window.Render_Position.Y) / Window.Render_Size.Y * 2 + 1.0) * 10 / win_width;
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
