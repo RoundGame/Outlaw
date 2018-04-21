@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿  main.cpp
   core.cpp
 c:\users\user\desktop\новая папка (2)\outlaw\outlaw\core.cpp(54): warning C4305: аргумент: усечение из "double" в "GLclampf"
@@ -12,3 +13,19 @@ soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.
 soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(stb_image_aug.obj)" или на "C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
   Outlaw.vcxproj -> C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\Outlaw.exe
   Outlaw.vcxproj -> C:\Users\User\Desktop\Новая папка (2)\Outlaw\Debug\Outlaw.pdb (Partial PDB)
+=======
+﻿  character.cpp
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(40): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(41): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(42): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(43): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(55): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(56): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(57): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(58): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB
+  Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe
+>>>>>>> develop
