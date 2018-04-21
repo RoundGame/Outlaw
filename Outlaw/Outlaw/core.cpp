@@ -2,6 +2,16 @@
 #include <soil.h>
 #include <cstdio>
 
+struct Window
+{
+	//	позиция_х позиция_у
+	Vector Position;
+	// X ширина_окна	 Y высота_окна
+	Vector Size;
+	Vector Render_Position; // Позиция отрисовываемой области
+	Vector Render_Size; // Размер отрисовываемой области
+} Window;
+
 Entity entity; // тестовый блок
 const int bullet_count = 25;
 Object bullet[bullet_count];
@@ -12,16 +22,6 @@ Static_Object Test_Box;
 int volume; // Тестовая переменная громкости звука
 int BurstMode = 0; //Режим стрельбы (0 - одиночными, 2 - очередью)
 bool isMousePressed = false;
-
-struct Window
-{
-	//	позиция_х позиция_у
-	Vector Position;
-	// X ширина_окна	 Y высота_окна
-	Vector Size;
-	Vector Render_Position; // Позиция отрисовываемой области
-	Vector Render_Size; // Размер отрисовываемой области
-} Window;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -48,6 +48,7 @@ void Update(int Value)
 			Player.Direction = -acos(Velocity.X);
 	}
 
+	//Player.Target_TO(Cross.Physics.Position); // Настроить 
 	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
 	way.X *= (double)win_heigh / win_width * Window.Render_Size.X / 2;
 	way.Y *= Window.Render_Size.Y / 2;
@@ -98,6 +99,21 @@ void Update(int Value)
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Высчитывание столкновений ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	for (int i = 0; i < bullet_count; i++) // Для пуль
+	{
+		if (bullet[i].isExist) // Для всех пуль что вылетели (являются активными)
+		{
+			// Если произошла колизия, узменим активность пули в нерабочее
+			if (	bullet[i].Physics.Position.X > Test_Box.Position.X - Test_Box.Size.X / 2
+				&&	bullet[i].Physics.Position.X < Test_Box.Position.X + Test_Box.Size.X / 2
+				&&	bullet[i].Physics.Position.Y > Test_Box.Position.Y - Test_Box.Size.Y / 2
+				&&	bullet[i].Physics.Position.Y < Test_Box.Position.Y + Test_Box.Size.Y / 2)
+			{
+				bullet[i].isExist = false;
+			}
+		}
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -172,6 +188,7 @@ void Render()
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
 	Player.Draw(); // Рисуем игрока
+
 	Test_Box.Position.X = 0.5;
 	Test_Box.Size.X = 0.2;
 	Test_Box.Size.Y = 0.2;
@@ -280,6 +297,18 @@ void CreateBullet()
 	bullet[k].Physics.Angle = Player.Physics.Angle;
 	bullet[k].Physics.Velocity.X = cos(bullet[k].Physics.Angle) * bullet[k].Physics.Speed;
 	bullet[k].Physics.Velocity.Y = sin(bullet[k].Physics.Angle) * bullet[k].Physics.Speed;
+}
+
+bool Collision(Physical_component Physics1, Physical_component Physics2)
+{
+	bool Collision_X = Physics1.Position.X + Physics1.Size.X / 2 > Physics2.Position.X + Physics2.Size.X;
+	bool Collision_Y = Physics1.Position.X + Physics1.Size.X > Physics2.Position.X + Physics2.Size.X;
+	bool Collision = Collision_X && Collision_Y;
+
+	if (Collision)
+		return true;
+	else
+		return false;
 }
 
 //Функция, которая вызывается при изменении состоянии клавиатуры

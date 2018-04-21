@@ -40,6 +40,6 @@ struct Character
 	Sprite Legs, Body;	// Текстура персонажа
 
 	void Animation();	// Анимаций персонажа
-	void Target_TO(Vector Position); //
+	void Target_TO(Vector Position); // Установить угол(Physics.Angle) направления в сторону обьекта цели
 	void Draw();		// Отрисовка персонажа по своим координатам в мире.
 };

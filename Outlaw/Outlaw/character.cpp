@@ -27,6 +27,19 @@ void Character::Animation()
 	}
 }
 
+void Character::Target_TO(Vector Position)
+{
+	Vector way = Vector(Position.X - Physics.Position.X, Position.Y - Physics.Position.Y);
+	//way.X *= (double)win_heigh / win_width * Window.Render_Size.X / 2;
+	//way.Y *= Window.Render_Size.Y / 2;
+	//way = way.GetNormalize();
+
+	if (way.Y >= 0)
+		Physics.Angle = acos(way.X);
+	else
+		Physics.Angle = -acos(way.X);
+}
+
 void Character::Draw()
 {
 	glBindTexture(GL_TEXTURE_2D, Legs.Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки

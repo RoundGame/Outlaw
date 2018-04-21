@@ -5,6 +5,8 @@
 #include <GL/glut.h>
 #include "character.h"
 
+
+
 static HHOOK Keyboard_Hook; // Хэндл хука клавиатуры
 static HHOOK Mouse_Hook; // Хэндл хука мыши
 static HWND Main_Window_Handle; // Хэндл главного окна, для последующего отключения обработчика нажатия клавиш
@@ -25,6 +27,8 @@ void Turn_to_goal(Physical_component Physics); // Поворот в соотве
 
 void Update(int Value);	// Главнвя функция изменения позиции
 void CreateBullet();
+bool Collision(Physical_component Physics1, Physical_component Physics2); // Возвращает истину, если Physics1 пересекает Physics2
+
 
 LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam); // Для считываения нажатия клавиш 
 LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam); // Для считываения событий мыши
