@@ -1,18 +1,5 @@
-﻿  core.cpp
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(92): warning C4305: аргумент: усечение из "double" в "GLclampf"
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(100): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(101): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(102): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(103): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-soil.lib(SOIL.obj) : warning LNK4075: не учитывается "/EDITANDCONTINUE" из-за спецификации "/OPT:ICF"
-LINK : warning LNK4098: библиотека по умолчанию "MSVCRTD" противоречит использованию других библиотек; используйте параметр /NODEFAULTLIB:library
+﻿  main.cpp
   Создание кода
-  3 of 24 functions (12.5%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  All 1 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Создание кода завершено
-soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(image_DXT.obj)" или на "E:\1Folders\Outlaw\Outlaw\Release\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
-soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(image_helper.obj)" или на "E:\1Folders\Outlaw\Outlaw\Release\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
-soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(SOIL.obj)" или на "E:\1Folders\Outlaw\Outlaw\Release\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
-soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB не найден с "soil.lib(stb_image_aug.obj)" или на "E:\1Folders\Outlaw\Outlaw\Release\SOIL.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
   Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Release\Outlaw.exe
