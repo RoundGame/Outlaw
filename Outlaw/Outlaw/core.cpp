@@ -105,10 +105,7 @@ void Update(int Value)
 		if (bullet[i].isExist) // Для всех пуль что вылетели (являются активными)
 		{
 			// Если произошла колизия, узменим активность пули в нерабочее
-			if (	bullet[i].Physics.Position.X > Test_Box.Position.X - Test_Box.Size.X / 2
-				&&	bullet[i].Physics.Position.X < Test_Box.Position.X + Test_Box.Size.X / 2
-				&&	bullet[i].Physics.Position.Y > Test_Box.Position.Y - Test_Box.Size.Y / 2
-				&&	bullet[i].Physics.Position.Y < Test_Box.Position.Y + Test_Box.Size.Y / 2)
+			if (Collision (bullet[i].Physics, Test_Box))
 			{
 				bullet[i].isExist = false;
 			}
@@ -299,11 +296,11 @@ void CreateBullet()
 	bullet[k].Physics.Velocity.Y = sin(bullet[k].Physics.Angle) * bullet[k].Physics.Speed;
 }
 
-bool Collision(Physical_component Physics1, Physical_component Physics2)
+bool Collision(Physical_component Physics1, Static_Object Physics2)
 {
-	bool Collision_X = Physics1.Position.X + Physics1.Size.X / 2 > Physics2.Position.X + Physics2.Size.X;
-	bool Collision_Y = Physics1.Position.X + Physics1.Size.X > Physics2.Position.X + Physics2.Size.X;
-	bool Collision = Collision_X && Collision_Y;
+	bool Collision_X = Physics1.Position.X + Physics1.Size.X / 2 > Physics2.Position.X - Physics2.Size.X / 2 && Physics1.Position.X + Physics1.Size.X / 2 < Physics2.Position.X + Physics2.Size.X / 2; // Проверим пересечение по X
+	bool Collision_Y = Physics1.Position.Y + Physics1.Size.Y / 2 > Physics2.Position.Y - Physics2.Size.Y / 2 && Physics1.Position.Y + Physics1.Size.Y / 2 < Physics2.Position.Y + Physics2.Size.Y / 2; // Проверим пересечение по Y
+	bool Collision = Collision_X && Collision_Y; // Объекты пересекаются
 
 	if (Collision)
 		return true;
