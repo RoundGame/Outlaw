@@ -8,8 +8,8 @@ Object bullet[bullet_count];
 Object Cross;
 Character Player; // Создаем игрока
 Sprite debugSprite;
+Static_Object Test_Box;
 int volume; // Тестовая переменная громкости звука
-double bullet_Speed = 0.6;
 int BurstMode = 0; //Режим стрельбы (0 - одиночными, 2 - очередью)
 bool isMousePressed = false;
 
@@ -35,7 +35,7 @@ void Update(int Value)
 	Window.Size.X = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
 	Window.Size.Y = rect.bottom - rect.top;
 
-	// Высчитывание перемещения игрока
+	// Высчитывание перемещения игрока //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	Player.Physics.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
 	Player.Physics.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
 	Player.Physics.Acceleration = Player.Physics.Acceleration.GetNormalize();
@@ -48,8 +48,23 @@ void Update(int Value)
 			Player.Direction = -acos(Velocity.X);
 	}
 
-	Player.Physics.Update(true); // Изменение позиции игрока
+	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
+	way.X *= (double)win_heigh / win_width * Window.Render_Size.X / 2;
+	way.Y *= Window.Render_Size.Y / 2;
+	way = way.GetNormalize();
 
+	if (way.Y >= 0)
+		Player.Physics.Angle = acos(way.X);
+	else
+		Player.Physics.Angle = -acos(way.X);
+
+	Player.Physics.Update(true); // Изменение позиции игрока
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+	
+	// Высчитывание перемещения пули //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	for (int i = 0; i < bullet_count; i++)
 	{
 		if (bullet[i].isExist)
@@ -60,15 +75,10 @@ void Update(int Value)
 		}
 	}
 
-	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
-	way.X *= (double)win_heigh / win_width * Window.Render_Size.X / 2;
-	way.Y *= Window.Render_Size.Y / 2;
-	way = way.GetNormalize();
-	if (way.Y >= 0)
-		Player.Physics.Angle = acos(way.X);
-	else
-		Player.Physics.Angle = -acos(way.X);
 
+
+
+	// Настройки режима стрельбы (ТЕСТ) //////////////////////////////////////////////////////////////////////////////////////////////
 	if (isMousePressed)
 	{
 		//printf("Pressed");
@@ -85,6 +95,11 @@ void Update(int Value)
 		if (BurstMode == 1)
 			BurstMode = 0;
 	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// Высчитывание столкновений ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
@@ -104,13 +119,13 @@ void Animation(int Value)
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 }
 
+// Поворот в соответствии физическому компоненту
 void Turn_to_goal(Physical_component Physics)
 {
-	glTranslated(Physics.Position.X, Physics.Position.Y, 0);
-	glRotated(Physics.Angle * 180 / M_PI, 0, 0, 1);
-	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0);
+	glTranslated(Physics.Position.X, Physics.Position.Y, 0); // Для корректного поворота изменим позицию проекционной камеры до позиции объекта
+	glRotated(Physics.Angle * 180 / M_PI, 0, 0, 1); // Поверем побъект
+	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0); // Восстановим положение камеры
 }
-
 
 // Инициализация главного окна
 void initGL(int argc, char **argv)
@@ -131,6 +146,7 @@ void initGL(int argc, char **argv)
 	Player.Legs.Load("Legs.png");
 	Player.Body.Load("Body.png");
 	Cross.Body.Load("Cross.png");
+	Test_Box.Body.Load("cobblestone.png");
 	debugSprite.Load("cobblestone.png");
 	for (int i = 0; i < bullet_count; i++)
 		bullet[i].Body.Load("Bullet.png");
@@ -151,19 +167,15 @@ void Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Очистка буферов глубины и цвета
 	glClearColor(0, 0, 0, 1); // Устанавливаем цвет фона
 
-	// Фон
-	//glBegin(GL_QUADS);
-	//	glTexCoord2f(0, 1); glVertex2f(-2, -2);
-	//	glTexCoord2f(1, 1); glVertex2f(2, -2);
-	//	glTexCoord2f(1, 0); glVertex2f(2, 2);
-	//	glTexCoord2f(0, 0); glVertex2f(-2,2);
-	//glEnd();
-
 	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
 	Player.Draw(); // Рисуем игрока
+	Test_Box.Position.X = 0.5;
+	Test_Box.Size.X = 0.2;
+	Test_Box.Size.Y = 0.2;
+	Draw_Quad(Test_Box.Position, Test_Box.Size, Test_Box.Body);
 	
 	//Отрисовка пуль
 	for (int i = 0; i < bullet_count; i++)
@@ -266,8 +278,8 @@ void CreateBullet()
 	bullet[k].Physics.Position.X = Player.Physics.Position.X;
 	bullet[k].Physics.Position.Y = Player.Physics.Position.Y;
 	bullet[k].Physics.Angle = Player.Physics.Angle;
-	bullet[k].Physics.Velocity.X = cos(bullet[k].Physics.Angle) * bullet_Speed;
-	bullet[k].Physics.Velocity.Y = sin(bullet[k].Physics.Angle) * bullet_Speed;
+	bullet[k].Physics.Velocity.X = cos(bullet[k].Physics.Angle) * bullet[k].Physics.Speed;
+	bullet[k].Physics.Velocity.Y = sin(bullet[k].Physics.Angle) * bullet[k].Physics.Speed;
 }
 
 //Функция, которая вызывается при изменении состоянии клавиатуры

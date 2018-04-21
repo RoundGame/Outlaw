@@ -1,4 +1,5 @@
 ﻿#include "character.h"
+#include "core.h"
 
 void Physical_component::Update(bool isAcceleration)
 {
@@ -58,42 +59,3 @@ void Character::Draw()
 	glEnd();
 	glPopMatrix();
 }
-
-/*void physical_component::update()
-{
-	acceleration = acceleration.getnormalize(); //нормализуем полученный вектор ускорения
-
-	velocity.x += (acceleration.x * 0.01 - velocity.x * 0.1) * boost; //добавлем к вектору скорости вектор ускорения. boost - коэффициент ускорения
-	velocity.y += (acceleration.y * 0.01 - velocity.y * 0.1) * boost; //вычитаем из вектора ускорения вектор текущей скорости, тем самым имитируем трение
-
-	position.x += velocity.x * speed; //добавляем к вектору текущей позиции вектор текущей скорости
-	position.y += velocity.y * speed;
-}
-
-void bullet::draw() // сейявс не используется
-{
-	if (isexist)
-	{
-		glbindtexture(gl_texture_2d, body.texture);
-		glmatrixmode(gl_modelview);
-
-		glpushmatrix();
-		glloadidentity();
-		gltranslated(move.position.x, move.position.y, 0);
-		glrotated(-move.angle * 180 / m_pi - 90, 0, 0, 1);
-		gltranslated(-move.position.x, -move.position.y, 0);
-
-		glbegin(gl_quads);
-			gltexcoord2f(0.0, 1.0); glvertex2f(-0.15 + move.position.x, -0.15 + move.position.y);
-			gltexcoord2f(0.0, 0.0); glvertex2f(-0.15 + move.position.x, 0.15 + move.position.y);
-			gltexcoord2f(1.0, 0.0); glvertex2f(0.15 + move.position.x, 0.15 + move.position.y);
-			gltexcoord2f(1.0, 1.0); glvertex2f(0.15 + move.position.x, -0.15 + move.position.y);
-		glend();
-		glpopmatrix();
-	}
-}
-
-void bullet::update()
-{
-
-}*/

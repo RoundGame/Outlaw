@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include "magnitudes.h"
 
+
 struct Physical_component
 {
 	double	Speed = 0.4; // Множитель скорости изменения координат (скорость передвижения)
@@ -10,6 +11,7 @@ struct Physical_component
 	Vector	Position, // Позиция
 			Velocity, // Скорость
 			Acceleration; // Ускорение
+	Vector Size;
 
 	void Update(bool isAcceleration);
 };
@@ -26,6 +28,7 @@ struct Static_Object
 	bool isExist = false;
 	Sprite Body;
 	Vector Position;
+	Vector Size;
 };
 
 struct Character
@@ -37,5 +40,6 @@ struct Character
 	Sprite Legs, Body;	// Текстура персонажа
 
 	void Animation();	// Анимаций персонажа
+	void Target_TO(Vector Position); //
 	void Draw();		// Отрисовка персонажа по своим координатам в мире.
 };

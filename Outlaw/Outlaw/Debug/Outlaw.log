@@ -1,12 +1,12 @@
-﻿  core.cpp
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(200): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(201): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(202): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(203): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(225): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(225): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(247): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(248): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+﻿  character.cpp
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(40): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(41): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(42): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(43): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(55): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(56): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(57): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(58): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
 soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB
 soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB
 soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB
