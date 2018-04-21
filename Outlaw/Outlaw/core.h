@@ -27,7 +27,7 @@ void Matrix_Rotate(Vector position, double angle); // Поворот в соот
 
 void Update(int Value);	// Главнвя функция изменения позиции
 void CreateBullet();
-bool Collision(Physical_component Physics1, Physical_component Physics2); // Возвращает истину, если Physics1 пересекает Physics2
+bool Collision(Physical_component Physics1, Static_Object Physics2); // Возвращает истину, если Physics1 пересекает Physics2
 
 
 LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam); // Для считываения нажатия клавиш 
