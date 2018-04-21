@@ -136,11 +136,14 @@ void Animation(int Value)
 }
 
 // Поворот в соответствии физическому компоненту
-void Turn_to_goal(Physical_component Physics)
+void Matrix_Rotate(Vector position, double angle)
 {
-	glTranslated(Physics.Position.X, Physics.Position.Y, 0); // Для корректного поворота изменим позицию проекционной камеры до позиции объекта
-	glRotated(Physics.Angle * 180 / M_PI, 0, 0, 1); // Поверем побъект
-	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0); // Восстановим положение камеры
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslated(position.X, position.Y, 0);
+	glRotated(angle * 180 / M_PI, 0, 0, 1);
+	glTranslated(-position.X, -position.Y, 0);
 }
 
 // Инициализация главного окна
@@ -205,9 +208,8 @@ void Render()
 			glPushMatrix();
 			glLoadIdentity();
 
-			Turn_to_goal(bullet[i].Physics); // Поворачиваем пулю
+			Matrix_Rotate(bullet[i].Physics.Position, bullet[i].Physics.Angle); // Поворачиваем пулю
 			Draw_Quad(bullet[i].Physics.Position, bullet[i].Body.Size, bullet[i].Body); // Рисуем пулю
-			
 			glPopMatrix();
 
 		}

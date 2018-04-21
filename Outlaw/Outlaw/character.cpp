@@ -43,12 +43,7 @@ void Character::Target_TO(Vector Position)
 void Character::Draw()
 {
 	glBindTexture(GL_TEXTURE_2D, Legs.Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	glTranslated(Physics.Position.X, Physics.Position.Y, 0);
-	glRotated(Direction * 180 / M_PI, 0, 0, 1);
-	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0);
+	Matrix_Rotate(Physics.Position, Direction);
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
 	glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.125); glVertex2f(-0.2 + Physics.Position.X, -0.2 + Physics.Position.Y);
 	glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.0); glVertex2f(-0.2 + Physics.Position.X, 0.2 + Physics.Position.Y);
@@ -58,12 +53,7 @@ void Character::Draw()
 	glPopMatrix();
 
 	glBindTexture(GL_TEXTURE_2D, Body.Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	glTranslated(Physics.Position.X, Physics.Position.Y, 0);
-	glRotated(Physics.Angle * 180 / M_PI, 0, 0, 1);
-	glTranslated(-Physics.Position.X, -Physics.Position.Y, 0);
+	Matrix_Rotate(Physics.Position, Physics.Angle);
 	glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
 	glTexCoord2f(0.0, 1.0); glVertex2f(-0.45 + Physics.Position.X, -0.45 + Physics.Position.Y);
 	glTexCoord2f(0.0, 0.0); glVertex2f(-0.45 + Physics.Position.X, 0.45 + Physics.Position.Y);
