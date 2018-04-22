@@ -13,12 +13,12 @@ struct Window
 } Window;
 
 Entity entity; // тестовый блок
-const int bullet_count = 25;
+const int bullet_count = 30;
+const int wall_count = 56;
 Object bullet[bullet_count];
 Object Cross;
 Character Player; // Создаем игрока
-Sprite debugSprite;
-Static_Object Test_Box;
+Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
 int BurstMode = 0; //Режим стрельбы (0 - одиночными, 2 - очередью)
 bool isMousePressed = false;
@@ -73,8 +73,11 @@ void Update(int Value)
 				bullet[i].isExist = false;
 
 			// Если произошла колизия, изменим активность пули в нерабочее
-			if (Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Test_Box.Position, Test_Box.Body.Size))
-				bullet[i].isExist = false;
+			for (int j = 0; j < wall_count; j++)
+			{
+				if (Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Wall[j].Position, Wall[j].Body.Size))
+					bullet[i].isExist = false;
+			}
 		}
 	}
 
@@ -99,7 +102,7 @@ void Update(int Value)
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	glutPostRedisplay(); // Обновляем экран
-	glutTimerFunc(timer_update, Update, Value); // Задержка 20 мс перед новым вызовом функции
+	glutTimerFunc(timer_update, Update, Value); // Задержка 15 мс перед новым вызовом функции
 }
 
 // Сохранение и выход
@@ -146,10 +149,31 @@ void initGL(int argc, char **argv)
 	Player.Legs.Load("Legs.png");
 	Player.Body.Load("Body.png");
 	Cross.Body.Load("Cross.png");
-	Test_Box.Body.Load("cobblestone.png");
-	debugSprite.Load("cobblestone.png");
+	for (int i = 0; i < wall_count; i++)
+	{
+		Wall[i].Body.Load("cobblestone.png");
+		Wall[i].Body.Size = Vector(1.0 / 9, 1.0 / 9);
+	}
 	for (int i = 0; i < bullet_count; i++)
 		bullet[i].Body.Load("Bullet.png");
+
+	int k = 0;
+	for (int i = 0; i < 18; i++)
+	{
+		Wall[k].Position.Y = 0.5;
+		Wall[k].Position.X = (double)i / 9 - 1.0;
+		Wall[k + 1].Position.Y = -0.5;
+		Wall[k + 1].Position.X = (double)i / 9 - 1.0;
+		k += 2;
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		Wall[k].Position.Y = (double)i / 9 - 0.5;
+		Wall[k].Position.X = -1.0;
+		Wall[k + 1].Position.Y = (double)i / 9 - 0.5;
+		Wall[k + 1].Position.X = 1.0;
+		k += 2;
+	}
 
 	//Биндим клавиши
 	key[LEFT].Nominal = KEY_A;
@@ -173,9 +197,8 @@ void Render()
 
 	Player.Draw(); // Рисуем игрока
 
-	Test_Box.Position.X = 0.5;
-	Test_Box.Body.Size = Vector(0.2, 0.2);
-	Draw_Quad(Test_Box.Position, Test_Box.Body);
+	for (int i = 0; i < wall_count; i++)
+		Draw_Quad(Wall[i].Position, Wall[i].Body);
 	
 	//Отрисовка пуль
 	for (int i = 0; i < bullet_count; i++)
