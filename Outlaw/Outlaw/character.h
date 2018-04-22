@@ -11,7 +11,6 @@ struct Physical_component
 	Vector	Position, // Позиция
 			Velocity, // Скорость
 			Acceleration; // Ускорение
-	Vector Size;
 
 	void Update(bool isAcceleration);
 };
@@ -28,7 +27,6 @@ struct Static_Object
 	bool isExist = false;
 	Sprite Body;
 	Vector Position;
-	Vector Size;
 };
 
 struct Character

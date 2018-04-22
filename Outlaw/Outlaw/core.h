@@ -21,13 +21,13 @@ void initGL(int argc, char **argv);
 
 // Отрисовка
 void Render();
-void Draw_Quad(Vector Position, Vector Size, Sprite Sprite); // Рисует квадрат в позиции Position и размера Size, где рисование объекта начинается с центра
+void Draw_Quad(Vector Position, Sprite Sprite); // Рисует квадрат в позиции Position и размера Size, где рисование объекта начинается с центра
 void Animation(int Value); // Главная функция анимации
 void Matrix_Rotate(Vector position, double angle); // Поворот в соответствии физическому компоненту
 
 void Update(int Value);	// Главнвя функция изменения позиции
 void CreateBullet();
-bool Collision(Physical_component Physics1, Static_Object Physics2); // Возвращает истину, если Physics1 пересекает Physics2
+bool Collision(Vector Position1, Vector Size1, Vector Position2, Vector Size2); // Возвращает истину, если Physics1 пересекает Physics2
 
 
 LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam); // Для считываения нажатия клавиш 

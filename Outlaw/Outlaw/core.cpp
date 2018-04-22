@@ -62,10 +62,8 @@ void Update(int Value)
 	Player.Physics.Update(true); // Изменение позиции игрока
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 	
-	// Высчитывание перемещения пули //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Высчитывание перемещения пули и высчитывание столкновений ///////////////////////////////////////////////////////////////////////////////////////////
 	for (int i = 0; i < bullet_count; i++)
 	{
 		if (bullet[i].isExist)
@@ -73,10 +71,12 @@ void Update(int Value)
 			bullet[i].Physics.Update(false);
 			if (bullet[i].Physics.Position.X >= 1.5 || bullet[i].Physics.Position.X <= -1.5 || bullet[i].Physics.Position.Y >= 1.5 || bullet[i].Physics.Position.Y <= -1.5)
 				bullet[i].isExist = false;
+
+			// Если произошла колизия, изменим активность пули в нерабочее
+			if (Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Test_Box.Position, Test_Box.Body.Size))
+				bullet[i].isExist = false;
 		}
 	}
-
-
 
 
 	// Настройки режима стрельбы (ТЕСТ) //////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,22 +96,6 @@ void Update(int Value)
 		if (BurstMode == 1)
 			BurstMode = 0;
 	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	// Высчитывание столкновений ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	for (int i = 0; i < bullet_count; i++) // Для пуль
-	{
-		if (bullet[i].isExist) // Для всех пуль что вылетели (являются активными)
-		{
-			// Если произошла колизия, узменим активность пули в нерабочее
-			if (Collision (bullet[i].Physics, Test_Box))
-			{
-				bullet[i].isExist = false;
-			}
-		}
-	}
-
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	glutPostRedisplay(); // Обновляем экран
@@ -190,9 +174,8 @@ void Render()
 	Player.Draw(); // Рисуем игрока
 
 	Test_Box.Position.X = 0.5;
-	Test_Box.Size.X = 0.2;
-	Test_Box.Size.Y = 0.2;
-	Draw_Quad(Test_Box.Position, Test_Box.Size, Test_Box.Body);
+	Test_Box.Body.Size = Vector(0.2, 0.2);
+	Draw_Quad(Test_Box.Position, Test_Box.Body);
 	
 	//Отрисовка пуль
 	for (int i = 0; i < bullet_count; i++)
@@ -206,14 +189,14 @@ void Render()
 			glLoadIdentity();
 
 			Matrix_Rotate(bullet[i].Physics.Position, bullet[i].Physics.Angle); // Поворачиваем пулю
-			Draw_Quad(bullet[i].Physics.Position, bullet[i].Body.Size, bullet[i].Body); // Рисуем пулю
+			Draw_Quad(bullet[i].Physics.Position, bullet[i].Body); // Рисуем пулю
 			glPopMatrix();
 
 		}
 	}
 	//Отрисовка прицела
-	Vector Size_Cross(0.2,0.2);
-	Draw_Quad(Cross.Physics.Position, Size_Cross, Cross.Body);
+	Cross.Body.Size = Vector(0.2, 0.2);
+	Draw_Quad(Cross.Physics.Position, Cross.Body);
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
@@ -221,14 +204,14 @@ void Render()
 }
 
 // Рисует квадрат в позиции Position и размера Size, где рисование объекта начинается с центра
-void Draw_Quad(Vector Position, Vector Size, Sprite Sprite)
+void Draw_Quad(Vector Position, Sprite Sprite)
 {
 	glBindTexture(GL_TEXTURE_2D, Sprite.Texture); // Укажем текстуру, далее будет использоваться она
 	glBegin(GL_QUADS); // Выбираем метод отрисовки
-	glTexCoord2f(0.0, 1.0); glVertex2f(-Size.X/2 + Position.X, -Size.Y/2 + Position.Y); // Задаем координаты декстур и позиции объекта
-	glTexCoord2f(1.0, 1.0); glVertex2f( Size.X/2 + Position.X, -Size.Y/2 + Position.Y);
-	glTexCoord2f(1.0, 0.0); glVertex2f( Size.X/2 + Position.X,  Size.Y/2 + Position.Y);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-Size.X/2 + Position.X,  Size.Y/2 + Position.Y);
+	glTexCoord2f(0.0, 1.0); glVertex2f(-Sprite.Size.X/2 + Position.X, -Sprite.Size.Y/2 + Position.Y); // Задаем координаты декстур и позиции объекта
+	glTexCoord2f(1.0, 1.0); glVertex2f(Sprite.Size.X/2 + Position.X, -Sprite.Size.Y/2 + Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(Sprite.Size.X/2 + Position.X, Sprite.Size.Y/2 + Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-Sprite.Size.X/2 + Position.X, Sprite.Size.Y/2 + Position.Y);
 	glEnd();
 }
 
@@ -298,16 +281,13 @@ void CreateBullet()
 	bullet[k].Physics.Velocity.Y = sin(bullet[k].Physics.Angle) * bullet[k].Physics.Speed;
 }
 
-bool Collision(Physical_component Physics1, Static_Object Physics2)
+bool Collision(Vector Position1, Vector Size1, Vector Position2, Vector Size2)
 {
-	bool Collision_X = Physics1.Position.X + Physics1.Size.X / 2 > Physics2.Position.X - Physics2.Size.X / 2 && Physics1.Position.X + Physics1.Size.X / 2 < Physics2.Position.X + Physics2.Size.X / 2; // Проверим пересечение по X
-	bool Collision_Y = Physics1.Position.Y + Physics1.Size.Y / 2 > Physics2.Position.Y - Physics2.Size.Y / 2 && Physics1.Position.Y + Physics1.Size.Y / 2 < Physics2.Position.Y + Physics2.Size.Y / 2; // Проверим пересечение по Y
+	bool Collision_X = Position1.X + Size1.X / 2 > Position2.X - Size2.X / 2 && Position1.X - Size1.X / 2 < Position2.X + Size2.X / 2; // Проверим пересечение по X
+	bool Collision_Y = Position1.Y - Size1.Y / 2 < Position2.Y + Size2.Y / 2 && Position1.Y + Size1.Y / 2 > Position2.Y - Size2.Y / 2; // Проверим пересечение по Y
 	bool Collision = Collision_X && Collision_Y; // Объекты пересекаются
 
-	if (Collision)
-		return true;
-	else
-		return false;
+	return Collision;
 }
 
 //Функция, которая вызывается при изменении состоянии клавиатуры
