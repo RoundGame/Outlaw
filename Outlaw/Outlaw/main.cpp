@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 	Keyboard_Hook = SetWindowsHookExA(WH_MOUSE_LL, MouseHookProc, NULL, 0);
 
 	/////////// Нуждается в доработке и КОМЕНТАРИИ ////////////////////////////////////////////////////////////////////////////
-	PlaySoundA("test.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+	//PlaySoundA("test.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/*Начинает основной цикл GLUT обработки событий. В цикле событий обрабатываются все сообщения клавиатуры,

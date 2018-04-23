@@ -53,9 +53,18 @@ void Update(int Value)
 		if (Collision(Player.Physics.Position, Player.Legs.Size, Wall[i].Position, Wall[i].Body.Size))
 		{
 			Vector FromPlayerToBlock = Vector(Player.Physics.Position.X - Wall[i].Position.X, Player.Physics.Position.Y - Wall[i].Position.Y);
-			FromPlayerToBlock = FromPlayerToBlock.GetNormalize();
-			Player.Physics.Acceleration.X += FromPlayerToBlock.X;
-			Player.Physics.Acceleration.Y += FromPlayerToBlock.Y;
+			if (FromPlayerToBlock.X > FromPlayerToBlock.Y) //FromPlayerToBlock = FromPlayerToBlock.GetNormalize();
+			{
+				Player.Physics.Acceleration.X = 0;
+				Player.Physics.Velocity.X = 0;
+			}
+			else
+			{
+				Player.Physics.Acceleration.Y = 0;
+				Player.Physics.Velocity.Y = 0;
+			}
+			//Player.Physics.Acceleration.X += FromPlayerToBlock.X;
+			//Player.Physics.Acceleration.Y += FromPlayerToBlock.Y;
 		}
 	}
 
@@ -158,9 +167,9 @@ void initGL(int argc, char **argv)
 
 	// Инициализация текстур
 	Player.Legs.Load("Legs.png");
-	Player.Legs.Size = Vector(0.4, 0.4);
+	Player.Legs.Size = Vector(0.2, 0.2);
 	Player.Body.Load("Body.png");
-	Player.Body.Size = Vector(0.9, 0.9);
+	Player.Body.Size = Vector(0.4, 0.4);
 
 	Cross.Body.Load("Cross.png");
 	for (int i = 0; i < wall_count; i++)
