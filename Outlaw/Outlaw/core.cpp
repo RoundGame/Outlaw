@@ -48,6 +48,17 @@ void Update(int Value)
 			Player.Direction = -acos(Velocity.X);
 	}
 
+	for (int i = 0; i < wall_count; i++)
+	{
+		if (Collision(Player.Physics.Position, Player.Legs.Size, Wall[i].Position, Wall[i].Body.Size))
+		{
+			Vector FromPlayerToBlock = Vector(Player.Physics.Position.X - Wall[i].Position.X, Player.Physics.Position.Y - Wall[i].Position.Y);
+			FromPlayerToBlock = FromPlayerToBlock.GetNormalize();
+			Player.Physics.Acceleration.X += FromPlayerToBlock.X;
+			Player.Physics.Acceleration.Y += FromPlayerToBlock.Y;
+		}
+	}
+
 	//Player.Target_TO(Cross.Physics.Position); // Настроить 
 	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
 	way.X *= (double)win_height / win_width * Window.Render_Size.X / 2;
@@ -147,7 +158,10 @@ void initGL(int argc, char **argv)
 
 	// Инициализация текстур
 	Player.Legs.Load("Legs.png");
+	Player.Legs.Size = Vector(0.4, 0.4);
 	Player.Body.Load("Body.png");
+	Player.Body.Size = Vector(0.9, 0.9);
+
 	Cross.Body.Load("Cross.png");
 	for (int i = 0; i < wall_count; i++)
 	{
@@ -155,7 +169,10 @@ void initGL(int argc, char **argv)
 		Wall[i].Body.Size = Vector(1.0 / 9, 1.0 / 9);
 	}
 	for (int i = 0; i < bullet_count; i++)
+	{
 		bullet[i].Body.Load("Bullet.png");
+		bullet[i].Body.Size = Vector(0.06, 0.06);
+	}
 
 	int k = 0;
 	for (int i = 0; i < 18; i++)
@@ -203,8 +220,6 @@ void Render()
 	//Отрисовка пуль
 	for (int i = 0; i < bullet_count; i++)
 	{
-		bullet[i].Body.Size.X = 0.06;
-		bullet[i].Body.Size.Y = 0.06;
 		if (bullet[i].isExist)
 		{
 			glMatrixMode(GL_MODELVIEW);
@@ -231,10 +246,10 @@ void Draw_Quad(Vector Position, Sprite Sprite)
 {
 	glBindTexture(GL_TEXTURE_2D, Sprite.Texture); // Укажем текстуру, далее будет использоваться она
 	glBegin(GL_QUADS); // Выбираем метод отрисовки
-	glTexCoord2f(0.0, 1.0); glVertex2f(-Sprite.Size.X/2 + Position.X, -Sprite.Size.Y/2 + Position.Y); // Задаем координаты декстур и позиции объекта
-	glTexCoord2f(1.0, 1.0); glVertex2f(Sprite.Size.X/2 + Position.X, -Sprite.Size.Y/2 + Position.Y);
-	glTexCoord2f(1.0, 0.0); glVertex2f(Sprite.Size.X/2 + Position.X, Sprite.Size.Y/2 + Position.Y);
-	glTexCoord2f(0.0, 0.0); glVertex2f(-Sprite.Size.X/2 + Position.X, Sprite.Size.Y/2 + Position.Y);
+	glTexCoord2f(0.0, 1.0); glVertex2f(-Sprite.Size.X / 2 + Position.X, -Sprite.Size.Y / 2 + Position.Y); // Задаем координаты декстур и позиции объекта
+	glTexCoord2f(1.0, 1.0); glVertex2f(Sprite.Size.X / 2 + Position.X, -Sprite.Size.Y / 2 + Position.Y);
+	glTexCoord2f(1.0, 0.0); glVertex2f(Sprite.Size.X / 2 + Position.X, Sprite.Size.Y / 2 + Position.Y);
+	glTexCoord2f(0.0, 0.0); glVertex2f(-Sprite.Size.X / 2 + Position.X, Sprite.Size.Y / 2 + Position.Y);
 	glEnd();
 }
 
