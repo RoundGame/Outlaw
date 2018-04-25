@@ -12,16 +12,14 @@ struct Window
 	Vector Render_Size; // Размер отрисовываемой области
 } Window;
 
-Entity entity; // тестовый блок
-const int bullet_count = 30;
-const int wall_count = 56;
+const int bullet_count = 10;
+const int wall_count = 67;
 Object bullet[bullet_count];
-Object Cross;
+Static_Object Cross;
 Character Player; // Создаем игрока
+Character Enemy; // Создаем врага
 Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
-int BurstMode = 0; //Режим стрельбы (0 - одиночными, 2 - очередью)
-bool isMousePressed = false;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -39,55 +37,23 @@ void Update(int Value)
 	Player.Physics.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
 	Player.Physics.Acceleration.Y = -1 * key[DOWN].isPressed + key[UP].isPressed;	// Получаем направление движения по Y
 	Player.Physics.Acceleration = Player.Physics.Acceleration.GetNormalize();
-	Vector Velocity = Player.Physics.Velocity.GetNormalize();
-	if (Player.Physics.Acceleration.GetLength() != 0)
-	{
-		if (Velocity.Y >= 0)
-			Player.Direction = acos(Velocity.X);
-		else
-			Player.Direction = -acos(Velocity.X);
-	}
+	Player.Set_Legs_Direction();
 
-	Vector Wall_Resistance;
-	for (int i = 0; i < wall_count; i++)
-	{
-		if (Collision(Player.Physics.Position, Player.Legs.Size, Wall[i].Position, Wall[i].Body.Size))
-		{
-			Wall_Resistance.X += Player.Physics.Position.X - Wall[i].Position.X;
-			Wall_Resistance.Y += Player.Physics.Position.Y - Wall[i].Position.Y;
-		}
-	}
-	Wall_Resistance = Wall_Resistance.GetNormalize();
-	//printf("%0.3f\t%0.3f\t\t", (float)(Wall_Resistance.X), (float)(Wall_Resistance.Y));
-	if (Wall_Resistance.GetLength() != 0)
-	{
-		double _angle;
-		if (Wall_Resistance.Y > 0)
-			_angle = round(acos(Wall_Resistance.X) / M_PI_4) * M_PI_4;
-		else
-			_angle = -round(acos(Wall_Resistance.X) / M_PI_4) * M_PI_4;
-		//printf("%d\t\t", (int)(_angle * 180 / M_PI));
-		Wall_Resistance.X = round(cos(_angle));
-		Wall_Resistance.Y = round(sin(_angle));
-	}
-	//printf("%0.3f\t%0.3f\n", (float)(Wall_Resistance.X), (float)(Wall_Resistance.Y));
-	Player.Physics.Acceleration.X += Wall_Resistance.X * abs(Player.Physics.Acceleration.X);
-	Player.Physics.Acceleration.Y += Wall_Resistance.Y * abs(Player.Physics.Acceleration.Y);
-
-	//Player.Target_TO(Cross.Physics.Position); // Настроить 
-	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
-	way.X *= (double)win_height / win_width * Window.Render_Size.X / 2;
-	way.Y *= Window.Render_Size.Y / 2;
-	way = way.GetNormalize();
-
-	if (way.Y >= 0)
-		Player.Physics.Angle = acos(way.X);
-	else
-		Player.Physics.Angle = -acos(way.X);
-
+	Player.Use_Collisions(Wall, wall_count);
+	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	Vector EnemyWay = Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y);
+	EnemyWay = EnemyWay.GetNormalize();
+	Enemy.Physics.Acceleration.X = EnemyWay.X;
+	Enemy.Physics.Acceleration.Y = EnemyWay.Y;
+	Enemy.Set_Legs_Direction();
+
+	Enemy.Use_Collisions(Wall, wall_count);
+	Enemy.Target_To(Player.Physics.Position, Window.Render_Size);
+	Enemy.Physics.Update(true);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// Высчитывание перемещения пули и высчитывание столкновений ///////////////////////////////////////////////////////////////////////////////////////////
 	for (int i = 0; i < bullet_count; i++)
@@ -107,26 +73,6 @@ void Update(int Value)
 		}
 	}
 
-
-	// Настройки режима стрельбы (ТЕСТ) //////////////////////////////////////////////////////////////////////////////////////////////
-	if (isMousePressed)
-	{
-		//printf("Pressed");
-		if (BurstMode == 0)
-		{
-			CreateBullet();
-			BurstMode = 1;
-		}
-		else if (BurstMode == 2)
-			CreateBullet();
-	}
-	else
-	{
-		if (BurstMode == 1)
-			BurstMode = 0;
-	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 	glutPostRedisplay(); // Обновляем экран
 	glutTimerFunc(timer_update, Update, Value); // Задержка 15 мс перед новым вызовом функции
 }
@@ -142,6 +88,7 @@ void Save()
 void Animation(int Value)
 {
 	Player.Animation(); // Анимация игрока, принемаемый параметр количество кадров анмайии
+	Enemy.Animation();
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 }
 
@@ -177,6 +124,11 @@ void initGL(int argc, char **argv)
 	Player.Body.Load("Body.png");
 	Player.Body.Size = Vector(0.4, 0.4);
 
+	Enemy.Legs.Load("Legs.png");
+	Enemy.Legs.Size = Vector(0.2, 0.2);
+	Enemy.Body.Load("Body.png");
+	Enemy.Body.Size = Vector(0.4, 0.4);
+
 	Cross.Body.Load("Cross.png");
 	for (int i = 0; i < wall_count; i++)
 	{
@@ -190,24 +142,29 @@ void initGL(int argc, char **argv)
 	}
 
 	int k = 0;
-	for (int i = 0; i < 18; i++)
+	for (int i = 0; i < 20; i++)
 	{
-		Wall[k].Position.Y = 0.5;
-		Wall[k].Position.X = (double)i / 9 - 1.0;
-		Wall[k + 1].Position.Y = -0.5;
-		Wall[k + 1].Position.X = (double)i / 9 - 1.0;
+		Wall[k].Position.Y = 10 / (double)win_width;
+		Wall[k].Position.X = (double)i / 9 - 10 / (double)win_height;
+		Wall[k + 1].Position.Y = -10 / (double)win_width;
+		Wall[k + 1].Position.X = (double)i / 9 - 10 / (double)win_height;
 		k += 2;
 	}
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 12; i++)
 	{
-		Wall[k].Position.Y = (double)i / 9 - 0.5;
-		Wall[k].Position.X = -1.0;
-		Wall[k + 1].Position.Y = (double)i / 9 - 0.5;
-		Wall[k + 1].Position.X = 1.0;
+		Wall[k].Position.Y = (double)i / 9 - 10 / (double)win_width;
+		Wall[k].Position.X = -10 / (double)win_height;
+		Wall[k + 1].Position.Y = (double)i / 9 - 10 / (double)win_width;
+		Wall[k + 1].Position.X = 10 / (double)win_height;
 		k += 2;
 	}
+	Wall[k].Position.Y = 1.0 / 9;
+	Wall[k + 1].Position.Y = -1.0 / 9;
 
+	Player.Physics.Position = Vector(-0.5, 0.0);
 	Player.Physics.Speed = 0.2;
+	Enemy.Physics.Position = Vector(0.5, 0.0);
+	Enemy.Physics.Speed = 0.1;
 
 	//Биндим клавиши
 	key[LEFT].Nominal = KEY_A;
@@ -230,6 +187,7 @@ void Render()
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
 	Player.Draw(); // Рисуем игрока
+	Enemy.Draw();
 
 	for (int i = 0; i < wall_count; i++)
 		Draw_Quad(Wall[i].Position, Wall[i].Body);
@@ -251,7 +209,7 @@ void Render()
 	}
 	//Отрисовка прицела
 	Cross.Body.Size = Vector(0.2, 0.2);
-	Draw_Quad(Cross.Physics.Position, Cross.Body);
+	Draw_Quad(Cross.Position, Cross.Body);
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
@@ -374,13 +332,6 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 			volume -= 134219776;
 			waveOutSetVolume(0, volume);
 		}
-		if (KEY->vkCode == KEY_C && wParam == WM_KEYUP)
-		{
-			if (Player.Physics.Boost == 4)
-				Player.Physics.Boost = 0.1;
-			else
-				Player.Physics.Boost = 4;
-		}
 		if (KEY->vkCode == VK_F11 && wParam == WM_KEYUP)
 			SetFullScreen();
 		if (KEY->vkCode == VK_ESCAPE)
@@ -398,23 +349,12 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 		if (wParam == WM_MOUSEMOVE)
 		{
-			Cross.Physics.Position.X = ((MOUSE->pt.x - Window.Position.X - Window.Render_Position.X) / Window.Render_Size.X * 2 - 1.0) * 10 / win_height;
-			Cross.Physics.Position.Y = (-(MOUSE->pt.y - Window.Position.Y - 20 - Window.Render_Position.Y) / Window.Render_Size.Y * 2 + 1.0) * 10 / win_width;
+			Cross.Position.X = ((MOUSE->pt.x - Window.Position.X - Window.Render_Position.X) / Window.Render_Size.X * 2 - 1.0) * 10 / win_height;
+			Cross.Position.Y = (-(MOUSE->pt.y - Window.Position.Y - 20 - Window.Render_Position.Y) / Window.Render_Size.Y * 2 + 1.0) * 10 / win_width;
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
-			isMousePressed = true;
-		}
-		if (wParam == WM_LBUTTONUP)
-		{
-			isMousePressed = false;
-		}
-		if (wParam == WM_RBUTTONDOWN)
-		{
-			if (BurstMode == 2)
-				BurstMode = 0;
-			else
-				BurstMode = 2;
+			CreateBullet();
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
