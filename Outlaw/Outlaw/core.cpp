@@ -48,25 +48,20 @@ void Update(int Value)
 			Player.Direction = -acos(Velocity.X);
 	}
 
+	Vector Wall_Resistance;
 	for (int i = 0; i < wall_count; i++)
 	{
 		if (Collision(Player.Physics.Position, Player.Legs.Size, Wall[i].Position, Wall[i].Body.Size))
 		{
-			Vector FromPlayerToBlock = Vector(Player.Physics.Position.X - Wall[i].Position.X, Player.Physics.Position.Y - Wall[i].Position.Y);
-			if (FromPlayerToBlock.X > FromPlayerToBlock.Y) //FromPlayerToBlock = FromPlayerToBlock.GetNormalize();
-			{
-				Player.Physics.Acceleration.X = 0;
-				Player.Physics.Velocity.X = 0;
-			}
-			else
-			{
-				Player.Physics.Acceleration.Y = 0;
-				Player.Physics.Velocity.Y = 0;
-			}
-			//Player.Physics.Acceleration.X += FromPlayerToBlock.X;
-			//Player.Physics.Acceleration.Y += FromPlayerToBlock.Y;
+			Wall_Resistance.X += Player.Physics.Position.X - Wall[i].Position.X;
+			Wall_Resistance.Y += Player.Physics.Position.Y - Wall[i].Position.Y;
 		}
 	}
+	Wall_Resistance = Wall_Resistance.GetNormalize();
+	Wall_Resistance.X = (int)(Wall_Resistance.X * 2 / sqrt(2));
+	Wall_Resistance.Y = (int)(Wall_Resistance.Y * 2 / sqrt(2));
+	Player.Physics.Acceleration.X += Wall_Resistance.X;
+	Player.Physics.Acceleration.Y += Wall_Resistance.Y;
 
 	//Player.Target_TO(Cross.Physics.Position); // Настроить 
 	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
