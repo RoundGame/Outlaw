@@ -60,8 +60,8 @@ void Update(int Value)
 	Wall_Resistance = Wall_Resistance.GetNormalize();
 	Wall_Resistance.X = (int)(Wall_Resistance.X * 2 / sqrt(2));
 	Wall_Resistance.Y = (int)(Wall_Resistance.Y * 2 / sqrt(2));
-	Player.Physics.Acceleration.X += Wall_Resistance.X;
-	Player.Physics.Acceleration.Y += Wall_Resistance.Y;
+	Player.Physics.Acceleration.X += Wall_Resistance.X * abs(Player.Physics.Acceleration.X);
+	Player.Physics.Acceleration.Y += Wall_Resistance.Y * abs(Player.Physics.Acceleration.Y);
 
 	//Player.Target_TO(Cross.Physics.Position); // Настроить 
 	Vector way = Vector(Cross.Physics.Position.X - Player.Physics.Position.X, Cross.Physics.Position.Y - Player.Physics.Position.Y);
@@ -195,6 +195,8 @@ void initGL(int argc, char **argv)
 		Wall[k + 1].Position.X = 1.0;
 		k += 2;
 	}
+
+	Player.Physics.Speed = 0.2;
 
 	//Биндим клавиши
 	key[LEFT].Nominal = KEY_A;
