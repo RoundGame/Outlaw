@@ -42,8 +42,41 @@ void Update(int Value)
 	Player.Use_Collisions(Wall, wall_count);
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
+	///*
+	double max = -wall_count * 100, X = 0, Y = 0;
+	for (double x = Enemy.Physics.Position.X - 0.1; x < Enemy.Physics.Position.X + 0.1; x += 0.1)
+	{
+		for (double y = Enemy.Physics.Position.Y - 0.1; y < Enemy.Physics.Position.Y + 0.1; y += 0.1)
+		{
+			if (y != Enemy.Physics.Position.Y || x != Enemy.Physics.Position.X)
+			{
+				Vector temp = Vector(Player.Physics.Position.X - x, Player.Physics.Position.Y - y);
+				double len = 0.2 / temp.GetLength() * wall_count;
+				printf("%0.3f\t%0.3f\t\t\t%0.3f\t\t", x, y, len);
+				for (int i = 0; i < wall_count; i++)
+				{
+					temp = Vector(Wall[i].Position.X - x, Wall[i].Position.Y - y);
+					len -= 0.1 / temp.GetLength();
+				}
+				printf("%0.3f\n", len);
+				if (len > max)
+				{
+					max = len;
+					X = x;
+					Y = y;
+				}
+			}
+		}
+	}
+	printf("%0.3f\t%0.3f\t\t\t%0.3f\n", X, Y, max);
+	//*/
+	//Vector temp = Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y);
+	//double len = 1.0 / temp.GetLength();
+	//temp.GetNormalize();
+	//temp.X *= len;
+	//temp.Y *= len;
 
-	Vector EnemyWay = Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y);
+	Vector EnemyWay = Vector(X - Enemy.Physics.Position.X, Y - Enemy.Physics.Position.Y);
 	EnemyWay = EnemyWay.GetNormalize();
 	Enemy.Physics.Acceleration.X = EnemyWay.X;
 	Enemy.Physics.Acceleration.Y = EnemyWay.Y;
@@ -52,6 +85,7 @@ void Update(int Value)
 	Enemy.Use_Collisions(Wall, wall_count);
 	Enemy.Target_To(Player.Physics.Position, Window.Render_Size);
 	Enemy.Physics.Update(true);
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
