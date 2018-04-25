@@ -20,6 +20,7 @@ Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
+double first_factor = 0.1, second_factor = 0.2;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -42,23 +43,21 @@ void Update(int Value)
 	Player.Use_Collisions(Wall, wall_count);
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
-	///*
+	
 	double max = -wall_count * 100, X = 0, Y = 0;
-	for (double x = Enemy.Physics.Position.X - 0.1; x < Enemy.Physics.Position.X + 0.1; x += 0.1)
+	for (double x = Enemy.Physics.Position.X - 0.1; x <= Enemy.Physics.Position.X + 0.1; x += 0.1)
 	{
-		for (double y = Enemy.Physics.Position.Y - 0.1; y < Enemy.Physics.Position.Y + 0.1; y += 0.1)
+		for (double y = Enemy.Physics.Position.Y - 0.1; y <= Enemy.Physics.Position.Y + 0.1; y += 0.1)
 		{
 			if (y != Enemy.Physics.Position.Y || x != Enemy.Physics.Position.X)
 			{
 				Vector temp = Vector(Player.Physics.Position.X - x, Player.Physics.Position.Y - y);
-				double len = 0.2 / temp.GetLength() * wall_count;
-				printf("%0.3f\t%0.3f\t\t\t%0.3f\t\t", x, y, len);
+				double len = first_factor / temp.GetLength() * wall_count;
 				for (int i = 0; i < wall_count; i++)
 				{
 					temp = Vector(Wall[i].Position.X - x, Wall[i].Position.Y - y);
-					len -= 0.1 / temp.GetLength();
+					len -= second_factor / temp.GetLength();
 				}
-				printf("%0.3f\n", len);
 				if (len > max)
 				{
 					max = len;
@@ -68,18 +67,18 @@ void Update(int Value)
 			}
 		}
 	}
-	printf("%0.3f\t%0.3f\t\t\t%0.3f\n", X, Y, max);
-	//*/
-	//Vector temp = Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y);
-	//double len = 1.0 / temp.GetLength();
-	//temp.GetNormalize();
-	//temp.X *= len;
-	//temp.Y *= len;
-
 	Vector EnemyWay = Vector(X - Enemy.Physics.Position.X, Y - Enemy.Physics.Position.Y);
 	EnemyWay = EnemyWay.GetNormalize();
-	Enemy.Physics.Acceleration.X = EnemyWay.X;
-	Enemy.Physics.Acceleration.Y = EnemyWay.Y;
+	if (Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y).GetLength() > 0.005)
+	{
+		Enemy.Physics.Acceleration.X = EnemyWay.X;
+		Enemy.Physics.Acceleration.Y = EnemyWay.Y;
+	}
+	else
+	{
+		Enemy.Physics.Acceleration = Vector(0, 0);
+		Enemy.Physics.Velocity = Vector(0, 0);
+	}
 	Enemy.Set_Legs_Direction();
 
 	Enemy.Use_Collisions(Wall, wall_count);
@@ -195,7 +194,7 @@ void initGL(int argc, char **argv)
 	Wall[k].Position.Y = 1.0 / 9;
 	Wall[k + 1].Position.Y = -1.0 / 9;
 
-	Player.Physics.Position = Vector(-0.5, 0.0);
+	Player.Physics.Position = Vector(-0.5, 0.01);
 	Player.Physics.Speed = 0.2;
 	Enemy.Physics.Position = Vector(0.5, 0.0);
 	Enemy.Physics.Speed = 0.1;
@@ -247,6 +246,22 @@ void Render()
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
+
+	//glMatrixMode(GL_MODELVIEW);
+	//glPushMatrix();
+	//glLoadIdentity();
+	//glTranslated(-0.5, -0.2, 0);
+	glRasterPos2d(Player.Physics.Position.X, Player.Physics.Position.Y);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'C');
+	glRasterPos2d(Enemy.Physics.Position.X + 0.05, Enemy.Physics.Position.Y);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'Y');
+	glRasterPos2d(Player.Physics.Position.X + 0.1, Player.Physics.Position.Y);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'K');
+	glRasterPos2d(Enemy.Physics.Position.X + 0.15, Enemy.Physics.Position.Y);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'A');
+	//glPopMatrix();
+
+
 	glutSwapBuffers(); // Замена буфера на вновь отрисованный 
 }
 
