@@ -58,8 +58,19 @@ void Update(int Value)
 		}
 	}
 	Wall_Resistance = Wall_Resistance.GetNormalize();
-	Wall_Resistance.X = (int)(Wall_Resistance.X * 2 / sqrt(2));
-	Wall_Resistance.Y = (int)(Wall_Resistance.Y * 2 / sqrt(2));
+	//printf("%0.3f\t%0.3f\t\t", (float)(Wall_Resistance.X), (float)(Wall_Resistance.Y));
+	if (Wall_Resistance.GetLength() != 0)
+	{
+		double _angle;
+		if (Wall_Resistance.Y > 0)
+			_angle = round(acos(Wall_Resistance.X) / M_PI_4) * M_PI_4;
+		else
+			_angle = -round(acos(Wall_Resistance.X) / M_PI_4) * M_PI_4;
+		//printf("%d\t\t", (int)(_angle * 180 / M_PI));
+		Wall_Resistance.X = round(cos(_angle));
+		Wall_Resistance.Y = round(sin(_angle));
+	}
+	//printf("%0.3f\t%0.3f\n", (float)(Wall_Resistance.X), (float)(Wall_Resistance.Y));
 	Player.Physics.Acceleration.X += Wall_Resistance.X * abs(Player.Physics.Acceleration.X);
 	Player.Physics.Acceleration.Y += Wall_Resistance.Y * abs(Player.Physics.Acceleration.Y);
 
