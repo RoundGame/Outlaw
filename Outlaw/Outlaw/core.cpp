@@ -247,10 +247,18 @@ void Render()
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
 
-	//glMatrixMode(GL_MODELVIEW);
-	//glPushMatrix();
-	//glLoadIdentity();
-	//glTranslated(-0.5, -0.2, 0);
+	char chislo1[4];
+	_itoa_s((int)(first_factor * 10), chislo1, 10);
+	char chislo2[4];
+	_itoa_s((int)(second_factor * 10), chislo2, 10);
+	for (int i = 0; i < 4; i++)
+	{
+		glRasterPos2d(-1.0 + i * 0.03, 0.5);
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, chislo1[i]);
+		glRasterPos2d(0.9 + i * 0.03, 0.5);
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, chislo2[i]);
+	}
+
 	glRasterPos2d(Player.Physics.Position.X, Player.Physics.Position.Y);
 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'C');
 	glRasterPos2d(Enemy.Physics.Position.X + 0.05, Enemy.Physics.Position.Y);
@@ -259,8 +267,6 @@ void Render()
 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'K');
 	glRasterPos2d(Enemy.Physics.Position.X + 0.15, Enemy.Physics.Position.Y);
 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'A');
-	//glPopMatrix();
-
 
 	glutSwapBuffers(); // Замена буфера на вновь отрисованный 
 }
@@ -371,6 +377,27 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 					key[i].isPressed = false;
 			}
 		}
+		if (KEY->vkCode == VK_NUMPAD4 && wParam == WM_KEYUP)
+		{
+			first_factor += 0.1;
+		}
+		if (KEY->vkCode == VK_NUMPAD1 && wParam == WM_KEYUP)
+		{
+			first_factor -= 0.1;
+		}
+		if (KEY->vkCode == VK_NUMPAD5 && wParam == WM_KEYUP)
+		{
+			second_factor += 0.1;
+		}
+		if (KEY->vkCode == VK_NUMPAD2 && wParam == WM_KEYUP)
+		{
+			second_factor -= 0.1;
+		}
+		if (KEY->vkCode == KEY_R)
+		{
+			volume += 134219776;
+			waveOutSetVolume(0, volume);
+		}
 		if (KEY->vkCode == KEY_R)
 		{
 			volume += 134219776;
@@ -404,6 +431,7 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		if (wParam == WM_LBUTTONDOWN)
 		{
 			CreateBullet();
+			//PlaySoundA("pistol.wav", NULL, SND_ASYNC | SND_FILENAME);
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
