@@ -31,11 +31,12 @@ struct Static_Object
 
 struct Character
 {
+	double HP = 100;
 	/*Механикуа перерабатывается*/ double	Direction = 0;	// Началное направление персонажа (3 - смотрит вперед) 
 	/*Механикуа перерабатывается*/ double	CurrentFrame = 0;	// Текуший кадр анимации
 	
 	Physical_component Physics; // Физический компонент персонажа (Позция, Скорость, Ускорение)
-	Sprite Legs, Body;	// Текстура персонажа
+	Sprite Legs, Body, Death;	// Текстура персонажа
 
 	void Animation();	// Анимаций персонажа
 	void Target_To(Vector Target, Vector Window_Render_Size); // Установить угол(Physics.Angle) направления в сторону обьекта цели

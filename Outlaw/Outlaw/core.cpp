@@ -20,7 +20,6 @@ Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
-double first_factor = 0.1, second_factor = 0.2;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -44,7 +43,7 @@ void Update(int Value)
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
 	
-	double max = -wall_count * 100, X = 0, Y = 0;
+	double max = wall_count * 100, X = 0, Y = 0;
 	for (double x = Enemy.Physics.Position.X - 0.1; x <= Enemy.Physics.Position.X + 0.1; x += 0.1)
 	{
 		for (double y = Enemy.Physics.Position.Y - 0.1; y <= Enemy.Physics.Position.Y + 0.1; y += 0.1)
@@ -52,13 +51,13 @@ void Update(int Value)
 			if (y != Enemy.Physics.Position.Y || x != Enemy.Physics.Position.X)
 			{
 				Vector temp = Vector(Player.Physics.Position.X - x, Player.Physics.Position.Y - y);
-				double len = first_factor / temp.GetLength() * wall_count;
+				double len = 0.15 * temp.GetLength() * wall_count;
 				for (int i = 0; i < wall_count; i++)
 				{
 					temp = Vector(Wall[i].Position.X - x, Wall[i].Position.Y - y);
-					len -= second_factor / temp.GetLength();
+					len += 0.2 / temp.GetLength();
 				}
-				if (len > max)
+				if (len < max)
 				{
 					max = len;
 					X = x;
@@ -69,21 +68,24 @@ void Update(int Value)
 	}
 	Vector EnemyWay = Vector(X - Enemy.Physics.Position.X, Y - Enemy.Physics.Position.Y);
 	EnemyWay = EnemyWay.GetNormalize();
-	if (Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y).GetLength() > 0.005)
+	if (Enemy.HP > 0)
 	{
-		Enemy.Physics.Acceleration.X = EnemyWay.X;
-		Enemy.Physics.Acceleration.Y = EnemyWay.Y;
-	}
-	else
-	{
-		Enemy.Physics.Acceleration = Vector(0, 0);
-		Enemy.Physics.Velocity = Vector(0, 0);
-	}
-	Enemy.Set_Legs_Direction();
+		if (Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y).GetLength() > 0.02)
+		{
+			Enemy.Physics.Acceleration.X = EnemyWay.X;
+			Enemy.Physics.Acceleration.Y = EnemyWay.Y;
+		}
+		else
+		{
+			Enemy.Physics.Acceleration = Vector(0, 0);
+			Enemy.Physics.Velocity = Vector(0, 0);
+		}
+		Enemy.Set_Legs_Direction();
 
-	Enemy.Use_Collisions(Wall, wall_count);
-	Enemy.Target_To(Player.Physics.Position, Window.Render_Size);
-	Enemy.Physics.Update(true);
+		Enemy.Use_Collisions(Wall, wall_count);
+		Enemy.Target_To(Player.Physics.Position, Window.Render_Size);
+		Enemy.Physics.Update(true);
+	}
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,6 +99,11 @@ void Update(int Value)
 			if (bullet[i].Physics.Position.X >= 1.5 || bullet[i].Physics.Position.X <= -1.5 || bullet[i].Physics.Position.Y >= 1.5 || bullet[i].Physics.Position.Y <= -1.5)
 				bullet[i].isExist = false;
 
+			if (Enemy.HP > 0 && Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Enemy.Physics.Position, Enemy.Body.Size))
+			{
+				bullet[i].isExist = false;
+				Enemy.HP -= rand() % 7 + 17;
+			}
 			// Если произошла колизия, изменим активность пули в нерабочее
 			for (int j = 0; j < wall_count; j++)
 			{
@@ -161,6 +168,8 @@ void initGL(int argc, char **argv)
 	Enemy.Legs.Size = Vector(0.2, 0.2);
 	Enemy.Body.Load("Body.png");
 	Enemy.Body.Size = Vector(0.4, 0.4);
+	Enemy.Death.Load("Death.png");
+	Enemy.Death.Size = Vector(0.35, 0.35);
 
 	Cross.Body.Load("Cross.png");
 	for (int i = 0; i < wall_count; i++)
@@ -207,6 +216,7 @@ void initGL(int argc, char **argv)
 
 	waveOutGetVolume(0, (LPDWORD)&volume);
 	glutSetCursor(GLUT_CURSOR_NONE);
+	srand(100);
 }
 
 // Отрисовка
@@ -219,8 +229,8 @@ void Render()
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
-	Player.Draw(); // Рисуем игрока
 	Enemy.Draw();
+	Player.Draw(); // Рисуем игрока
 
 	for (int i = 0; i < wall_count; i++)
 		Draw_Quad(Wall[i].Position, Wall[i].Body);
@@ -237,7 +247,6 @@ void Render()
 			Matrix_Rotate(bullet[i].Physics.Position, bullet[i].Physics.Angle); // Поворачиваем пулю
 			Draw_Quad(bullet[i].Physics.Position, bullet[i].Body); // Рисуем пулю
 			glPopMatrix();
-
 		}
 	}
 	//Отрисовка прицела
@@ -247,26 +256,20 @@ void Render()
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
 
-	char chislo1[4];
-	_itoa_s((int)(first_factor * 10), chislo1, 10);
-	char chislo2[4];
-	_itoa_s((int)(second_factor * 10), chislo2, 10);
-	for (int i = 0; i < 4; i++)
+	if (Enemy.HP > 0)
 	{
-		glRasterPos2d(-1.0 + i * 0.03, 0.5);
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, chislo1[i]);
-		glRasterPos2d(0.9 + i * 0.03, 0.5);
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, chislo2[i]);
+		char HP[4];
+		_itoa_s((int)Enemy.HP, HP, 10);
+		for (int i = 0; i < 3; i++)
+		{
+			glRasterPos2d(Enemy.Physics.Position.X - 0.08 + i * 0.04, Enemy.Physics.Position.Y + 0.06);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, HP[i]);
+		}
+		glRasterPos2d(Enemy.Physics.Position.X + 0.04, Enemy.Physics.Position.Y + 0.06);
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'H');
+		glRasterPos2d(Enemy.Physics.Position.X + 0.08, Enemy.Physics.Position.Y + 0.06);
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'P');
 	}
-
-	glRasterPos2d(Player.Physics.Position.X, Player.Physics.Position.Y);
-	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'C');
-	glRasterPos2d(Enemy.Physics.Position.X + 0.05, Enemy.Physics.Position.Y);
-	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'Y');
-	glRasterPos2d(Player.Physics.Position.X + 0.1, Player.Physics.Position.Y);
-	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'K');
-	glRasterPos2d(Enemy.Physics.Position.X + 0.15, Enemy.Physics.Position.Y);
-	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'A');
 
 	glutSwapBuffers(); // Замена буфера на вновь отрисованный 
 }
@@ -376,22 +379,6 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 				else
 					key[i].isPressed = false;
 			}
-		}
-		if (KEY->vkCode == VK_NUMPAD4 && wParam == WM_KEYUP)
-		{
-			first_factor += 0.1;
-		}
-		if (KEY->vkCode == VK_NUMPAD1 && wParam == WM_KEYUP)
-		{
-			first_factor -= 0.1;
-		}
-		if (KEY->vkCode == VK_NUMPAD5 && wParam == WM_KEYUP)
-		{
-			second_factor += 0.1;
-		}
-		if (KEY->vkCode == VK_NUMPAD2 && wParam == WM_KEYUP)
-		{
-			second_factor -= 0.1;
 		}
 		if (KEY->vkCode == KEY_R)
 		{
