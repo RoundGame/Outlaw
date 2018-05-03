@@ -5,8 +5,8 @@ void Physical_component::Update(bool isAcceleration)
 {
 	if (isAcceleration)
 	{
-		Velocity.X += (Acceleration.X * 0.01 - Velocity.X * 0.1) * Boost; //Добавлем к вектору скорости вектор ускорения. boost - коэффициент ускорения
-		Velocity.Y += (Acceleration.Y * 0.01 - Velocity.Y * 0.1) * Boost; //Вычитаем из вектора ускорения вектор текущей скорости, тем самым имитируем трение
+		Velocity.X += (Acceleration.X * 0.01 - Velocity.X * 0.1) * Boost * Speed * 5; //Добавлем к вектору скорости вектор ускорения. boost - коэффициент ускорения
+		Velocity.Y += (Acceleration.Y * 0.01 - Velocity.Y * 0.1) * Boost * Speed * 5; //Вычитаем из вектора ускорения вектор текущей скорости, тем самым имитируем трение
 	}
 	Position.X += Velocity.X * Speed; //Добавляем к вектору текущей позиции вектор текущей скорости
 	Position.Y += Velocity.Y * Speed;
