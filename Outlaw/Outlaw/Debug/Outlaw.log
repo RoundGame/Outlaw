@@ -1,14 +1,14 @@
 ﻿  core.cpp
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(282): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(283): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(284): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(285): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(307): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(307): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(329): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(330): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_DXT.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_helper.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(SOIL.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(stb_image_aug.obj)" шыш эр "E:\1Folders\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
-  Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Debug\Outlaw.exe
+c:\users\andreypc\documents\visual studio 2017\projects\quicksort2\outlaw\outlaw\outlaw\core.cpp(305): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+c:\users\andreypc\documents\visual studio 2017\projects\quicksort2\outlaw\outlaw\outlaw\core.cpp(306): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+c:\users\andreypc\documents\visual studio 2017\projects\quicksort2\outlaw\outlaw\outlaw\core.cpp(307): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+c:\users\andreypc\documents\visual studio 2017\projects\quicksort2\outlaw\outlaw\outlaw\core.cpp(308): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+c:\users\andreypc\documents\visual studio 2017\projects\quicksort2\outlaw\outlaw\outlaw\core.cpp(330): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
+c:\users\andreypc\documents\visual studio 2017\projects\quicksort2\outlaw\outlaw\outlaw\core.cpp(330): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
+c:\users\andreypc\documents\visual studio 2017\projects\quicksort2\outlaw\outlaw\outlaw\core.cpp(352): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+c:\users\andreypc\documents\visual studio 2017\projects\quicksort2\outlaw\outlaw\outlaw\core.cpp(353): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_DXT.obj)" шыш эр "C:\Users\AndreyPC\Documents\Visual Studio 2017\Projects\Quicksort2\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
+soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(image_helper.obj)" шыш эр "C:\Users\AndreyPC\Documents\Visual Studio 2017\Projects\Quicksort2\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
+soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(SOIL.obj)" шыш эр "C:\Users\AndreyPC\Documents\Visual Studio 2017\Projects\Quicksort2\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
+soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB эх эрщфхэ ё "soil.lib(stb_image_aug.obj)" шыш эр "C:\Users\AndreyPC\Documents\Visual Studio 2017\Projects\Quicksort2\Outlaw\Outlaw\Debug\SOIL.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
+  Outlaw.vcxproj -> C:\Users\AndreyPC\Documents\Visual Studio 2017\Projects\Quicksort2\Outlaw\Outlaw\Debug\Outlaw.exe
