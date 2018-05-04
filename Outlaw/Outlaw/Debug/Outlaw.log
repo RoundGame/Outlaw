@@ -1,5 +1,4 @@
 ﻿  core.cpp
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(274): error C2676: бинарный "+": "Vector" не определяет этот оператор или преобразование к типу приемлемо к встроенному оператору
 d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(308): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
 d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(309): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
 d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(310): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
@@ -8,3 +7,8 @@ d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(333): warning C4244: арг
 d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(333): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
 d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(355): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
 d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(356): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB
+soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB
+  Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe

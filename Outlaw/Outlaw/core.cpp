@@ -271,7 +271,7 @@ void Render()
 			glLoadIdentity();
 
 			Matrix_Rotate(bullet[i].Physics.Position, bullet[i].Physics.Angle); // Поворачиваем пулю
-			Draw_Quad(bullet[i].Physics.Position + Player.Physics.Position, bullet[i].Body); // Рисуем пулю
+			Draw_Quad(bullet[i].Physics.Position, bullet[i].Body); // Рисуем пулю
 			glPopMatrix();
 		}
 	}
