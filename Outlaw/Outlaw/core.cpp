@@ -19,6 +19,7 @@ Static_Object pick2;
 Object bullet[bullet_count];
 Static_Object Cross;
 Static_Object HP;
+Static_Object map;
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Floor;
@@ -188,7 +189,7 @@ void initGL(int argc, char **argv)
 
 
 	// Инициализация объектов (+загрузка текстур)
-	Player.Legs.Load("textures/Legs.png");
+	Player.Legs.Load("textures/Legs.png"); // Игрок
 	Player.Legs.Size = Vector(0.2, 0.2);
 	Player.Body.Load("textures/Body.png");
 	Player.Body.Size = Vector(0.4, 0.4);
@@ -197,7 +198,7 @@ void initGL(int argc, char **argv)
 	Player.Physics.Position = Vector(-0.5, 0.02);
 	Player.Physics.Speed = 0.2;
 
-	pick.Body.Load("textures/boots.png");
+	pick.Body.Load("textures/boots.png"); // Поднимаемые предметы
 	pick.Body.Size = Vector(0.1, 0.1);
 	pick.Position = Vector(0.5, 0.01);
 	pick.isExist = true;
@@ -207,14 +208,18 @@ void initGL(int argc, char **argv)
 	pick2.Position = Vector(0.2, 0.41);
 	pick2.isExist = true;
 
-	HP.Body.Load("textures/hp.png");
+	HP.Body.Load("textures/hp.png"); // HP бар
 	HP.Body.Size = Vector(0.08, 0.08);
 	HP.Position = Vector(-10 / (double)win_height + 0.06, 10 / (double)win_width - 0.06);
 
-	Floor.Body.Load("textures/planks.png");
+	map.Body.Load("textures/map.png"); // Карта
+	map.Body.Size = Vector(0.3, 0.2);
+	//map.Position  = Vector(10 / (double)win_height + map.Body.Size.Y, 10 / (double)win_width - map.Body.Size.X);
+
+	Floor.Body.Load("textures/planks.png"); // Пол
 	Floor.Body.Size = Vector(0.1, 0.1);
 
-	Enemy.Legs.Load("textures/Legs.png");
+	Enemy.Legs.Load("textures/Legs.png"); // Враг
 	Enemy.Legs.Size = Vector(0.2, 0.2);
 	Enemy.Body.Load("textures/Body.png");
 	Enemy.Body.Size = Vector(0.4, 0.4);
@@ -223,7 +228,7 @@ void initGL(int argc, char **argv)
 	Enemy.Physics.Position = Vector(0.5, 0.0);
 	Enemy.Physics.Speed = 0.1;
 
-	Cross.Body.Load("textures/Cross.png");
+	Cross.Body.Load("textures/Cross.png"); // Прицел
 	Cross.Body.Size = Vector(0.1, 0.1);
 
 	for (int i = 0; i < wall_count; i++)
@@ -319,7 +324,10 @@ void Render()
 
 	//Отрисовка прицела
 	Draw_Quad(Cross.Position, Cross.Body);
+	// 
 	Draw_Quad(HP.Position, HP.Body);
+	//
+	//Draw_Quad(map.Position, map.Body);
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
