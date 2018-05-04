@@ -19,6 +19,7 @@ Object bullet[bullet_count];
 Static_Object Cross;
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
+Static_Object Flor;
 Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
 
@@ -181,8 +182,8 @@ void initGL(int argc, char **argv)
 	Player.Body.Load("textures/Body.png");
 	Player.Body.Size = Vector(0.4, 0.4);
 
-	pick.Body.Load("textures/boots.png");
-	pick.Body.Size = Vector(0.1, 0.1);
+	pick.Body.Load("textures/latest.png");
+	pick.Body.Size = Vector(0.2, 0.2);
 	pick.Physics.Position = Vector(0.5, 0.01);
 
 	Enemy.Legs.Load("textures/Legs.png");
