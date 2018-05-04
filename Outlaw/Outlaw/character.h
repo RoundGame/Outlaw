@@ -32,7 +32,9 @@ struct Static_Object
 struct Character
 {
 	bool isAttack = false;
+	bool isKick = false;
 	double HP = 100;
+	double Knock_Back = 0.6;
 	/*Механикуа перерабатывается*/ double	Direction = 0;	// Началное направление персонажа (3 - смотрит вперед) 
 	/*Механикуа перерабатывается*/ double	Legs_CurrentFrame = 0;	// Текуший кадр анимации
 	double	Attack_CurrentFrame = 0;

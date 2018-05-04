@@ -25,7 +25,6 @@ Character Enemy; // Создаем врага
 Static_Object Floor;
 Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
-bool isKick;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -38,6 +37,13 @@ void Update(int Value)
 	Window.Position.Y = rect.top;
 	Window.Size.X = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
 	Window.Size.Y = rect.bottom - rect.top;
+
+	if (Player.HP <= 0)
+	{
+		glutPostRedisplay(); // Обновляем экран
+		glutTimerFunc(timer_update, Update, Value); // Задержка 15 мс перед новым вызовом функции
+		return;
+	}
 
 	// Высчитывание перемещения игрока //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	Player.Physics.Acceleration.X = -1 * key[LEFT].isPressed + key[RIGHT].isPressed; // Получаем направление движения по X
@@ -92,7 +98,7 @@ void Update(int Value)
 	EnemyWay = EnemyWay.GetNormalize();
 	if (Enemy.HP > 0)
 	{
-		if (FromEnemyToPlayer.GetLength() > 0.02)
+		if (FromEnemyToPlayer.GetLength() > 0.1)
 		{
 			Enemy.Physics.Acceleration.X = EnemyWay.X;
 			Enemy.Physics.Acceleration.Y = EnemyWay.Y;
@@ -100,7 +106,8 @@ void Update(int Value)
 		else
 		{
 			Enemy.Physics.Acceleration = Vector(0, 0);
-			Enemy.Physics.Velocity = Vector(0, 0);
+			Enemy.isAttack = true;
+			Enemy.isKick = true;
 		}
 		Enemy.Set_Legs_Direction();
 
@@ -110,14 +117,20 @@ void Update(int Value)
 
 		if (Collision(Player.Physics.Position, Player.Legs.Size, Enemy.Physics.Position, Enemy.Legs.Size))
 		{
-			if (isKick)
+			if (Player.isKick)
 			{
-				Enemy.Physics.Velocity.X -= FromEnemyToPlayer.GetNormalize().X / 2;
-				Enemy.Physics.Velocity.Y -= FromEnemyToPlayer.GetNormalize().Y / 2;
+				Enemy.Physics.Velocity.X -= FromEnemyToPlayer.GetNormalize().X * Player.Knock_Back;
+				Enemy.Physics.Velocity.Y -= FromEnemyToPlayer.GetNormalize().Y * Player.Knock_Back;
 				Enemy.HP -= rand() % 7 + 7;
-				isKick = false;
+				Player.isKick = false;
 			}
-			Enemy.isAttack = true;
+			if (Enemy.isKick)
+			{
+				Player.Physics.Velocity.X += FromEnemyToPlayer.GetNormalize().X * Enemy.Knock_Back;
+				Player.Physics.Velocity.Y += FromEnemyToPlayer.GetNormalize().Y * Enemy.Knock_Back;
+				Player.HP -= 10;
+				Enemy.isKick = false;
+			}
 		}
 	}
 
@@ -197,6 +210,8 @@ void initGL(int argc, char **argv)
 	Player.Legs.Size = Vector(0.2, 0.2);
 	Player.Body.Load("textures/Body_Gun.png");
 	Player.Body.Size = Vector(0.4, 0.4);
+	Player.Death.Load("textures/Death.png");
+	Player.Death.Size = Vector(0.35, 0.35);
 	Player.Attack.Load("textures/Attack.png");
 	Player.Attack.Size = Vector(0.18, 0.18);
 	Player.Physics.Position = Vector(-0.5, 0.02);
@@ -225,6 +240,7 @@ void initGL(int argc, char **argv)
 	Enemy.Attack.Size = Vector(0.18, 0.18);
 	Enemy.Physics.Position = Vector(0.5, 0.0);
 	Enemy.Physics.Speed = 0.1;
+	Enemy.Knock_Back = 0.3;
 
 	Cross.Body.Load("textures/Cross.png"); // Прицел
 	Cross.Body.Size = Vector(0.1, 0.1);
@@ -345,19 +361,31 @@ void Render()
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
 
-	if (Enemy.HP > 0)
+	if (Player.HP > 0)
 	{
-		char HP[4];
-		_itoa_s((int)Enemy.HP, HP, 10);
-		for (int i = 0; i < 3; i++)
+		if (Enemy.HP > 0)
 		{
-			glRasterPos2d(Enemy.Physics.Position.X - 0.08 + i * 0.04, Enemy.Physics.Position.Y + 0.06);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, HP[i]);
+			char text[4];
+			_itoa_s((int)Enemy.HP, text, 10);
+			for (int i = 0; i < 3; i++)
+			{
+				glRasterPos2d(Enemy.Physics.Position.X - 0.08 + i * 0.04, Enemy.Physics.Position.Y + 0.06);
+				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+			}
+			glRasterPos2d(Enemy.Physics.Position.X + 0.04, Enemy.Physics.Position.Y + 0.06);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'H');
+			glRasterPos2d(Enemy.Physics.Position.X + 0.08, Enemy.Physics.Position.Y + 0.06);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'P');
 		}
-		glRasterPos2d(Enemy.Physics.Position.X + 0.04, Enemy.Physics.Position.Y + 0.06);
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'H');
-		glRasterPos2d(Enemy.Physics.Position.X + 0.08, Enemy.Physics.Position.Y + 0.06);
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'P');
+	}
+	else
+	{
+		char text[10] = "Game Over";
+		for (int i = 0; i < 10; i++)
+		{
+			glRasterPos2d(-0.16 + i * 0.04, 0.0);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+		}
 	}
 
 	glutSwapBuffers(); // Замена буфера на вновь отрисованный 
@@ -506,14 +534,14 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
-			if (!Player.isAttack)
+			if (!Player.isAttack && Player.HP > 0)
 				CreateBullet();
 			//PlaySoundA("pistol.wav", NULL, SND_ASYNC | SND_FILENAME);
 		}
 		if (wParam == WM_RBUTTONDOWN)
 		{
 			Player.isAttack = true;
-			isKick = true;
+			Player.isKick = true;
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
