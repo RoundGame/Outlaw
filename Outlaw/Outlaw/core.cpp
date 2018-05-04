@@ -195,7 +195,7 @@ void initGL(int argc, char **argv)
 	// Инициализация объектов (+загрузка текстур)
 	Player.Legs.Load("textures/Legs.png"); // Игрок
 	Player.Legs.Size = Vector(0.2, 0.2);
-	Player.Body.Load("textures/Body.png");
+	Player.Body.Load("textures/Body_Gun.png");
 	Player.Body.Size = Vector(0.4, 0.4);
 	Player.Attack.Load("textures/Attack.png");
 	Player.Attack.Size = Vector(0.18, 0.18);

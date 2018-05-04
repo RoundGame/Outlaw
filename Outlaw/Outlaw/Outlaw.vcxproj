@@ -129,7 +129,6 @@
     <ClInclude Include="info.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="magnitudes.h" />
-    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
