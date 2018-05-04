@@ -182,8 +182,8 @@ void initGL(int argc, char **argv)
 	Player.Body.Load("textures/Body.png");
 	Player.Body.Size = Vector(0.4, 0.4);
 
-	pick.Body.Load("textures/latest.png");
-	pick.Body.Size = Vector(0.2, 0.2);
+	pick.Body.Load("textures/boots.png");
+	pick.Body.Size = Vector(0.1, 0.1);
 	pick.Physics.Position = Vector(0.5, 0.01);
 
 	Enemy.Legs.Load("textures/Legs.png");
@@ -247,6 +247,8 @@ void Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Очистка буферов глубины и цвета
 	glClearColor(0, 0, 0, 1); // Устанавливаем цвет фона
+
+
 
 	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности

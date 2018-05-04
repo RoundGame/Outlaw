@@ -59,10 +59,10 @@ void Character::Draw()
 		glBindTexture(GL_TEXTURE_2D, Legs.Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 		Matrix_Rotate(Physics.Position, Direction);
 		glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-		glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.125); glVertex2f(-Legs.Size.X / 2 + Physics.Position.X, -Legs.Size.Y / 2 + Physics.Position.Y);
+		glTexCoord2f(CurrentFrame / Legs.AnimationSize, 1.0 / Legs.AnimationNumber); glVertex2f(-Legs.Size.X / 2 + Physics.Position.X, -Legs.Size.Y / 2 + Physics.Position.Y);
 		glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.0); glVertex2f(-Legs.Size.X / 2 + Physics.Position.X, Legs.Size.Y / 2 + Physics.Position.Y);
 		glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 0.0); glVertex2f(Legs.Size.X / 2 + Physics.Position.X, Legs.Size.Y / 2 + Physics.Position.Y);
-		glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 0.125); glVertex2f(Legs.Size.X / 2 + Physics.Position.X, -Legs.Size.Y / 2 + Physics.Position.Y);
+		glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 1.0 / Legs.AnimationNumber); glVertex2f(Legs.Size.X / 2 + Physics.Position.X, -Legs.Size.Y / 2 + Physics.Position.Y);
 		glEnd(); // Конец обьекта рисуемого треугольниками
 		glPopMatrix();
 
