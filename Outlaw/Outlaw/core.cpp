@@ -57,8 +57,9 @@ void Update(int Value)
 	if (Collision(Player.Physics.Position, Player.Legs.Size, pick2.Physics.Position, pick2.Body.Size) && !pick2.isExist)
 	{
 		pick2.isExist = true;
-		Player.Body.Size = Vector(0.2, 0.2);
-		Player.Legs.Size = Vector(0.1, 0.1);
+		Player.Body.Size = Vector(0.3, 0.3);
+		Player.Legs.Size = Vector(0.15, 0.15);
+		Player.Attack.Size = Vector(0.14, 0.14);
 	}
 	
 	double max = wall_count * 100, X = 0, Y = 0;
