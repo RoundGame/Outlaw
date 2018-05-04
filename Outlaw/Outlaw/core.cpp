@@ -18,6 +18,7 @@ Static_Object pick;
 Static_Object pick2;
 Object bullet[bullet_count];
 Static_Object Cross;
+Static_Object HP;
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Floor;
@@ -186,13 +187,15 @@ void initGL(int argc, char **argv)
 	Main_Window_Handle = GetActiveWindow(); // Запоминаем главное окно, что бы в последстыии отключать обработчик клавиш если оно свернуто.
 
 
-	// Инициализация текстур
+	// Инициализация объектов (+загрузка текстур)
 	Player.Legs.Load("textures/Legs.png");
 	Player.Legs.Size = Vector(0.2, 0.2);
 	Player.Body.Load("textures/Body.png");
 	Player.Body.Size = Vector(0.4, 0.4);
 	Player.Attack.Load("textures/Attack.png");
 	Player.Attack.Size = Vector(0.18, 0.18);
+	Player.Physics.Position = Vector(-0.5, 0.02);
+	Player.Physics.Speed = 0.2;
 
 	pick.Body.Load("textures/boots.png");
 	pick.Body.Size = Vector(0.1, 0.1);
@@ -204,6 +207,10 @@ void initGL(int argc, char **argv)
 	pick2.Position = Vector(0.2, 0.41);
 	pick2.isExist = true;
 
+	HP.Body.Load("textures/hp.png");
+	HP.Body.Size = Vector(0.08, 0.08);
+	HP.Position = Vector(-10 / (double)win_height + 0.06, 10 / (double)win_width - 0.06);
+
 	Floor.Body.Load("textures/planks.png");
 	Floor.Body.Size = Vector(0.1, 0.1);
 
@@ -213,6 +220,8 @@ void initGL(int argc, char **argv)
 	Enemy.Body.Size = Vector(0.4, 0.4);
 	Enemy.Death.Load("textures/Death.png");
 	Enemy.Death.Size = Vector(0.35, 0.35);
+	Enemy.Physics.Position = Vector(0.5, 0.0);
+	Enemy.Physics.Speed = 0.1;
 
 	Cross.Body.Load("textures/Cross.png");
 	Cross.Body.Size = Vector(0.1, 0.1);
@@ -249,11 +258,6 @@ void initGL(int argc, char **argv)
 	Wall[k].Position.Y = 1.0 / 9;
 	Wall[k + 1].Position.Y = -1.0 / 9;
 
-	Player.Physics.Position = Vector(-0.5, 0.01);
-	Player.Physics.Speed = 0.2;
-	Enemy.Physics.Position = Vector(0.5, 0.0);
-	Enemy.Physics.Speed = 0.1;
-
 	//Биндим клавиши
 	key[LEFT].Nominal = KEY_A;
 	key[RIGHT].Nominal = KEY_D;
@@ -281,9 +285,7 @@ void Render()
 	for (int i = -11; i <= 11; i++)
 	{
 		for (int j = -6; j <= 6; j++)
-		{
 			Draw_Quad(Vector((float)i / 10.0f, (float)j / 10.0f), Floor.Body);
-		}
 	}
 
 
@@ -296,8 +298,7 @@ void Render()
 	Enemy.Draw();
 	Player.Draw();// Рисуем игрока
 
-
-
+	//Отрисовка стен
 	for (int i = 0; i < wall_count; i++)
 		Draw_Quad(Wall[i].Position, Wall[i].Body);
 	
@@ -315,9 +316,10 @@ void Render()
 			glPopMatrix();
 		}
 	}
-	//Отрисовка прицела
 
+	//Отрисовка прицела
 	Draw_Quad(Cross.Position, Cross.Body);
+	Draw_Quad(HP.Position, HP.Body);
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
