@@ -4,7 +4,7 @@
 #include "config.h"
 #include <GL/glut.h>
 #include "character.h"
-
+#include <time.h>
 
 
 static HHOOK Keyboard_Hook; // Хэндл хука клавиатуры
