@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 ﻿  main.cpp
 soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB
 soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB
 soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB
 soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB
   Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe
+=======
+﻿  Outlaw.vcxproj -> C:\Users\AndreyPC\Documents\Visual Studio 2017\Projects\Quicksort2\Outlaw\Outlaw\Debug\Outlaw.exe
+>>>>>>> 61fd99ff33188a1487bb0d48cc07af91f8dbc187
