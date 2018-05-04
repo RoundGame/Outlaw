@@ -57,7 +57,7 @@ void Update(int Value)
 	if (Collision(Player.Physics.Position, Player.Body.Size, pick.Physics.Position, pick.Body.Size) && !pick.isExist)
 	{
 		pick.isExist = true;
-		Player.Physics.Speed *= 2.0f;
+		Player.Physics.Speed *= 1.5f;
 		//Player.Physics.Boost = Player.Physics.Speed * 10;
 	}
 	
@@ -117,7 +117,7 @@ void Update(int Value)
 			if (bullet[i].Physics.Position.X >= 1.5 || bullet[i].Physics.Position.X <= -1.5 || bullet[i].Physics.Position.Y >= 1.5 || bullet[i].Physics.Position.Y <= -1.5)
 				bullet[i].isExist = false;
 
-			if (Enemy.HP > 0 && Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Enemy.Physics.Position, Enemy.Body.Size))
+			if (Enemy.HP > 0 && Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Enemy.Physics.Position, Enemy.Legs.Size))
 			{
 				bullet[i].isExist = false;
 				Enemy.HP -= rand() % 7 + 17;
@@ -202,7 +202,8 @@ void initGL(int argc, char **argv)
 	for (int i = 0; i < bullet_count; i++)
 	{
 		bullet[i].Body.Load("textures/Bullet.png");
-		bullet[i].Body.Size = Vector(0.06, 0.06);
+		bullet[i].Body.Size = Vector(0.03, 0.03);
+		bullet[i].Physics.Speed = 0.4;
 	}
 
 	int k = 0;
