@@ -1,6 +1,10 @@
 #TargetFrameworkVersion=v4.0:PlatformToolSet=v141:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=10.0.16299.0
 <<<<<<< HEAD
+<<<<<<< HEAD
 Debug|Win32|D:\VisualStudio\OpenGL\Outlaw\Outlaw\|
 =======
 Debug|Win32|C:\Users\AndreyPC\Documents\Visual Studio 2017\Projects\Quicksort2\Outlaw\Outlaw\|
 >>>>>>> 61fd99ff33188a1487bb0d48cc07af91f8dbc187
+=======
+Debug|Win32|E:\1Folders\Outlaw\Outlaw\|
+>>>>>>> parent of c32c9f7... fix
