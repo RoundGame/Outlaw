@@ -237,7 +237,7 @@ void initGL(int argc, char **argv)
 
 	waveOutGetVolume(0, (LPDWORD)&volume);
 	glutSetCursor(GLUT_CURSOR_NONE);
-	srand(100);
+	srand(time(0));
 }
 
 // Отрисовка
