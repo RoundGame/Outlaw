@@ -31,17 +31,18 @@ struct Static_Object
 
 struct Character
 {
+	bool isAttack = false;
 	double HP = 100;
 	/*Механикуа перерабатывается*/ double	Direction = 0;	// Началное направление персонажа (3 - смотрит вперед) 
-	/*Механикуа перерабатывается*/ double	CurrentFrame = 0;	// Текуший кадр анимации
+	/*Механикуа перерабатывается*/ double	Legs_CurrentFrame = 0;	// Текуший кадр анимации
+	double	Attack_CurrentFrame = 0;
 	
 	Physical_component Physics; // Физический компонент персонажа (Позция, Скорость, Ускорение)
-	Sprite Legs, Body, Death;	// Текстура персонажа
+	Sprite Legs, Body, Death, Attack;	// Текстура персонажа
 
 	void Animation();	// Анимаций персонажа
 	void Target_To(Vector Target, Vector Window_Render_Size); // Установить угол(Physics.Angle) направления в сторону обьекта цели
 	void Set_Legs_Direction();
 	void Draw();		// Отрисовка персонажа по своим координатам в мире.
 	void Use_Collisions(Static_Object Obj[], int obj_count);
-
 };
