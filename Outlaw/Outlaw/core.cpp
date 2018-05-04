@@ -54,7 +54,7 @@ void Update(int Value)
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
 	
-	if (Collision(Player.Physics.Position, Player.Body.Size, pick.Physics.Position, pick.Body.Size) && !pick.isExist)
+	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Physics.Position, pick.Body.Size) && !pick.isExist)
 	{
 		pick.isExist = true;
 		Player.Physics.Speed *= 1.5f;
@@ -202,7 +202,7 @@ void initGL(int argc, char **argv)
 	for (int i = 0; i < bullet_count; i++)
 	{
 		bullet[i].Body.Load("textures/Bullet.png");
-		bullet[i].Body.Size = Vector(0.03, 0.03);
+		bullet[i].Body.Size = Vector(0.1, 0.05);
 		bullet[i].Physics.Speed = 0.4;
 	}
 
