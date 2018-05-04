@@ -15,21 +15,14 @@ struct Window
 const int bullet_count = 10;
 const int wall_count = 67;
 Object pick;
+Object pick2;
 Object bullet[bullet_count];
 Static_Object Cross;
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
-Static_Object Flor;
+Static_Object Floor;
 Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
-
-//void Picking(Character Player, Object pick) {
-//	if (Collision(Player.Physics.Position, Player.Body.Size, pick.Physics.Position, pick.Body.Size) && !pick.isExist)
-//	{
-//		pick.isExist = true;
-//		//Player.Physics.Speed *= 1.2f;
-//	}
-//}
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -58,7 +51,13 @@ void Update(int Value)
 	{
 		pick.isExist = true;
 		Player.Physics.Speed *= 1.5f;
-		//Player.Physics.Boost = Player.Physics.Speed * 10;
+	}
+
+	if (Collision(Player.Physics.Position, Player.Legs.Size, pick2.Physics.Position, pick2.Body.Size) && !pick2.isExist)
+	{
+		pick2.isExist = true;
+		Player.Body.Size = Vector(0.2, 0.2);
+		Player.Legs.Size = Vector(0.1, 0.1);
 	}
 	
 	double max = wall_count * 100, X = 0, Y = 0;
@@ -186,6 +185,13 @@ void initGL(int argc, char **argv)
 	pick.Body.Size = Vector(0.1, 0.1);
 	pick.Physics.Position = Vector(0.5, 0.01);
 
+	pick2.Body.Load("textures/dye_powder_cyan.png");
+	pick2.Body.Size = Vector(0.1, 0.1);
+	pick2.Physics.Position = Vector(0.2, 0.41);
+
+	Floor.Body.Load("textures/planks.png");
+	Floor.Body.Size = Vector(0.1, 0.1);
+
 	Enemy.Legs.Load("textures/Legs.png");
 	Enemy.Legs.Size = Vector(0.2, 0.2);
 	Enemy.Body.Load("textures/Body.png");
@@ -194,6 +200,8 @@ void initGL(int argc, char **argv)
 	Enemy.Death.Size = Vector(0.35, 0.35);
 
 	Cross.Body.Load("textures/Cross.png");
+	Cross.Body.Size = Vector(0.1, 0.1);
+
 	for (int i = 0; i < wall_count; i++)
 	{
 		Wall[i].Body.Load("textures/cobblestone.png");
@@ -254,12 +262,29 @@ void Render()
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
-	Enemy.Draw();
-	Player.Draw();// Рисуем игрока
+	// Рисуем пол
+	for (int i = -11; i <= 11; i++)
+	{
+		for (int j = -6; j <= 6; j++)
+		{
+			Draw_Quad(Vector((float)i / 10.0f, (float)j / 10.0f), Floor.Body);
+		}
+	}
+
+
 	if (!pick.isExist)
 	{
 		Draw_Quad(pick.Physics.Position, pick.Body);
 	}
+
+	if (!pick2.isExist)
+	{
+		Draw_Quad(pick2.Physics.Position, pick2.Body);
+	}
+
+	Enemy.Draw();
+	Player.Draw();// Рисуем игрока
+
 
 
 	for (int i = 0; i < wall_count; i++)
@@ -280,7 +305,7 @@ void Render()
 		}
 	}
 	//Отрисовка прицела
-	Cross.Body.Size = Vector(0.2, 0.2);
+
 	Draw_Quad(Cross.Position, Cross.Body);
 
 	glDisable(GL_TEXTURE_2D);
