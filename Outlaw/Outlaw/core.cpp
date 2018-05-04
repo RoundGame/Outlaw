@@ -14,8 +14,8 @@ struct Window
 
 const int bullet_count = 10;
 const int wall_count = 67;
-Object pick;
-Object pick2;
+Static_Object pick;
+Static_Object pick2;
 Object bullet[bullet_count];
 Static_Object Cross;
 Character Player; // Создаем игрока
@@ -48,15 +48,15 @@ void Update(int Value)
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
 	
-	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Physics.Position, pick.Body.Size) && !pick.isExist)
+	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Position, pick.Body.Size) && pick.isExist)
 	{
-		pick.isExist = true;
+		pick.isExist = false;
 		Player.Physics.Speed *= 1.5f;
 	}
 
-	if (Collision(Player.Physics.Position, Player.Legs.Size, pick2.Physics.Position, pick2.Body.Size) && !pick2.isExist)
+	if (Collision(Player.Physics.Position, Player.Legs.Size, pick2.Position, pick2.Body.Size) && pick2.isExist)
 	{
-		pick2.isExist = true;
+		pick2.isExist = false;
 		Player.Body.Size = Vector(0.3, 0.3);
 		Player.Legs.Size = Vector(0.15, 0.15);
 		Player.Attack.Size = Vector(0.14, 0.14);
@@ -196,11 +196,13 @@ void initGL(int argc, char **argv)
 
 	pick.Body.Load("textures/boots.png");
 	pick.Body.Size = Vector(0.1, 0.1);
-	pick.Physics.Position = Vector(0.5, 0.01);
+	pick.Position = Vector(0.5, 0.01);
+	pick.isExist = true;
 
 	pick2.Body.Load("textures/dye_powder_cyan.png");
 	pick2.Body.Size = Vector(0.1, 0.1);
-	pick2.Physics.Position = Vector(0.2, 0.41);
+	pick2.Position = Vector(0.2, 0.41);
+	pick2.isExist = true;
 
 	Floor.Body.Load("textures/planks.png");
 	Floor.Body.Size = Vector(0.1, 0.1);
@@ -285,15 +287,11 @@ void Render()
 	}
 
 
-	if (!pick.isExist)
-	{
-		Draw_Quad(pick.Physics.Position, pick.Body);
-	}
+	if (pick.isExist)
+		Draw_Quad(pick.Position, pick.Body);
 
-	if (!pick2.isExist)
-	{
-		Draw_Quad(pick2.Physics.Position, pick2.Body);
-	}
+	if (pick2.isExist)
+		Draw_Quad(pick2.Position, pick2.Body);
 
 	Enemy.Draw();
 	Player.Draw();// Рисуем игрока
@@ -485,7 +483,8 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
-			CreateBullet();
+			if (!Player.isAttack)
+				CreateBullet();
 			//PlaySoundA("pistol.wav", NULL, SND_ASYNC | SND_FILENAME);
 		}
 		if (wParam == WM_RBUTTONDOWN)
