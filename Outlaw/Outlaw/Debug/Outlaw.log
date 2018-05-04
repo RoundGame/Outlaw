@@ -1,10 +1,10 @@
-<<<<<<< HEAD
-﻿  main.cpp
-soil.lib(image_DXT.obj) : warning LNK4099: "SOIL.pdb" PDB
-soil.lib(image_helper.obj) : warning LNK4099: "SOIL.pdb" PDB
-soil.lib(SOIL.obj) : warning LNK4099: "SOIL.pdb" PDB
-soil.lib(stb_image_aug.obj) : warning LNK4099: "SOIL.pdb" PDB
-  Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe
-=======
-﻿  Outlaw.vcxproj -> C:\Users\AndreyPC\Documents\Visual Studio 2017\Projects\Quicksort2\Outlaw\Outlaw\Debug\Outlaw.exe
->>>>>>> 61fd99ff33188a1487bb0d48cc07af91f8dbc187
+﻿  core.cpp
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(274): error C2676: бинарный "+": "Vector" не определяет этот оператор или преобразование к типу приемлемо к встроенному оператору
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(308): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(309): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(310): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(311): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(333): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(333): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(355): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(356): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
