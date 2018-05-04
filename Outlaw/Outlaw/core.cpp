@@ -14,12 +14,22 @@ struct Window
 
 const int bullet_count = 10;
 const int wall_count = 67;
+Object pick;
 Object bullet[bullet_count];
 Static_Object Cross;
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
+
+void Picking(Character Player, Object pick) {
+
+	if (Collision(Player.Physics.Position, Player.Body.Size, pick.Physics.Position, pick.Body.Size) && !pick.isExist)
+	{
+		pick.isExist = true;
+		Player.Physics.Speed *= 3;
+	}
+}
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -39,9 +49,17 @@ void Update(int Value)
 	Player.Physics.Acceleration = Player.Physics.Acceleration.GetNormalize();
 	Player.Set_Legs_Direction();
 
+
 	Player.Use_Collisions(Wall, wall_count);
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
+	
+	if (Collision(Player.Physics.Position, Player.Body.Size, pick.Physics.Position, pick.Body.Size) && !pick.isExist)
+	{
+		pick.isExist = true;
+		Player.Physics.Speed *= 3;
+		Player.Physics.Boost = Player.Physics.Speed * 10;
+	}
 	
 	double max = wall_count * 100, X = 0, Y = 0;
 	for (double x = Enemy.Physics.Position.X - 0.1; x <= Enemy.Physics.Position.X + 0.1; x += 0.1)
@@ -164,6 +182,10 @@ void initGL(int argc, char **argv)
 	Player.Body.Load("Body.png");
 	Player.Body.Size = Vector(0.4, 0.4);
 
+	pick.Body.Load("blob.png");
+	pick.Body.Size = Vector(0.4, 0.4);
+	pick.Physics.Position = Vector(0.5, 0.01);
+
 	Enemy.Legs.Load("Legs.png");
 	Enemy.Legs.Size = Vector(0.2, 0.2);
 	Enemy.Body.Load("Body.png");
@@ -230,7 +252,8 @@ void Render()
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
 	Enemy.Draw();
-	Player.Draw(); // Рисуем игрока
+	Player.Draw();// Рисуем игрока
+	Draw_Quad(pick.Physics.Position, pick.Body);
 
 	for (int i = 0; i < wall_count; i++)
 		Draw_Quad(Wall[i].Position, Wall[i].Body);
