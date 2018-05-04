@@ -17,13 +17,21 @@ void Character::Animation()
 {
 	if (Physics.Acceleration.GetLength() != 0) //Если есть скорость то
 	{	//Включаем анимацию передвижения
-		CurrentFrame++;
-		if (CurrentFrame > Legs.AnimationSize) //В анимации frame + 1 кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за frame
-			CurrentFrame = 0;
+		Legs_CurrentFrame++;
+		if (Legs_CurrentFrame > Legs.AnimationSize) //В анимации frame + 1 кадров, поэтому сбрасываем счетчик на 0, как только он перевалил за frame
+			Legs_CurrentFrame = 0;
 	}
 	else // Иначе остановить персонажа
+		Legs_CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
+
+	if (isAttack)
 	{
-		CurrentFrame = 0; //Текущий кадр - нулевой (стоим)
+		Attack_CurrentFrame++;
+		if (Attack_CurrentFrame > Attack.AnimationSize)
+		{
+			isAttack = false;
+			Attack_CurrentFrame = 0;
+		}
 	}
 }
 
@@ -59,22 +67,37 @@ void Character::Draw()
 		glBindTexture(GL_TEXTURE_2D, Legs.Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
 		Matrix_Rotate(Physics.Position, Direction);
 		glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-		glTexCoord2f(CurrentFrame / Legs.AnimationSize, 1.0 / Legs.AnimationNumber); glVertex2f(-Legs.Size.X / 2 + Physics.Position.X, -Legs.Size.Y / 2 + Physics.Position.Y);
-		glTexCoord2f(CurrentFrame / Legs.AnimationSize, 0.0); glVertex2f(-Legs.Size.X / 2 + Physics.Position.X, Legs.Size.Y / 2 + Physics.Position.Y);
-		glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 0.0); glVertex2f(Legs.Size.X / 2 + Physics.Position.X, Legs.Size.Y / 2 + Physics.Position.Y);
-		glTexCoord2f(CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 1.0 / Legs.AnimationNumber); glVertex2f(Legs.Size.X / 2 + Physics.Position.X, -Legs.Size.Y / 2 + Physics.Position.Y);
+		glTexCoord2f(Legs_CurrentFrame / Legs.AnimationSize, 1.0 / Legs.AnimationNumber); glVertex2f(-Legs.Size.X / 2 + Physics.Position.X, -Legs.Size.Y / 2 + Physics.Position.Y);
+		glTexCoord2f(Legs_CurrentFrame / Legs.AnimationSize, 0.0); glVertex2f(-Legs.Size.X / 2 + Physics.Position.X, Legs.Size.Y / 2 + Physics.Position.Y);
+		glTexCoord2f(Legs_CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 0.0); glVertex2f(Legs.Size.X / 2 + Physics.Position.X, Legs.Size.Y / 2 + Physics.Position.Y);
+		glTexCoord2f(Legs_CurrentFrame / Legs.AnimationSize + 1 / (double)Legs.AnimationSize, 1.0 / Legs.AnimationNumber); glVertex2f(Legs.Size.X / 2 + Physics.Position.X, -Legs.Size.Y / 2 + Physics.Position.Y);
 		glEnd(); // Конец обьекта рисуемого треугольниками
 		glPopMatrix();
 
-		glBindTexture(GL_TEXTURE_2D, Body.Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
-		Matrix_Rotate(Physics.Position, Physics.Angle);
-		glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
-		glTexCoord2f(0.0, 1.0); glVertex2f(-Body.Size.X / 2 + Physics.Position.X, -Body.Size.Y / 2 + Physics.Position.Y);
-		glTexCoord2f(0.0, 0.0); glVertex2f(-Body.Size.X / 2 + Physics.Position.X, Body.Size.Y / 2 + Physics.Position.Y);
-		glTexCoord2f(1.0, 0.0); glVertex2f(Body.Size.X / 2 + Physics.Position.X, Body.Size.Y / 2 + Physics.Position.Y);
-		glTexCoord2f(1.0, 1.0); glVertex2f(Body.Size.X / 2 + Physics.Position.X, -Body.Size.Y / 2 + Physics.Position.Y);
-		glEnd();
-		glPopMatrix();
+		if (isAttack)
+		{
+			glBindTexture(GL_TEXTURE_2D, Attack.Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
+			Matrix_Rotate(Physics.Position, Physics.Angle);
+			glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
+			glTexCoord2f(Attack_CurrentFrame / Attack.AnimationSize, 1.0 / Attack.AnimationNumber); glVertex2f(-Attack.Size.X / 2 + Physics.Position.X, -Attack.Size.Y / 2 + Physics.Position.Y);
+			glTexCoord2f(Attack_CurrentFrame / Attack.AnimationSize, 0.0); glVertex2f(-Attack.Size.X / 2 + Physics.Position.X, Attack.Size.Y / 2 + Physics.Position.Y);
+			glTexCoord2f(Attack_CurrentFrame / Attack.AnimationSize + 1 / (double)Attack.AnimationSize, 0.0); glVertex2f(Attack.Size.X / 2 + Physics.Position.X, Attack.Size.Y / 2 + Physics.Position.Y);
+			glTexCoord2f(Attack_CurrentFrame / Attack.AnimationSize + 1 / (double)Attack.AnimationSize, 1.0 / Attack.AnimationNumber); glVertex2f(Attack.Size.X / 2 + Physics.Position.X, -Attack.Size.Y / 2 + Physics.Position.Y);
+			glEnd();
+			glPopMatrix();
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, Body.Texture); // Привязываем текстуру, далее будет использоваться она, до новой привязки
+			Matrix_Rotate(Physics.Position, Physics.Angle);
+			glBegin(GL_QUADS); // Начало обьекта рисуемого треугольниками
+			glTexCoord2f(0.0, 1.0); glVertex2f(-Body.Size.X / 2 + Physics.Position.X, -Body.Size.Y / 2 + Physics.Position.Y);
+			glTexCoord2f(0.0, 0.0); glVertex2f(-Body.Size.X / 2 + Physics.Position.X, Body.Size.Y / 2 + Physics.Position.Y);
+			glTexCoord2f(1.0, 0.0); glVertex2f(Body.Size.X / 2 + Physics.Position.X, Body.Size.Y / 2 + Physics.Position.Y);
+			glTexCoord2f(1.0, 1.0); glVertex2f(Body.Size.X / 2 + Physics.Position.X, -Body.Size.Y / 2 + Physics.Position.Y);
+			glEnd();
+			glPopMatrix();
+		}
 	}
 	else
 	{

@@ -23,6 +23,7 @@ Character Enemy; // Создаем врага
 Static_Object Floor;
 Static_Object Wall[wall_count];
 int volume; // Тестовая переменная громкости звука
+bool isKick;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -84,10 +85,11 @@ void Update(int Value)
 		}
 	}
 	Vector EnemyWay = Vector(X - Enemy.Physics.Position.X, Y - Enemy.Physics.Position.Y);
+	Vector FromEnemyToPlayer = Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y);
 	EnemyWay = EnemyWay.GetNormalize();
 	if (Enemy.HP > 0)
 	{
-		if (Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y).GetLength() > 0.02)
+		if (FromEnemyToPlayer.GetLength() > 0.02)
 		{
 			Enemy.Physics.Acceleration.X = EnemyWay.X;
 			Enemy.Physics.Acceleration.Y = EnemyWay.Y;
@@ -102,6 +104,14 @@ void Update(int Value)
 		Enemy.Use_Collisions(Wall, wall_count);
 		Enemy.Target_To(Player.Physics.Position, Window.Render_Size);
 		Enemy.Physics.Update(true);
+
+		if (Collision(Player.Physics.Position, Player.Legs.Size, Enemy.Physics.Position, Enemy.Legs.Size) && isKick)
+		{
+			Enemy.Physics.Velocity.X -= FromEnemyToPlayer.GetNormalize().X / 2;
+			Enemy.Physics.Velocity.Y -= FromEnemyToPlayer.GetNormalize().Y / 2;
+			Enemy.HP -= rand() % 7 + 7;
+			isKick = false;
+		}
 	}
 
 
@@ -119,7 +129,7 @@ void Update(int Value)
 			if (Enemy.HP > 0 && Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Enemy.Physics.Position, Enemy.Legs.Size))
 			{
 				bullet[i].isExist = false;
-				Enemy.HP -= rand() % 7 + 17;
+				Enemy.HP -= rand() % 7 + 15;
 			}
 			// Если произошла колизия, изменим активность пули в нерабочее
 			for (int j = 0; j < wall_count; j++)
@@ -180,6 +190,8 @@ void initGL(int argc, char **argv)
 	Player.Legs.Size = Vector(0.2, 0.2);
 	Player.Body.Load("textures/Body.png");
 	Player.Body.Size = Vector(0.4, 0.4);
+	Player.Attack.Load("textures/Attack.png");
+	Player.Attack.Size = Vector(0.18, 0.18);
 
 	pick.Body.Load("textures/boots.png");
 	pick.Body.Size = Vector(0.1, 0.1);
@@ -474,6 +486,11 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		{
 			CreateBullet();
 			//PlaySoundA("pistol.wav", NULL, SND_ASYNC | SND_FILENAME);
+		}
+		if (wParam == WM_RBUTTONDOWN)
+		{
+			Player.isAttack = true;
+			isKick = true;
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
