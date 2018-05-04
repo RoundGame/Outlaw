@@ -135,7 +135,7 @@ void Animation(int Value)
 // Поворот в соответствии физическому компоненту
 void Matrix_Rotate(Vector position, double angle)
 {
-	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW); 
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslated(position.X, position.Y, 0);
