@@ -43,11 +43,13 @@ struct Vector
 
 struct Key
 {
-	int Nominal;
+	int Nominal1;
+	int Nominal2;
 	bool isPressed;
 	Key()
 	{
-		Nominal = KEY_UNKNOWN;
+		Nominal1 = KEY_UNKNOWN;
+		Nominal2 = KEY_UNKNOWN;
 		isPressed = false;
 	}
 };

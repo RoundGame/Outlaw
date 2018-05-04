@@ -14,11 +14,12 @@ struct Window
 
 const int bullet_count = 10;
 const int wall_count = 67;
+const int hp_count = 5;
 Static_Object pick;
 Static_Object pick2;
 Object bullet[bullet_count];
 Static_Object Cross;
-Static_Object HP;
+Static_Object HP[hp_count];
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Floor;
@@ -107,12 +108,16 @@ void Update(int Value)
 		Enemy.Target_To(Player.Physics.Position, Window.Render_Size);
 		Enemy.Physics.Update(true);
 
-		if (Collision(Player.Physics.Position, Player.Legs.Size, Enemy.Physics.Position, Enemy.Legs.Size) && isKick)
+		if (Collision(Player.Physics.Position, Player.Legs.Size, Enemy.Physics.Position, Enemy.Legs.Size))
 		{
-			Enemy.Physics.Velocity.X -= FromEnemyToPlayer.GetNormalize().X / 2;
-			Enemy.Physics.Velocity.Y -= FromEnemyToPlayer.GetNormalize().Y / 2;
-			Enemy.HP -= rand() % 7 + 7;
-			isKick = false;
+			if (isKick)
+			{
+				Enemy.Physics.Velocity.X -= FromEnemyToPlayer.GetNormalize().X / 2;
+				Enemy.Physics.Velocity.Y -= FromEnemyToPlayer.GetNormalize().Y / 2;
+				Enemy.HP -= rand() % 7 + 7;
+				isKick = false;
+			}
+			Enemy.isAttack = true;
 		}
 	}
 
@@ -207,10 +212,6 @@ void initGL(int argc, char **argv)
 	pick2.Position = Vector(0.2, 0.41);
 	pick2.isExist = true;
 
-	HP.Body.Load("textures/hp.png");
-	HP.Body.Size = Vector(0.08, 0.08);
-	HP.Position = Vector(-10 / (double)win_height + 0.06, 10 / (double)win_width - 0.06);
-
 	Floor.Body.Load("textures/planks.png");
 	Floor.Body.Size = Vector(0.1, 0.1);
 
@@ -220,11 +221,20 @@ void initGL(int argc, char **argv)
 	Enemy.Body.Size = Vector(0.4, 0.4);
 	Enemy.Death.Load("textures/Death.png");
 	Enemy.Death.Size = Vector(0.35, 0.35);
+	Enemy.Attack.Load("textures/Attack.png");
+	Enemy.Attack.Size = Vector(0.18, 0.18);
 	Enemy.Physics.Position = Vector(0.5, 0.0);
 	Enemy.Physics.Speed = 0.1;
 
 	Cross.Body.Load("textures/Cross.png");
 	Cross.Body.Size = Vector(0.1, 0.1);
+
+	for (int i = 0; i < hp_count; i++)
+	{
+		HP[i].Body.Load("textures/hp.png");
+		HP[i].Body.Size = Vector(0.07, 0.07);
+		HP[i].Position = Vector(-10 / (double)win_height + 0.06 + i * 0.08, 10 / (double)win_width - 0.06);
+	}
 
 	for (int i = 0; i < wall_count; i++)
 	{
@@ -259,10 +269,15 @@ void initGL(int argc, char **argv)
 	Wall[k + 1].Position.Y = -1.0 / 9;
 
 	//Биндим клавиши
-	key[LEFT].Nominal = KEY_A;
-	key[RIGHT].Nominal = KEY_D;
-	key[UP].Nominal = KEY_W;
-	key[DOWN].Nominal = KEY_S;
+	key[LEFT].Nominal1 = KEY_A;
+	key[RIGHT].Nominal1 = KEY_D;
+	key[UP].Nominal1 = KEY_W;
+	key[DOWN].Nominal1 = KEY_S;
+
+	key[LEFT].Nominal2 = VK_LEFT;
+	key[RIGHT].Nominal2 = VK_RIGHT;
+	key[UP].Nominal2 = VK_UP;
+	key[DOWN].Nominal2 = VK_DOWN;
 
 	waveOutGetVolume(0, (LPDWORD)&volume);
 	glutSetCursor(GLUT_CURSOR_NONE);
@@ -319,7 +334,13 @@ void Render()
 
 	//Отрисовка прицела
 	Draw_Quad(Cross.Position, Cross.Body);
-	Draw_Quad(HP.Position, HP.Body);
+
+	//Отрисовка HP
+	for (int i = 0; i < hp_count; i++)
+	{
+		if (Player.HP / 20 > i)
+			Draw_Quad(HP[i].Position, HP[i].Body);
+	}
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
@@ -440,7 +461,7 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 
 		for (int i = 0; i < gamekey_size; i++) // Проверяем игровые клавиши на нажитие, где sizeof(gamekey) - доступное кол-во клавиш
 		{
-			if (key[i].Nominal == KEY->vkCode)
+			if (key[i].Nominal1 == KEY->vkCode || key[i].Nominal2 == KEY->vkCode)
 			{
 				if (wParam == WM_KEYDOWN) // Изменяем их состояние на соответственные значения 
 					key[i].isPressed = true;
