@@ -14,6 +14,7 @@ struct Window
 
 const int bullet_count = 10;
 const int wall_count = 67;
+const int ice_count = 8;
 const int hp_count = 5;
 Static_Object pick;
 Static_Object pick2;
@@ -24,6 +25,7 @@ Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Floor;
 Static_Object Wall[wall_count];
+Static_Object Ice[ice_count];
 int volume; // Тестовая переменная громкости звука
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
@@ -55,7 +57,16 @@ void Update(int Value)
 	Player.Use_Collisions(Wall, wall_count);
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
+
+	//Проверка, что мы на льду
+	Player.Physics.Boost = 5;
+	for (int i = 0; i < ice_count; i++)
+	{
+		if (Collision(Player.Physics.Position, Player.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
+			Player.Physics.Boost = 0.5;
+	}
 	
+	//Проверка, что мы взяли пикапы
 	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Position, pick.Body.Size) && pick.isExist)
 	{
 		pick.isExist = false;
@@ -70,6 +81,7 @@ void Update(int Value)
 		Player.Attack.Size = Vector(0.14, 0.14);
 	}
 	
+	//Обход стен врагом, реализованный с помощью метода потенциальных полей
 	double max = wall_count * 100, X = 0, Y = 0;
 	for (double x = Enemy.Physics.Position.X - 0.1; x <= Enemy.Physics.Position.X + 0.1; x += 0.1)
 	{
@@ -225,12 +237,12 @@ void initGL(int argc, char **argv)
 
 	pick.Body.Load("textures/boots.png"); // Поднимаемые предметы
 	pick.Body.Size = Vector(0.1, 0.1);
-	pick.Position = Vector(0.5, 0.01);
+	pick.Position = Vector(0.6, 0.01);
 	pick.isExist = true;
 
 	pick2.Body.Load("textures/dye_powder_cyan.png");
 	pick2.Body.Size = Vector(0.1, 0.1);
-	pick2.Position = Vector(0.2, 0.41);
+	pick2.Position = Vector(0.3, 0.41);
 	pick2.isExist = true;
 
 	Floor.Body.Load("textures/planks.png");
@@ -263,6 +275,11 @@ void initGL(int argc, char **argv)
 		Wall[i].Body.Load("textures/cobblestone.png");
 		Wall[i].Body.Size = Vector(1.0 / 9, 1.0 / 9);
 	}
+	for (int i = 0; i < ice_count; i++)
+	{
+		Ice[i].Body.Load("textures/ice.png");
+		Ice[i].Body.Size = Vector(1.0 / 9, 1.0 / 9);
+	}
 	for (int i = 0; i < bullet_count; i++)
 	{
 		bullet[i].Body.Load("textures/Bullet.png");
@@ -289,6 +306,13 @@ void initGL(int argc, char **argv)
 	}
 	Wall[k].Position.Y = 1.0 / 9;
 	Wall[k + 1].Position.Y = -1.0 / 9;
+	for (int i = 0; i < ice_count; i += 2)
+	{
+		Ice[i].Position.X = -(double)i / 18 - 3.5 / 9;
+		Ice[i].Position.Y = -2.0 / 9;
+		Ice[i + 1].Position.X = -(double)i / 18 - 3.5 / 9;
+		Ice[i + 1].Position.Y = -3.0 / 9;
+	}
 
 	//Биндим клавиши
 	key[LEFT].Nominal1 = KEY_A;
@@ -325,14 +349,18 @@ void Render()
 			Draw_Quad(Vector((float)i / 10.0f, (float)j / 10.0f), Floor.Body);
 	}
 
+	//Отрисовка льда
+	for (int i = 0; i < ice_count; i++)
+		Draw_Quad(Ice[i].Position, Ice[i].Body);
 
+	//Отрисовка пикапов
 	if (pick.isExist)
 		Draw_Quad(pick.Position, pick.Body);
 
 	if (pick2.isExist)
 		Draw_Quad(pick2.Position, pick2.Body);
 
-	Enemy.Draw();
+	Enemy.Draw(); // Рисуем врага
 	Player.Draw();// Рисуем игрока
 
 	//Отрисовка стен
