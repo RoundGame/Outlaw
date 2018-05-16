@@ -31,6 +31,7 @@ struct Static_Object
 
 struct Character
 {
+	bool isInvulnerability = false;
 	bool isAttack = false;
 	bool isKick = false;
 	double HP = 100;
@@ -38,6 +39,7 @@ struct Character
 	/*Механикуа перерабатывается*/ double	Direction = 0;	// Началное направление персонажа (3 - смотрит вперед) 
 	/*Механикуа перерабатывается*/ double	Legs_CurrentFrame = 0;	// Текуший кадр анимации
 	double	Attack_CurrentFrame = 0;
+	double Inv_CurrentFrame = 0;
 	
 	Physical_component Physics; // Физический компонент персонажа (Позция, Скорость, Ускорение)
 	Sprite Legs, Body, Death, Attack;	// Текстура персонажа

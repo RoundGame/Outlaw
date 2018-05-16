@@ -124,11 +124,12 @@ void Update(int Value)
 				Enemy.HP -= rand() % 7 + 7;
 				Player.isKick = false;
 			}
-			if (Enemy.isKick)
+			if (Enemy.isKick && !Player.isInvulnerability)
 			{
 				Player.Physics.Velocity.X += FromEnemyToPlayer.GetNormalize().X * Enemy.Knock_Back;
 				Player.Physics.Velocity.Y += FromEnemyToPlayer.GetNormalize().Y * Enemy.Knock_Back;
-				Player.HP -= 10;
+				Player.HP -= 20;
+				Player.isInvulnerability = true;
 				Enemy.isKick = false;
 			}
 		}
@@ -174,8 +175,13 @@ void Save()
 //Функция анимации персонажей
 void Animation(int Value)
 {
-	Player.Animation(); // Анимация игрока, принемаемый параметр количество кадров анмайии
-	Enemy.Animation();
+	if (Player.HP <= 0)
+	{
+		glutTimerFunc(timer_update, Animation, Value); // Задержка 15 мс перед новым вызовом функции
+		return;
+	}
+	Player.Animation(); // Анимация игрока
+	Enemy.Animation(); //Анимация врага
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 }
 

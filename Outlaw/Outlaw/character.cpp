@@ -33,6 +33,16 @@ void Character::Animation()
 			Attack_CurrentFrame = 0;
 		}
 	}
+
+	if (isInvulnerability)
+	{
+		Inv_CurrentFrame++;
+		if (Inv_CurrentFrame > Attack.AnimationSize)
+		{
+			isInvulnerability = false;
+			Inv_CurrentFrame = 0;
+		}
+	}
 }
 
 void Character::Target_To(Vector Target, Vector Window_Render_Size)
