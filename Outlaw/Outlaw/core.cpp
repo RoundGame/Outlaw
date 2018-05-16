@@ -60,10 +60,13 @@ void Update(int Value)
 
 	//Проверка, что мы на льду
 	Player.Physics.Boost = 5;
+	Enemy.Physics.Boost = 5;
 	for (int i = 0; i < ice_count; i++)
 	{
 		if (Collision(Player.Physics.Position, Player.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
 			Player.Physics.Boost = 0.5;
+		if (Collision(Enemy.Physics.Position, Enemy.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
+			Enemy.Physics.Boost = 0.5;
 	}
 	
 	//Проверка, что мы взяли пикапы
