@@ -20,6 +20,8 @@ void initGL(int argc, char **argv);
 	// Сохранение и выход
 	void Save(); 
 
+	void BuildMap(double Map_Size);
+
 // Отрисовка
 void Render();
 void Draw_Quad(Vector Position, Sprite Sprite); // Рисует квадрат в позиции Position и размера Size, где рисование объекта начинается с центра

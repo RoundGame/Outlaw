@@ -120,7 +120,7 @@
   <ItemGroup>
     <ClCompile Include="character.cpp" />
     <ClCompile Include="core.cpp" />
-    <ClCompile Include="heneration.cpp" />
+    <ClCompile Include="generation.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,11 @@ Static_Object pick2;
 Object bullet[bullet_count];
 Static_Object Cross;
 Static_Object HP[hp_count];
+level Map;
+Static_Object Map_Back;
+Tile Level_Tile[level_size * level_size];
+int tile_count = level_size;
+double Map_Size = 0.03;
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Floor;
@@ -223,8 +228,14 @@ void initGL(int argc, char **argv)
 	glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
 	glutCreateWindow("Outlaw");	 // Имя окна
 
-	Main_Window_Handle = GetActiveWindow(); // Запоминаем главное окно, что бы в последстыии отключать обработчик клавиш если оно свернуто.
+	Main_Window_Handle = GetActiveWindow(); // Запоминаем главное окно, что бы в последствии отключать обработчик клавиш если оно свернуто.
 
+	for (int i = 0; i < level_size - 3; i++)
+	{
+		Map.generation();
+	}
+	Map.draw();
+	BuildMap(Map_Size);
 
 	// Инициализация объектов (+загрузка текстур)
 	Player.Legs.Load("textures/Legs.png"); // Игрок
@@ -333,6 +344,33 @@ void initGL(int argc, char **argv)
 	srand(time(0));
 }
 
+void BuildMap(double Map_Size)
+{
+	int k = 0;
+	for (int x = 0; x < level_size; x++)
+	{
+		for (int y = 0; y < level_size; y++)
+		{
+			if (Map.box[x][y] == NORMAL)
+			{
+				if (x == level_size / 2 && y == level_size / 2)
+					Level_Tile[k].isStudy = true;
+				Level_Tile[k].isExist = true;
+				Level_Tile[k].Position = Vector(10 / (double)win_height - level_size * Map_Size + x * Map_Size, 10 / (double)win_width - y * Map_Size);
+				Level_Tile[k].First.Load("textures/Normal_Level1.png");
+				Level_Tile[k].First.Size = Vector(Map_Size, Map_Size);
+				Level_Tile[k].Second.Load("textures/Normal_Level2.png");
+				Level_Tile[k].Second.Size = Vector(Map_Size, Map_Size);
+				k++;
+			}
+		}
+	}
+	tile_count = k;
+	Map_Back.Body.Load("textures/Map_Back.png");
+	Map_Back.Body.Size = Vector(level_size * Map_Size, level_size * Map_Size);
+	Map_Back.Position = Vector(10 / (double)win_height - level_size * Map_Size / 2, 10 / (double)win_width - level_size * Map_Size / 2);
+}
+
 // Отрисовка
 void Render()
 {
@@ -385,8 +423,18 @@ void Render()
 		}
 	}
 
-	//Отрисовка прицела
-	Draw_Quad(Cross.Position, Cross.Body);
+	//Отрисовка миникарты
+	Draw_Quad(Map_Back.Position, Map_Back.Body);
+	for (int i = 0; i < tile_count; i++)
+	{
+		if (Level_Tile[i].isExist)
+		{
+			if (Level_Tile[i].isStudy)
+				Draw_Quad(Level_Tile[i].Position, Level_Tile[i].Second);
+			else
+				Draw_Quad(Level_Tile[i].Position, Level_Tile[i].First);
+		}
+	}
 
 	//Отрисовка HP
 	for (int i = 0; i < hp_count; i++)
@@ -394,6 +442,9 @@ void Render()
 		if (Player.HP / 20 > i)
 			Draw_Quad(HP[i].Position, HP[i].Body);
 	}
+
+	//Отрисовка прицела
+	Draw_Quad(Cross.Position, Cross.Body);
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
@@ -534,20 +585,13 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 					key[i].isPressed = false;
 			}
 		}
-		if (KEY->vkCode == KEY_R)
+		if (KEY->vkCode == KEY_0 && wParam == WM_KEYUP)
 		{
-			volume += 134219776;
-			waveOutSetVolume(0, volume);
-		}
-		if (KEY->vkCode == KEY_R)
-		{
-			volume += 134219776;
-			waveOutSetVolume(0, volume);
-		}
-		if (KEY->vkCode == KEY_E)
-		{
-			volume -= 134219776;
-			waveOutSetVolume(0, volume);
+			if (Map_Size == 0.03)
+				Map_Size = 0.08;
+			else
+				Map_Size = 0.03;
+			BuildMap(Map_Size);
 		}
 		if (KEY->vkCode == VK_F11 && wParam == WM_KEYUP)
 			SetFullScreen();

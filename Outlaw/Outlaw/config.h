@@ -15,4 +15,4 @@ static	int win_width = 16,
 			win_height = 9;
 
 // Генерация
-static const __int8 level_size = 22; // Размер "коробки" в пределах которой генерируется комната
+static const __int8 level_size = 8; // Размер "коробки" в пределах которой генерируется комната

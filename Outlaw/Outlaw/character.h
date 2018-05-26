@@ -29,6 +29,14 @@ struct Static_Object
 	Vector Position;
 };
 
+struct Tile
+{
+	bool isExist = false;
+	bool isStudy = false;
+	Sprite First, Second;
+	Vector Position;
+};
+
 struct Character
 {
 	bool isInvulnerability = false;

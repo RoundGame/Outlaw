@@ -7,13 +7,13 @@
 using namespace std;
 /*	Тип комнаты
 EMPTY	- Пустая,
-NORMAL	- Обычная,
+NORMAL	- Обычная(не изучена),
 SHOP	- Магазин,
 BOSS	- Покои босса,
 SECRET	- Тайник	*/
 enum RoomType
 {
-	EMPTY, NORMAL, SHOP, BOSS, SECRET
+	EMPTY = 0, NORMAL, SHOP, BOSS, SECRET
 };
 
 struct level
@@ -43,7 +43,7 @@ struct level
 	
 	room * center = new room(EMPTY); // Центральныя комната
 
-	bool box[level_size][level_size]; // карта [высота][ширина]
+	char box[level_size][level_size]; // карта [высота][ширина]
 	
 	list<pos> nextgen; // Очередь точек в которых возможно расширение карты
 	

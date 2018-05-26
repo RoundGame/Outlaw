@@ -3,15 +3,6 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-	level m;
-	for (int i = 0; i < 20; i++)
-	{
-		m.generation();
-		system("cls");
-		m.draw();
-		Sleep(10);
-	}
-
 	// Инициализация GLUT
 	initGL(argc, argv);
 
