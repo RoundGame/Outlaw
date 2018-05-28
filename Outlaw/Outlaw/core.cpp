@@ -235,6 +235,8 @@ void initGL(int argc, char **argv)
 		Map.generation();
 	}
 	Map.draw();
+	
+	Map.draw(Map.current);
 	BuildMap(Map_Size);
 
 	// Инициализация объектов (+загрузка текстур)
