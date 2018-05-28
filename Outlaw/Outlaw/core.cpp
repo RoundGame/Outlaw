@@ -391,7 +391,7 @@ void BuildMap(double Map_Size, bool reloadTexture)
 	{
 		for (int y = 0; y < level_size; y++)
 		{
-			if (Map.box[x][y] == NORMAL)
+			if (Map.box[y][x] == NORMAL)
 			{
 				if (x == level_size / 2 && y == level_size / 2)
 					Level_Tile[k].isStudy = true;
