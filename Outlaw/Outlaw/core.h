@@ -19,8 +19,8 @@ void initGL(int argc, char **argv);
 	void SetFullScreen();
 	// Сохранение и выход
 	void Save(); 
-
-	void BuildMap(double Map_Size);
+	//Построение Миникарты
+	void BuildMap(double Map_Size, bool reloadTexture);
 
 // Отрисовка
 void Render();

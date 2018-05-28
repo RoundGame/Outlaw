@@ -7,7 +7,7 @@
 #include <cmath>
 
 // Обращение к клавишам управления
-enum gamekey { LEFT, RIGHT, UP, DOWN, gamekey_size };
+enum gamekey { LEFT, RIGHT, UP, DOWN, FULLSCREEN, MINIMAP, GAMEMENU, gamekey_size };
 
 struct Vector
 {

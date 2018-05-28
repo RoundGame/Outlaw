@@ -13,25 +13,29 @@ struct Window
 } Window;
 
 const int bullet_count = 10;
+const int hp_count = 5;
 const int wall_count = 67;
 const int ice_count = 8;
-const int hp_count = 5;
+Object bullet[bullet_count];
 Static_Object pick;
 Static_Object pick2;
-Object bullet[bullet_count];
 Static_Object Cross;
+Static_Object Floor;
 Static_Object HP[hp_count];
+Static_Object Wall[wall_count];
+Static_Object Ice[ice_count];
+
 level Map;
 Static_Object Map_Back;
 Tile Level_Tile[level_size * level_size];
-int tile_count = level_size;
-double Map_Size = 0.03;
+int tile_count = level_size * 4;
+double Map_Size = 0.04;
+
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
-Static_Object Floor;
-Static_Object Wall[wall_count];
-Static_Object Ice[ice_count];
-int volume; // Тестовая переменная громкости звука
+
+bool isInMenu = false;
+Static_Object Menu_Back;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -45,6 +49,33 @@ void Update(int Value)
 	Window.Size.X = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
 	Window.Size.Y = rect.bottom - rect.top;
 
+	//Если открыто меню
+	if (isInMenu)
+	{
+		glutPostRedisplay(); // Обновляем экран
+		glutTimerFunc(timer_update, Update, Value); // Задержка 15 мс перед новым вызовом функции
+		return;
+	}
+
+	//Изменение размера карты
+	if (key[MINIMAP].isPressed)
+	{
+		if (Map_Size == 0.04)
+		{
+			Map_Size = 0.08;
+			BuildMap(Map_Size, false);
+		}
+	}
+	else
+	{
+		if (Map_Size == 0.08)
+		{
+			Map_Size = 0.04;
+			BuildMap(Map_Size, false);
+		}
+	}
+
+	//Если мертвы, то больше не обновляем остальную информацию
 	if (Player.HP <= 0)
 	{
 		glutPostRedisplay(); // Обновляем экран
@@ -154,8 +185,6 @@ void Update(int Value)
 			}
 		}
 	}
-
-
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// Высчитывание перемещения пули и высчитывание столкновений ///////////////////////////////////////////////////////////////////////////////////////////
@@ -237,7 +266,11 @@ void initGL(int argc, char **argv)
 	Map.draw();
 	
 	Map.draw(Map.current);
-	BuildMap(Map_Size);
+	BuildMap(Map_Size, true);
+
+	Menu_Back.Body.Load("textures/Menu_Back.png");
+	Menu_Back.Body.Size = Vector(20 / (double)win_height, 20 / (double)win_width);
+	Menu_Back.Position = Vector(0.0, 0.0);
 
 	// Инициализация объектов (+загрузка текстур)
 	Player.Legs.Load("textures/Legs.png"); // Игрок
@@ -335,18 +368,23 @@ void initGL(int argc, char **argv)
 	key[RIGHT].Nominal1 = KEY_D;
 	key[UP].Nominal1 = KEY_W;
 	key[DOWN].Nominal1 = KEY_S;
+	key[MINIMAP].Nominal1 = VK_TAB;
+	key[GAMEMENU].Nominal1 = VK_ESCAPE;
+	key[FULLSCREEN].Nominal1 = VK_F11;
 
 	key[LEFT].Nominal2 = VK_LEFT;
 	key[RIGHT].Nominal2 = VK_RIGHT;
 	key[UP].Nominal2 = VK_UP;
 	key[DOWN].Nominal2 = VK_DOWN;
+	key[MINIMAP].Nominal2 = KEY_UNKNOWN;
+	key[GAMEMENU].Nominal2 = KEY_UNKNOWN;
+	key[FULLSCREEN].Nominal2 = KEY_UNKNOWN;
 
-	waveOutGetVolume(0, (LPDWORD)&volume);
 	glutSetCursor(GLUT_CURSOR_NONE);
 	srand(time(0));
 }
 
-void BuildMap(double Map_Size)
+void BuildMap(double Map_Size, bool reloadTexture)
 {
 	int k = 0;
 	for (int x = 0; x < level_size; x++)
@@ -358,10 +396,13 @@ void BuildMap(double Map_Size)
 				if (x == level_size / 2 && y == level_size / 2)
 					Level_Tile[k].isStudy = true;
 				Level_Tile[k].isExist = true;
-				Level_Tile[k].Position = Vector(10 / (double)win_height - level_size * Map_Size + x * Map_Size, 10 / (double)win_width - y * Map_Size);
-				Level_Tile[k].First.Load("textures/Normal_Level1.png");
+				Level_Tile[k].Position = Vector(10 / (double)win_height - (level_size - 0.5 - x) * Map_Size, 10 / (double)win_width - (y + 0.5) * Map_Size);
+				if (reloadTexture)
+				{
+					Level_Tile[k].First.Load("textures/Normal_Level1.png");
+					Level_Tile[k].Second.Load("textures/Normal_Level2.png");
+				}
 				Level_Tile[k].First.Size = Vector(Map_Size, Map_Size);
-				Level_Tile[k].Second.Load("textures/Normal_Level2.png");
 				Level_Tile[k].Second.Size = Vector(Map_Size, Map_Size);
 				k++;
 			}
@@ -380,10 +421,23 @@ void Render()
 	glClearColor(0, 0, 0, 1); // Устанавливаем цвет фона
 
 
-
 	glEnable(GL_ALPHA_TEST);	// Рразрешаем использовать прозрвачные текстуры
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
+
+	if (isInMenu)
+	{
+		//Отрисовка меню
+		Draw_Quad(Menu_Back.Position, Menu_Back.Body);
+
+		//Отрисовка прицела
+		Draw_Quad(Cross.Position, Cross.Body);
+
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_ALPHA_TEST);
+		glutSwapBuffers(); // Замена буфера на вновь отрисованный 
+		return;
+	}
 
 	// Рисуем пол
 	for (int i = -11; i <= 11; i++)
@@ -523,18 +577,21 @@ void reshape_win_size(int w, int h)
    false - окно			
    true - полный экран */
 bool IsFullScreen = false;
+Vector prevWinSize, prevWinPos;
 
 void SetFullScreen() //Функция установки полного экрана или возвращения в окно
 {
 	if (!IsFullScreen)
 	{
+		prevWinSize = Window.Size;
+		prevWinPos = Window.Position;
 		glutFullScreen();	// Запуск полноэкранного режима
 		IsFullScreen = !IsFullScreen;
 	}
 	else
 	{
-		glutReshapeWindow(Window.Size.X, Window.Size.Y);	 // Установка первоначальных размеров окна
-		glutPositionWindow(Window.Position.X, Window.Position.Y);	// Перемещение окна в первоначальное положение
+		glutReshapeWindow(prevWinSize.X - 16, prevWinSize.Y - 39);	 // Установка первоначальных размеров окна
+		glutPositionWindow(prevWinPos.X, prevWinPos.Y);	// Перемещение окна в первоначальное положение
 		IsFullScreen = !IsFullScreen;
 	}
 }
@@ -587,19 +644,13 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 					key[i].isPressed = false;
 			}
 		}
-		if (KEY->vkCode == KEY_0 && wParam == WM_KEYUP)
+		if (wParam == WM_KEYUP)
 		{
-			if (Map_Size == 0.03)
-				Map_Size = 0.08;
-			else
-				Map_Size = 0.03;
-			BuildMap(Map_Size);
+			if ((key[GAMEMENU].Nominal1 == KEY->vkCode || key[GAMEMENU].Nominal2 == KEY->vkCode))
+				isInMenu = !isInMenu;
+			if ((key[FULLSCREEN].Nominal1 == KEY->vkCode || key[FULLSCREEN].Nominal2 == KEY->vkCode))
+				SetFullScreen();
 		}
-		if (KEY->vkCode == VK_F11 && wParam == WM_KEYUP)
-			SetFullScreen();
-		if (KEY->vkCode == VK_ESCAPE)
-			Save();
-
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
 }
@@ -617,14 +668,17 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
-			if (!Player.isAttack && Player.HP > 0)
+			if (!Player.isAttack && Player.HP > 0 && !isInMenu)
 				CreateBullet();
 			//PlaySoundA("pistol.wav", NULL, SND_ASYNC | SND_FILENAME);
 		}
 		if (wParam == WM_RBUTTONDOWN)
 		{
-			Player.isAttack = true;
-			Player.isKick = true;
+			if (Player.HP > 0 && !isInMenu)
+			{
+				Player.isAttack = true;
+				Player.isKick = true;
+			}
 		}
 	}
 	return CallNextHookEx(Keyboard_Hook, code, wParam, lParam); //Пробрасываем хук дальше
