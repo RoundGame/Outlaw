@@ -24,8 +24,8 @@ Static_Object HP[hp_count];
 level Map;
 Static_Object Map_Back;
 Tile Level_Tile[level_size * level_size];
-int tile_count = level_size;
-double Map_Size = 0.03;
+int tile_count = level_size * 4;
+double Map_Size = 0.04;
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 Static_Object Floor;
@@ -50,6 +50,24 @@ void Update(int Value)
 		glutPostRedisplay(); // Обновляем экран
 		glutTimerFunc(timer_update, Update, Value); // Задержка 15 мс перед новым вызовом функции
 		return;
+	}
+
+	//Изменение размера карты
+	if (key[MINIMAP].isPressed)
+	{
+		if (Map_Size == 0.04)
+		{
+			Map_Size = 0.08;
+			BuildMap(Map_Size, false);
+		}
+	}
+	else
+	{
+		if (Map_Size == 0.08)
+		{
+			Map_Size = 0.04;
+			BuildMap(Map_Size, false);
+		}
 	}
 
 	// Высчитывание перемещения игрока //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,7 +253,7 @@ void initGL(int argc, char **argv)
 		Map.generation();
 	}
 	Map.draw();
-	BuildMap(Map_Size);
+	BuildMap(Map_Size, true);
 
 	// Инициализация объектов (+загрузка текстур)
 	Player.Legs.Load("textures/Legs.png"); // Игрок
@@ -333,18 +351,20 @@ void initGL(int argc, char **argv)
 	key[RIGHT].Nominal1 = KEY_D;
 	key[UP].Nominal1 = KEY_W;
 	key[DOWN].Nominal1 = KEY_S;
+	key[MINIMAP].Nominal1 = VK_TAB;
 
 	key[LEFT].Nominal2 = VK_LEFT;
 	key[RIGHT].Nominal2 = VK_RIGHT;
 	key[UP].Nominal2 = VK_UP;
 	key[DOWN].Nominal2 = VK_DOWN;
+	key[MINIMAP].Nominal2 = KEY_UNKNOWN;
 
 	waveOutGetVolume(0, (LPDWORD)&volume);
 	glutSetCursor(GLUT_CURSOR_NONE);
 	srand(time(0));
 }
 
-void BuildMap(double Map_Size)
+void BuildMap(double Map_Size, bool reloadTexture)
 {
 	int k = 0;
 	for (int x = 0; x < level_size; x++)
@@ -356,10 +376,13 @@ void BuildMap(double Map_Size)
 				if (x == level_size / 2 && y == level_size / 2)
 					Level_Tile[k].isStudy = true;
 				Level_Tile[k].isExist = true;
-				Level_Tile[k].Position = Vector(10 / (double)win_height - level_size * Map_Size + x * Map_Size, 10 / (double)win_width - y * Map_Size);
-				Level_Tile[k].First.Load("textures/Normal_Level1.png");
+				Level_Tile[k].Position = Vector(10 / (double)win_height - (level_size - 0.5 - x) * Map_Size, 10 / (double)win_width - (y + 0.5) * Map_Size);
+				if (reloadTexture)
+				{
+					Level_Tile[k].First.Load("textures/Normal_Level1.png");
+					Level_Tile[k].Second.Load("textures/Normal_Level2.png");
+				}
 				Level_Tile[k].First.Size = Vector(Map_Size, Map_Size);
-				Level_Tile[k].Second.Load("textures/Normal_Level2.png");
 				Level_Tile[k].Second.Size = Vector(Map_Size, Map_Size);
 				k++;
 			}
@@ -584,14 +607,6 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 				else
 					key[i].isPressed = false;
 			}
-		}
-		if (KEY->vkCode == KEY_0 && wParam == WM_KEYUP)
-		{
-			if (Map_Size == 0.03)
-				Map_Size = 0.08;
-			else
-				Map_Size = 0.03;
-			BuildMap(Map_Size);
 		}
 		if (KEY->vkCode == VK_F11 && wParam == WM_KEYUP)
 			SetFullScreen();
