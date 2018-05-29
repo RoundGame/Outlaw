@@ -102,5 +102,6 @@ struct Sprite
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // На любой размер изображения 
 			gluBuild2DMipmaps(GL_TEXTURE_2D, 4, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image);// Создание миникарты
 		}
+		SOIL_free_image_data(image);
 	}
 };

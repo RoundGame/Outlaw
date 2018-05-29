@@ -4,7 +4,7 @@ using namespace std;
 int main(int argc, char **argv)
 {
 	// Инициализация GLUT
-	initGL(argc, argv);
+	initGL(argc, argv, true);
 
 	// Отрисовка
 	/*Единственный параметр этой функции - это указатель на функцию,

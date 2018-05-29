@@ -1,17 +1,11 @@
 ﻿  core.cpp
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(384): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(543): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(544): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(545): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(546): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(568): warning C4244: 'argument': conversion from 'double' to 'GLsizei', possible loss of data
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(568): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(593): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(594): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-  generation.cpp
-  Generating Code...
-soil.lib(image_DXT.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(image_DXT.obj)' or at 'D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
-soil.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(image_helper.obj)' or at 'D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
-soil.lib(SOIL.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(SOIL.obj)' or at 'D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
-soil.lib(stb_image_aug.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'soil.lib(stb_image_aug.obj)' or at 'D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\SOIL.pdb'; linking object as if no debug info
-  Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(459): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(634): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(635): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(636): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(637): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(659): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(659): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(684): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(685): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Debug\Outlaw.exe

@@ -34,8 +34,14 @@ double Map_Size = 0.04;
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
 
-bool isInMenu = false;
-Static_Object Menu_Back;
+enum ButtonType { BUTTON_NEW_GAME = 0, BUTTON_SETTINGS, BUTTON_EXIT, BUTTON_BACK, BUTTON_CONTINUE, button_count };
+int currentMenu = -1, prevMenu = -1;
+Static_Object Menu_BackGround;
+Static_Object Menu_Text;
+Static_Object Settings_Text;
+Static_Object Button[button_count];
+Static_Object Cursor;
+int currentButton = -1;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value) 
@@ -50,8 +56,42 @@ void Update(int Value)
 	Window.Size.Y = rect.bottom - rect.top;
 
 	//Если открыто меню
-	if (isInMenu)
+	if (currentMenu != 0)
 	{
+		if (currentMenu == 1 || currentMenu == -1)
+		{
+			Menu_Text.isExist = true;
+			Settings_Text.isExist = false;
+			Button[BUTTON_CONTINUE].isExist = true;
+			Button[BUTTON_NEW_GAME].isExist = true;
+			Button[BUTTON_SETTINGS].isExist = true;
+			Button[BUTTON_EXIT].isExist = true;
+			Button[BUTTON_BACK].isExist = false;
+		}
+		if (currentMenu == 2)
+		{
+			Menu_Text.isExist = false;
+			Settings_Text.isExist = true;
+			Button[BUTTON_CONTINUE].isExist = false;
+			Button[BUTTON_NEW_GAME].isExist = false;
+			Button[BUTTON_SETTINGS].isExist = false;
+			Button[BUTTON_EXIT].isExist = false;
+			Button[BUTTON_BACK].isExist = true;
+		}
+		currentButton = -1;
+		Cursor.isExist = false;
+		for (int i = 0; i < button_count && !Cursor.isExist; i++)
+		{
+			if (Button[i].isExist && Collision(Button[i].Position, Button[i].Body.Size, Cross.Position, Vector(0.0, 0.0)))
+			{
+				if (i != BUTTON_CONTINUE || currentMenu != -1)
+				{
+					Cursor.isExist = true;
+					Cursor.Position = Button[i].Position;
+					currentButton = i;
+				}
+			}
+		}
 		glutPostRedisplay(); // Обновляем экран
 		glutTimerFunc(timer_update, Update, Value); // Задержка 15 мс перед новым вызовом функции
 		return;
@@ -246,31 +286,64 @@ void Matrix_Rotate(Vector position, double angle)
 }
 
 // Инициализация главного окна
-void initGL(int argc, char **argv)
+void initGL(int argc, char **argv, bool isNewWindow)
 {
-	glutInit(&argc, argv);	// Инициализация glut
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA); 	// Установка парометров отрисовки где
-																// GLUT_DEPTH - разрешение глубины
-																// GLUT_DOUBLE - режим двойной буферизации
-																// GLUT_RGBA - цветовой канал(RGB) + альфа канал(А)
-	glutInitWindowSize(960, 540);	 // Размер экрана в пикселях
-	glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
-	glutCreateWindow("Outlaw");	 // Имя окна
+	if (isNewWindow)
+	{
+		glutInit(&argc, argv);	// Инициализация glut
+		glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA); 	// Установка парометров отрисовки где
+																	// GLUT_DEPTH - разрешение глубины
+																	// GLUT_DOUBLE - режим двойной буферизации
+																	// GLUT_RGBA - цветовой канал(RGB) + альфа канал(А)
+		glutInitWindowSize(960, 540);	 // Размер экрана в пикселях
+		glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
+		glutCreateWindow("Outlaw");	 // Имя окна
+	}
 
 	Main_Window_Handle = GetActiveWindow(); // Запоминаем главное окно, что бы в последствии отключать обработчик клавиш если оно свернуто.
 
+	//Инициализация меню
+	Menu_BackGround.Body.Load("textures/Menu/BackGround.png");
+	Menu_BackGround.Body.Size = Vector(20 / (double)win_height, 20 / (double)win_width);
+	Menu_BackGround.Position = Vector(0.0, 0.0);
+	Menu_Text.Body.Load("textures/Menu/Menu_Text.png");
+	Menu_Text.Body.Size = Vector(0.7, 0.1);
+	Menu_Text.Position = Vector(-0.5, 0.3);
+	Settings_Text.Body.Load("textures/Menu/Settings_Text.png");
+	Settings_Text.Body.Size = Vector(0.7, 0.1);
+	Settings_Text.Position = Vector(-0.5, 0.3);
+	Button[BUTTON_NEW_GAME].Body.Load("textures/Menu/New_Game.png");
+	Button[BUTTON_NEW_GAME].Body.Size = Vector(0.5, 0.1);
+	Button[BUTTON_NEW_GAME].Position = Vector(-0.5, -0.02);
+	Button[BUTTON_SETTINGS].Body.Load("textures/Menu/Settings.png");
+	Button[BUTTON_SETTINGS].Body.Size = Vector(0.5, 0.1);
+	Button[BUTTON_SETTINGS].Position = Vector(-0.5, -0.14);
+	Button[BUTTON_EXIT].Body.Load("textures/Menu/Exit.png");
+	Button[BUTTON_EXIT].Body.Size = Vector(0.5, 0.1);
+	Button[BUTTON_EXIT].Position = Vector(-0.5, -0.26);
+	Button[BUTTON_BACK].Body.Load("textures/Menu/Back.png");
+	Button[BUTTON_BACK].Body.Size = Vector(0.5, 0.1);
+	Button[BUTTON_BACK].Position = Vector(-0.5, -0.26);
+	if (currentMenu == -1)
+		Button[BUTTON_CONTINUE].Body.Load("textures/Menu/Continue_R.png");
+	else
+		Button[BUTTON_CONTINUE].Body.Load("textures/Menu/Continue.png");
+	Button[BUTTON_CONTINUE].Body.Size = Vector(0.5, 0.1);
+	Button[BUTTON_CONTINUE].Position = Vector(-0.5, 0.1);
+	Cursor.Body.Load("textures/Menu/Cursor.png");
+	Cursor.Body.Size = Vector(0.52, 0.12);
+	Cursor.Position = Vector(-0.5, 0.0);
+	if (currentMenu == -1)
+		return;
+
+	//Генерация карты и уровня
+	Map = level();
 	for (int i = 0; i < level_size - 3; i++)
-	{
 		Map.generation();
-	}
 	Map.draw();
-	
+
 	Map.draw(Map.current);
 	BuildMap(Map_Size, true);
-
-	Menu_Back.Body.Load("textures/Menu_Back.png");
-	Menu_Back.Body.Size = Vector(20 / (double)win_height, 20 / (double)win_width);
-	Menu_Back.Position = Vector(0.0, 0.0);
 
 	// Инициализация объектов (+загрузка текстур)
 	Player.Legs.Load("textures/Legs.png"); // Игрок
@@ -283,6 +356,7 @@ void initGL(int argc, char **argv)
 	Player.Attack.Size = Vector(0.18, 0.18);
 	Player.Physics.Position = Vector(-0.5, 0.02);
 	Player.Physics.Speed = 0.2;
+	Player.HP = 100;
 
 	pick.Body.Load("textures/boots.png"); // Поднимаемые предметы
 	pick.Body.Size = Vector(0.1, 0.1);
@@ -308,6 +382,7 @@ void initGL(int argc, char **argv)
 	Enemy.Physics.Position = Vector(0.5, 0.0);
 	Enemy.Physics.Speed = 0.1;
 	Enemy.Knock_Back = 0.3;
+	Enemy.HP = 100;
 
 	Cross.Body.Load("textures/Cross.png"); // Прицел
 	Cross.Body.Size = Vector(0.1, 0.1);
@@ -393,8 +468,13 @@ void BuildMap(double Map_Size, bool reloadTexture)
 		{
 			if (Map.box[y][x] == NORMAL)
 			{
-				if (x == level_size / 2 && y == level_size / 2)
-					Level_Tile[k].isStudy = true;
+				if (reloadTexture)
+				{
+					if (x == level_size / 2 && y == level_size / 2)
+						Level_Tile[k].isStudy = true;
+					else
+						Level_Tile[k].isStudy = false;
+				}
 				Level_Tile[k].isExist = true;
 				Level_Tile[k].Position = Vector(10 / (double)win_height - (level_size - 0.5 - x) * Map_Size, 10 / (double)win_width - (y + 0.5) * Map_Size);
 				if (reloadTexture)
@@ -425,10 +505,21 @@ void Render()
 	glAlphaFunc(GL_GREATER, 0.5f); // Порог прорисовки прозрачности
 	glEnable(GL_TEXTURE_2D); // Включает двухмерное текстурирование
 
-	if (isInMenu)
+	if (currentMenu != 0)
 	{
 		//Отрисовка меню
-		Draw_Quad(Menu_Back.Position, Menu_Back.Body);
+		Draw_Quad(Menu_BackGround.Position, Menu_BackGround.Body);
+		if (Menu_Text.isExist)
+			Draw_Quad(Menu_Text.Position, Menu_Text.Body);
+		if (Settings_Text.isExist)
+			Draw_Quad(Settings_Text.Position, Settings_Text.Body);
+		for (int i = 0; i < button_count; i++)
+		{
+			if (Button[i].isExist)
+				Draw_Quad(Button[i].Position, Button[i].Body);
+		}
+		if (Cursor.isExist)
+			Draw_Quad(Cursor.Position, Cursor.Body);
 
 		//Отрисовка прицела
 		Draw_Quad(Cross.Position, Cross.Body);
@@ -647,7 +738,12 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 		if (wParam == WM_KEYUP)
 		{
 			if ((key[GAMEMENU].Nominal1 == KEY->vkCode || key[GAMEMENU].Nominal2 == KEY->vkCode))
-				isInMenu = !isInMenu;
+			{
+				if (currentMenu == 0)
+					currentMenu = 1;
+				else if (currentMenu != -1)
+					currentMenu = prevMenu;
+			}
 			if ((key[FULLSCREEN].Nominal1 == KEY->vkCode || key[FULLSCREEN].Nominal2 == KEY->vkCode))
 				SetFullScreen();
 		}
@@ -668,13 +764,40 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
-			if (!Player.isAttack && Player.HP > 0 && !isInMenu)
-				CreateBullet();
-			//PlaySoundA("pistol.wav", NULL, SND_ASYNC | SND_FILENAME);
+			if (currentMenu == 0)
+			{
+				if (!Player.isAttack && Player.HP > 0)
+					CreateBullet();
+			}
+			else
+			{
+				switch (currentButton)
+				{
+				case BUTTON_CONTINUE:
+					currentMenu = 0;
+					break;
+				case BUTTON_NEW_GAME:
+					currentMenu = 0;
+					initGL(NULL, NULL, false);
+					break;
+				case BUTTON_SETTINGS:
+					prevMenu = currentMenu;
+					currentMenu = 2;
+					break;
+				case BUTTON_EXIT:
+					Save();
+					break;
+				case BUTTON_BACK:
+					currentMenu = prevMenu;
+					break;
+				default:
+					break;
+				}
+			}
 		}
 		if (wParam == WM_RBUTTONDOWN)
 		{
-			if (Player.HP > 0 && !isInMenu)
+			if (Player.HP > 0 && currentMenu == 0)
 			{
 				Player.isAttack = true;
 				Player.isKick = true;
