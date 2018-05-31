@@ -7,7 +7,6 @@
 #include <time.h>
 #include "generation.h"
 
-
 static HHOOK Keyboard_Hook; // Хэндл хука клавиатуры
 static HHOOK Mouse_Hook; // Хэндл хука мыши
 static HWND Main_Window_Handle; // Хэндл главного окна, для последующего отключения обработчика нажатия клавиш

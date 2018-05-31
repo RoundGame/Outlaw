@@ -2,6 +2,7 @@
 #include <soil.h>
 #include <cstdio>
 
+level Map;
 struct Window
 {
 	//	позиция_х позиция_у
@@ -25,7 +26,7 @@ Static_Object HP[hp_count];
 Static_Object Wall[wall_count];
 Static_Object Ice[ice_count];
 
-level Map;
+
 Static_Object Map_Back;
 Tile Level_Tile[level_size * level_size];
 int tile_count = level_size * 4;
@@ -44,7 +45,7 @@ Static_Object Cursor;
 int currentButton = -1;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
-void Update(int Value) 
+void Update(int Value)
 {
 	RECT rect = RECT(); //Прямоугольник
 						/*Извлекает размеры ограничивающего прямоугольника указанного окна.
@@ -144,7 +145,7 @@ void Update(int Value)
 		if (Collision(Enemy.Physics.Position, Enemy.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
 			Enemy.Physics.Boost = 0.5;
 	}
-	
+
 	//Проверка, что мы взяли пикапы
 	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Position, pick.Body.Size) && pick.isExist)
 	{
@@ -159,7 +160,7 @@ void Update(int Value)
 		Player.Legs.Size = Vector(0.15, 0.15);
 		Player.Attack.Size = Vector(0.14, 0.14);
 	}
-	
+
 	//Обход стен врагом, реализованный с помощью метода потенциальных полей
 	double max = wall_count * 100, X = 0, Y = 0;
 	for (double x = Enemy.Physics.Position.X - 0.1; x <= Enemy.Physics.Position.X + 0.1; x += 0.1)
@@ -226,7 +227,7 @@ void Update(int Value)
 		}
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	// Высчитывание перемещения пули и высчитывание столкновений ///////////////////////////////////////////////////////////////////////////////////////////
 	for (int i = 0; i < bullet_count; i++)
 	{
@@ -307,32 +308,32 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	Menu_BackGround.Body.Size = Vector(20 / (double)win_height, 20 / (double)win_width);
 	Menu_BackGround.Position = Vector(0.0, 0.0);
 	Menu_Text.Body.Load("textures/Menu/Menu_Text.png");
-	Menu_Text.Body.Size = Vector(0.7, 0.1);
-	Menu_Text.Position = Vector(-0.5, 0.3);
+	Menu_Text.Body.Size = menu_text_size;
+	Menu_Text.Position = menu_text_position;
 	Settings_Text.Body.Load("textures/Menu/Settings_Text.png");
-	Settings_Text.Body.Size = Vector(0.7, 0.1);
-	Settings_Text.Position = Vector(-0.5, 0.3);
+	Settings_Text.Body.Size = menu_text_size;
+	Settings_Text.Position = menu_text_position;
 	Button[BUTTON_NEW_GAME].Body.Load("textures/Menu/New_Game.png");
-	Button[BUTTON_NEW_GAME].Body.Size = Vector(0.5, 0.1);
-	Button[BUTTON_NEW_GAME].Position = Vector(-0.5, -0.02);
+	Button[BUTTON_NEW_GAME].Body.Size = menu_button_size;
+	Button[BUTTON_NEW_GAME].Position = Vector(-1 + menu_button_size.X/3 + menu_button_ident, -0.02);
 	Button[BUTTON_SETTINGS].Body.Load("textures/Menu/Settings.png");
-	Button[BUTTON_SETTINGS].Body.Size = Vector(0.5, 0.1);
-	Button[BUTTON_SETTINGS].Position = Vector(-0.5, -0.14);
+	Button[BUTTON_SETTINGS].Body.Size = menu_button_size;
+	Button[BUTTON_SETTINGS].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.14);
 	Button[BUTTON_EXIT].Body.Load("textures/Menu/Exit.png");
-	Button[BUTTON_EXIT].Body.Size = Vector(0.5, 0.1);
-	Button[BUTTON_EXIT].Position = Vector(-0.5, -0.26);
+	Button[BUTTON_EXIT].Body.Size = menu_button_size;
+	Button[BUTTON_EXIT].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.26);
 	Button[BUTTON_BACK].Body.Load("textures/Menu/Back.png");
-	Button[BUTTON_BACK].Body.Size = Vector(0.5, 0.1);
-	Button[BUTTON_BACK].Position = Vector(-0.5, -0.26);
+	Button[BUTTON_BACK].Body.Size = menu_button_size;
+	Button[BUTTON_BACK].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.26);
 	if (currentMenu == -1)
 		Button[BUTTON_CONTINUE].Body.Load("textures/Menu/Continue_R.png");
 	else
 		Button[BUTTON_CONTINUE].Body.Load("textures/Menu/Continue.png");
-	Button[BUTTON_CONTINUE].Body.Size = Vector(0.5, 0.1);
-	Button[BUTTON_CONTINUE].Position = Vector(-0.5, 0.1);
+	Button[BUTTON_CONTINUE].Body.Size = menu_button_size;
+	Button[BUTTON_CONTINUE].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, 0.1);
 	Cursor.Body.Load("textures/Menu/Cursor.png");
-	Cursor.Body.Size = Vector(0.52, 0.12);
-	Cursor.Position = Vector(-0.5, 0.0);
+	Cursor.Body.Size = menu_button_size;
+	Cursor.Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, 0.0);
 	if (currentMenu == -1)
 		return;
 
@@ -369,7 +370,7 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	pick2.isExist = true;
 
 	Floor.Body.Load("textures/planks.png");
-	Floor.Body.Size = Vector(0.1, 0.1);
+	Floor.Body.Size = Vector(1.0 / 9, 1.0 / 9);
 
 	Enemy.Legs.Load("textures/Legs.png"); // Враг
 	Enemy.Legs.Size = Vector(0.2, 0.2);
@@ -531,17 +532,31 @@ void Render()
 	}
 
 	// Рисуем пол
-	for (int i = -11; i <= 11; i++)
+	for (unsigned __int8 i = 0; i < room_h; i++)
 	{
-		for (int j = -6; j <= 6; j++)
-			Draw_Quad(Vector((float)i / 10.0f, (float)j / 10.0f), Floor.Body);
+		for (unsigned __int8 j = 0; j < room_w; j++)
+		{
+			if (Map.current->box[i][j] == room_wall)
+			{
+				Draw_Quad(Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05), Wall[0].Body);
+			}
+			if (Map.current->box[i][j] != room_wall)
+			{
+				Draw_Quad(Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05), Floor.Body);
+			}
+			if (Map.current->box[i][j] == room_gift)
+			{
+				Draw_Quad(Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05), pick.Body);
+			}
+		}
 	}
 
 	//Отрисовка льда
-	for (int i = 0; i < ice_count; i++)
-		Draw_Quad(Ice[i].Position, Ice[i].Body);
+	//for (int i = 0; i < ice_count; i++)
+	//	Draw_Quad(Ice[i].Position, Ice[i].Body);
 
 	//Отрисовка пикапов
+
 	if (pick.isExist)
 		Draw_Quad(pick.Position, pick.Body);
 
@@ -552,9 +567,9 @@ void Render()
 	Player.Draw();// Рисуем игрока
 
 	//Отрисовка стен
-	for (int i = 0; i < wall_count; i++)
-		Draw_Quad(Wall[i].Position, Wall[i].Body);
-	
+	//for (int i = 0; i < wall_count; i++)
+	//	Draw_Quad(Wall[i].Position, Wall[i].Body);
+
 	//Отрисовка пуль
 	for (int i = 0; i < bullet_count; i++)
 	{
@@ -661,11 +676,11 @@ void reshape_win_size(int w, int h)
 	// Сместим соотношение сторон для рендера
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glScaled((double)win_height/10, (double)win_width/10, 0);
+	glScaled((double)win_height / 10, (double)win_width / 10, 0);
 }
 
-/* Состояние прилржения 
-   false - окно			
+/* Состояние прилржения
+   false - окно
    true - полный экран */
 bool IsFullScreen = false;
 Vector prevWinSize, prevWinPos;

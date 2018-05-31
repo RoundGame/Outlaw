@@ -14,6 +14,28 @@ level::room::room(RoomType _T)
 		}
 	}
 
+	int k = 0;
+	for (unsigned __int8 i = 1 + safe_indent; i < room_h - 1 - safe_indent; i++) // Генерируем положение препятствий
+	{
+		for (unsigned __int8 j = 1 + safe_indent; j < room_w - 1 - safe_indent; j++)
+		{
+			if (rand() % wall_frequency == 0)
+			{
+				box[i][j] = room_wall;
+			}
+		}
+	}
+
+	for (unsigned __int8 i = 0; i < enemy_size; i++) // Генерируем положение врагов
+	{
+		box[rand() % room_h][rand() % room_w] = room_enemy;
+	}
+
+	if (rand() % prob_gift == 0)
+	{
+		box[rand() % (room_h-1) + 1][rand() % (room_w - 1) + 1 ] = room_gift; // Подарок в комнату
+	}
+
 	for (int i = 0; i < room_h; i++) // Рисуем стены ( левая и правая)
 	{
 		box[i][0] = room_wall;

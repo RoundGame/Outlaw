@@ -1,6 +1,7 @@
 ﻿#include "character.h"
 #include "core.h"
 
+
 void Physical_component::Update(bool isAcceleration)
 {
 	if (isAcceleration)

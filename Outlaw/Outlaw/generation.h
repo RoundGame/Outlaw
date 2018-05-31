@@ -2,8 +2,8 @@
 #include <ctime>
 #include <list>
 #include "config.h"
-
 #include <windows.h>
+#include "core.h"
 using namespace std;
 /*	Тип комнаты
 EMPTY	- Пустая,
@@ -13,12 +13,11 @@ BOSS	- Покои босса,
 SECRET	- Тайник	*/
 enum RoomType
 {
-	EMPTY, NORMAL, SHOP, BOSS, SECRET
+	EMPTY = 0, NORMAL, SHOP, BOSS, SECRET
 };
 
 struct level
 {
-
 	struct room
 	{
 		room
@@ -29,6 +28,7 @@ struct level
 		RoomType type;
 		char box[room_h][room_w];
 		room(RoomType _T); // Создает комнату типа _T
+
 	};
 	struct pos // точка на карте
 	{
@@ -43,10 +43,11 @@ struct level
 	room * current = center;
 	list<pos> nextgen; // Очередь точек в которых возможно расширение карты
 	
-	__int8 neighbors = 0; // Число соседей
-	__int8 rooms = 0; // Число соседей
-	__int8 error = 0; // Количество несгенерированных комнат подряд, необходимо для исключения одиночной комнаты
-	char box[level_size][level_size]; // карта [высота][ширина]
+	unsigned __int8 neighbors = 0; // Число соседей
+	unsigned __int8 rooms = 0; // Число соседей
+	unsigned __int8 error = 0; // Количество несгенерированных комнат подряд, необходимо для исключения одиночной комнаты
+	unsigned char box[level_size][level_size]; // карта [высота][ширина]
+
 	pos getnextpos(); // Процедура получения из очереди следующей точки
 
 	void draw(); // Вывод карты в консоли
