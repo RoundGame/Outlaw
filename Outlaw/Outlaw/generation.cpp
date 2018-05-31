@@ -2,6 +2,7 @@
 
 level::room::room(RoomType _T)
 {
+	srand(time(0) * rand());
 	type = _T;
 	up = down = right = left = nullptr;
 
@@ -30,7 +31,6 @@ level::room::room(RoomType _T)
 	{
 		box[rand() % room_h][rand() % room_w] = room_enemy;
 	}
-
 	if (rand() % prob_gift == 0)
 	{
 		box[rand() % (room_h-1) + 1][rand() % (room_w - 1) + 1 ] = room_gift; // Подарок в комнату
@@ -116,7 +116,7 @@ void level::draw()
 
 bool level::create(__int8 h, __int8 w) 
 {
-	srand(time(NULL) * rand() % 100); // Необходимо для генерации псевдо случайных чисел
+	srand(time(NULL) * rand()); // Необходимо для генерации псевдо случайных чисел
 	if (error > 2 || rand() % 2)
 	{
 		box[h][w] = NORMAL; // Обозначим комнату как существующую, сгенерировав число от 0{false} до 1{true}
@@ -132,6 +132,7 @@ bool level::create(__int8 h, __int8 w)
 
 void level::generation() 
 {
+
 	if (nextgen.size()) // Для не пустой очереди
 	{
 		pos next = getnextpos(); // Получим нового кандидата на расширение

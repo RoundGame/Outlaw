@@ -28,7 +28,6 @@ struct level
 		RoomType type;
 		char box[room_h][room_w];
 		room(RoomType _T); // Создает комнату типа _T
-
 	};
 	struct pos // точка на карте
 	{

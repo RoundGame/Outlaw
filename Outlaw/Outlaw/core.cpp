@@ -15,7 +15,7 @@ struct Window
 
 const int bullet_count = 10;
 const int hp_count = 5;
-const int wall_count = 67;
+
 const int ice_count = 8;
 Object bullet[bullet_count];
 Static_Object pick;
@@ -25,7 +25,6 @@ Static_Object Floor;
 Static_Object HP[hp_count];
 Static_Object Wall[wall_count];
 Static_Object Ice[ice_count];
-
 
 Static_Object Map_Back;
 Tile Level_Tile[level_size * level_size];
@@ -43,6 +42,27 @@ Static_Object Settings_Text;
 Static_Object Button[button_count];
 Static_Object Cursor;
 int currentButton = -1;
+
+void Rebuild()
+{
+	for (unsigned __int8 i = 0; i < wall_count; i++)
+	{
+		Wall[i].Position = Vector(1, 1);
+	}
+
+	int k = 0;
+	for (unsigned __int8 i = 0; i < room_h; i++)
+	{
+		for (unsigned __int8 j = 0; j < room_w; j++)
+		{
+			if (Map.current->box[i][j] == room_wall && k < wall_count)
+			{
+				Wall[k].Position = Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05);
+				k++;
+			}
+		}
+	}
+}
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value)
@@ -130,21 +150,55 @@ void Update(int Value)
 	Player.Physics.Acceleration = Player.Physics.Acceleration.GetNormalize();
 	Player.Set_Legs_Direction();
 
-
 	Player.Use_Collisions(Wall, wall_count);
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
 
-	//Проверка, что мы на льду
-	Player.Physics.Boost = 5;
-	Enemy.Physics.Boost = 5;
-	for (int i = 0; i < ice_count; i++)
-	{
-		if (Collision(Player.Physics.Position, Player.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
-			Player.Physics.Boost = 0.5;
-		if (Collision(Enemy.Physics.Position, Enemy.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
-			Enemy.Physics.Boost = 0.5;
-	}
+
+	// Перемещение между комнатами ///////////////////
+	if (Player.Physics.Position.X > 0.97)			//
+	{												//
+		Player.Physics.Position.X = -0.97;			//
+		Map.current = Map.current->right;			//
+		Rebuild();									//
+		Map.draw(Map.current);						//
+	}												//
+													//
+	if (Player.Physics.Position.Y > 0.65)			//
+	{												//
+		Player.Physics.Position.Y = -0.65;			//
+		Map.current = Map.current->up;				//
+		Rebuild();									//
+		Map.draw(Map.current);						//
+	}												//
+													//
+	if (Player.Physics.Position.X < -0.97)			//
+	{												//
+		Player.Physics.Position.X = 0.97;			//
+		Map.current = Map.current->left;			//
+		Rebuild();									//
+		Map.draw(Map.current);						//
+	}												//
+													//
+	if (Player.Physics.Position.Y < -0.65)			//
+	{												//
+		Map.current = Map.current->down;			//
+		Player.Physics.Position.Y = 0.65;			//
+		Rebuild();									//
+		Map.draw(Map.current);						//
+	}												//
+	//////////////////////////////////////////////////
+
+	////Проверка, что мы на льду
+	//Player.Physics.Boost = 5;
+	//Enemy.Physics.Boost = 5;
+	//for (int i = 0; i < ice_count; i++)
+	//{
+	//	if (Collision(Player.Physics.Position, Player.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
+	//		Player.Physics.Boost = 0.5;
+	//	if (Collision(Enemy.Physics.Position, Enemy.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
+	//		Enemy.Physics.Boost = 0.5;
+	//}
 
 	//Проверка, что мы взяли пикапы
 	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Position, pick.Body.Size) && pick.isExist)
@@ -213,6 +267,7 @@ void Update(int Value)
 			{
 				Enemy.Physics.Velocity.X -= FromEnemyToPlayer.GetNormalize().X * Player.Knock_Back;
 				Enemy.Physics.Velocity.Y -= FromEnemyToPlayer.GetNormalize().Y * Player.Knock_Back;
+
 				Enemy.HP -= rand() % 7 + 7;
 				Player.isKick = false;
 			}
@@ -240,6 +295,7 @@ void Update(int Value)
 			if (Enemy.HP > 0 && Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Enemy.Physics.Position, Enemy.Legs.Size))
 			{
 				bullet[i].isExist = false;
+
 				Enemy.HP -= rand() % 7 + 15;
 			}
 			// Если произошла колизия, изменим активность пули в нерабочее
@@ -315,7 +371,7 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	Settings_Text.Position = menu_text_position;
 	Button[BUTTON_NEW_GAME].Body.Load("textures/Menu/New_Game.png");
 	Button[BUTTON_NEW_GAME].Body.Size = menu_button_size;
-	Button[BUTTON_NEW_GAME].Position = Vector(-1 + menu_button_size.X/3 + menu_button_ident, -0.02);
+	Button[BUTTON_NEW_GAME].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.02);
 	Button[BUTTON_SETTINGS].Body.Load("textures/Menu/Settings.png");
 	Button[BUTTON_SETTINGS].Body.Size = menu_button_size;
 	Button[BUTTON_SETTINGS].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.14);
@@ -412,32 +468,15 @@ void initGL(int argc, char **argv, bool isNewWindow)
 		bullet[i].Physics.Speed = 0.4;
 	}
 
-	int k = 0;
-	for (int i = 0; i < 20; i++)
-	{
-		Wall[k].Position.Y = 10 / (double)win_width;
-		Wall[k].Position.X = (double)i / 9 - 10 / (double)win_height;
-		Wall[k + 1].Position.Y = -10 / (double)win_width;
-		Wall[k + 1].Position.X = (double)i / 9 - 10 / (double)win_height;
-		k += 2;
-	}
-	for (int i = 0; i < 12; i++)
-	{
-		Wall[k].Position.Y = (double)i / 9 - 10 / (double)win_width;
-		Wall[k].Position.X = -10 / (double)win_height;
-		Wall[k + 1].Position.Y = (double)i / 9 - 10 / (double)win_width;
-		Wall[k + 1].Position.X = 10 / (double)win_height;
-		k += 2;
-	}
-	Wall[k].Position.Y = 1.0 / 9;
-	Wall[k + 1].Position.Y = -1.0 / 9;
-	for (int i = 0; i < ice_count; i += 2)
-	{
-		Ice[i].Position.X = -(double)i / 18 - 3.5 / 9;
-		Ice[i].Position.Y = -2.0 / 9;
-		Ice[i + 1].Position.X = -(double)i / 18 - 3.5 / 9;
-		Ice[i + 1].Position.Y = -3.0 / 9;
-	}
+	//for (int i = 0; i < ice_count; i += 2)
+	//{
+	//	Ice[i].Position.X = -(double)i / 18 - 3.5 / 9;
+	//	Ice[i].Position.Y = -2.0 / 9;
+	//	Ice[i + 1].Position.X = -(double)i / 18 - 3.5 / 9;
+	//	Ice[i + 1].Position.Y = -3.0 / 9;
+	//}
+
+	Rebuild(); // Установка препятствий в комнате
 
 	//Биндим клавиши
 	key[LEFT].Nominal1 = KEY_A;
@@ -459,6 +498,8 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	glutSetCursor(GLUT_CURSOR_NONE);
 	srand(time(0));
 }
+
+
 
 void BuildMap(double Map_Size, bool reloadTexture)
 {
@@ -536,10 +577,6 @@ void Render()
 	{
 		for (unsigned __int8 j = 0; j < room_w; j++)
 		{
-			if (Map.current->box[i][j] == room_wall)
-			{
-				Draw_Quad(Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05), Wall[0].Body);
-			}
 			if (Map.current->box[i][j] != room_wall)
 			{
 				Draw_Quad(Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05), Floor.Body);
@@ -567,8 +604,9 @@ void Render()
 	Player.Draw();// Рисуем игрока
 
 	//Отрисовка стен
-	//for (int i = 0; i < wall_count; i++)
-	//	Draw_Quad(Wall[i].Position, Wall[i].Body);
+	for (int i = 0; i < wall_count; i++)
+		Draw_Quad(Wall[i].Position, Wall[i].Body);
+
 
 	//Отрисовка пуль
 	for (int i = 0; i < bullet_count; i++)
