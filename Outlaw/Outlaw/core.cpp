@@ -2,7 +2,6 @@
 #include <soil.h>
 #include <cstdio>
 
-level Map;
 struct Window
 {
 	//	позиция_х позиция_у
@@ -27,10 +26,12 @@ Static_Object Wall[wall_count];
 Static_Object Ice[ice_count];
 bool isLeftMouseButtonDown = false;
 
+int cursor_tile_x = 0, cursor_tile_y = 0;
+level Map;
 Static_Object Map_Back;
-Tile Level_Tile[level_size * level_size];
-int tile_count = level_size * 4;
-double Map_Size = 0.04;
+Static_Object Map_Cursor;
+Tile Level_Tile[level_size][level_size];
+double Map_Size = 0.05;
 
 Character Player; // Создаем игрока
 Character Enemy; // Создаем врага
@@ -51,7 +52,7 @@ void Rebuild()
 {
 	for (unsigned __int8 i = 0; i < wall_count; i++)
 	{
-		Wall[i].Position = Vector(1, 1);
+		Wall[i].Position = Vector(1.5, 1.5);
 	}
 
 	int k = 0;
@@ -140,7 +141,7 @@ void Update(int Value)
 	//Изменение размера карты
 	if (key[MINIMAP].isPressed)
 	{
-		if (Map_Size == 0.04)
+		if (Map_Size == 0.05)
 		{
 			Map_Size = 0.08;
 			BuildMap(Map_Size, false);
@@ -150,10 +151,11 @@ void Update(int Value)
 	{
 		if (Map_Size == 0.08)
 		{
-			Map_Size = 0.04;
+			Map_Size = 0.05;
 			BuildMap(Map_Size, false);
 		}
 	}
+	Map_Cursor.Position = Level_Tile[cursor_tile_x][cursor_tile_y].Position;
 
 	//Если мертвы, то больше не обновляем остальную информацию
 	if (Player.HP <= 0)
@@ -174,39 +176,51 @@ void Update(int Value)
 	Player.Physics.Update(true); // Изменение позиции игрока
 
 
-	// Перемещение между комнатами ///////////////////
-	if (Player.Physics.Position.X > 10 / (double)win_height)			//
-	{												//
-		Player.Physics.Position.X = -10 / (double)win_height;			//
-		Map.current = Map.current->right;			//
-		Rebuild();									//
-		Map.draw(Map.current);						//
-	}												//
-													//
-	if (Player.Physics.Position.Y > 10 / (double)win_width)			//
-	{												//
-		Player.Physics.Position.Y = -10 / (double)win_width;			//
-		Map.current = Map.current->up;				//
-		Rebuild();									//
-		Map.draw(Map.current);						//
-	}												//
-													//
-	if (Player.Physics.Position.X < -10 / (double)win_height)			//
-	{												//
-		Player.Physics.Position.X = 10 / (double)win_height;			//
-		Map.current = Map.current->left;			//
-		Rebuild();									//
-		Map.draw(Map.current);						//
-	}												//
-													//
-	if (Player.Physics.Position.Y < -10 / (double)win_width)			//
-	{												//
-		Map.current = Map.current->down;			//
-		Player.Physics.Position.Y = 10 / (double)win_width;			//
-		Rebuild();									//
-		Map.draw(Map.current);						//
-	}												//
-	//////////////////////////////////////////////////
+	// Перемещение между комнатами //////////////////////////////
+	if (Player.Physics.Position.X > 10 / (double)win_height)
+	{
+		Player.Physics.Position.X = -10 / (double)win_height;
+		Map.current = Map.current->right;
+		Rebuild();
+		Map.draw(Map.current);
+
+		cursor_tile_x++;
+		Level_Tile[cursor_tile_x][cursor_tile_y].isStudy = true;
+	}
+
+	if (Player.Physics.Position.Y > 10 / (double)win_width)
+	{
+		Player.Physics.Position.Y = -10 / (double)win_width;
+		Map.current = Map.current->up;
+		Rebuild();
+		Map.draw(Map.current);
+
+		cursor_tile_y--;
+		Level_Tile[cursor_tile_x][cursor_tile_y].isStudy = true;
+	}
+
+	if (Player.Physics.Position.X < -10 / (double)win_height)
+	{
+		Player.Physics.Position.X = 10 / (double)win_height;
+		Map.current = Map.current->left;
+		Rebuild();
+		Map.draw(Map.current);
+
+		cursor_tile_x--;
+		Level_Tile[cursor_tile_x][cursor_tile_y].isStudy = true;
+	}
+
+	if (Player.Physics.Position.Y < -10 / (double)win_width)
+	{
+		Map.current = Map.current->down;
+		Player.Physics.Position.Y = 10 / (double)win_width;
+		Rebuild();
+		Map.draw(Map.current);
+
+		cursor_tile_y++;
+		Level_Tile[cursor_tile_x][cursor_tile_y].isStudy = true;
+	}
+	/////////////////////////////////////////////////////////////
 
 	////Проверка, что мы на льду
 	//Player.Physics.Boost = 5;
@@ -540,37 +554,42 @@ void BindKey()
 
 void BuildMap(double Map_Size, bool reloadTexture)
 {
-	int k = 0;
 	for (int x = 0; x < level_size; x++)
 	{
 		for (int y = 0; y < level_size; y++)
 		{
+			Level_Tile[x][y].isExist = false;
 			if (Map.box[y][x] == NORMAL)
 			{
 				if (reloadTexture)
 				{
 					if (x == level_size / 2 && y == level_size / 2)
-						Level_Tile[k].isStudy = true;
+					{
+						Level_Tile[x][y].isStudy = true;
+						cursor_tile_x = x;
+						cursor_tile_y = y;
+					}
 					else
-						Level_Tile[k].isStudy = false;
+						Level_Tile[x][y].isStudy = false;
+
+					Level_Tile[x][y].First.Load("textures/Normal_Level1.png");
+					Level_Tile[x][y].Second.Load("textures/Normal_Level2.png");
 				}
-				Level_Tile[k].isExist = true;
-				Level_Tile[k].Position = Vector(10 / (double)win_height - (level_size - 0.5 - x) * Map_Size, 10 / (double)win_width - (y + 0.5) * Map_Size);
-				if (reloadTexture)
-				{
-					Level_Tile[k].First.Load("textures/Normal_Level1.png");
-					Level_Tile[k].Second.Load("textures/Normal_Level2.png");
-				}
-				Level_Tile[k].First.Size = Vector(Map_Size, Map_Size);
-				Level_Tile[k].Second.Size = Vector(Map_Size, Map_Size);
-				k++;
+				Level_Tile[x][y].First.Size = Vector(Map_Size, Map_Size);
+				Level_Tile[x][y].Second.Size = Vector(Map_Size, Map_Size);
+				Level_Tile[x][y].isExist = true;
+				Level_Tile[x][y].Position = Vector(10 / (double)win_height - (level_size - 0.5 - x) * Map_Size, 10 / (double)win_width - (y + 0.5) * Map_Size);
 			}
 		}
 	}
-	tile_count = k;
-	Map_Back.Body.Load("textures/Map_Back.png");
+	if (reloadTexture)
+	{
+		Map_Back.Body.Load("textures/Map_Back.png");
+		Map_Cursor.Body.Load("textures/Map_Cursor.png");
+	}
 	Map_Back.Body.Size = Vector(level_size * Map_Size, level_size * Map_Size);
 	Map_Back.Position = Vector(10 / (double)win_height - level_size * Map_Size / 2, 10 / (double)win_width - level_size * Map_Size / 2);
+	Map_Cursor.Body.Size = Vector(Map_Size, Map_Size);
 }
 
 // Отрисовка
@@ -668,16 +687,20 @@ void Render()
 
 	//Отрисовка миникарты
 	Draw_Quad(Map_Back.Position, Map_Back.Body);
-	for (int i = 0; i < tile_count; i++)
+	for (int x = 0; x < level_size; x++)
 	{
-		if (Level_Tile[i].isExist)
+		for (int y = 0; y < level_size; y++)
 		{
-			if (Level_Tile[i].isStudy)
-				Draw_Quad(Level_Tile[i].Position, Level_Tile[i].Second);
-			else
-				Draw_Quad(Level_Tile[i].Position, Level_Tile[i].First);
+			if (Level_Tile[x][y].isExist)
+			{
+				if (Level_Tile[x][y].isStudy)
+					Draw_Quad(Level_Tile[x][y].Position, Level_Tile[x][y].Second);
+				else
+					Draw_Quad(Level_Tile[x][y].Position, Level_Tile[x][y].First);
+			}
 		}
 	}
+	Draw_Quad(Map_Cursor.Position, Map_Cursor.Body);
 
 	//Отрисовка HP
 	for (int i = 0; i < hp_count; i++)
