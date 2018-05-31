@@ -1,12 +1,11 @@
 ﻿  core.cpp
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(110): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(480): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(695): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(696): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(697): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(698): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(720): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(720): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(745): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\core.cpp(746): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(131): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(730): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(731): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(732): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(733): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(755): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(755): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(780): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(781): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
   Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Debug\Outlaw.exe

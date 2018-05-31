@@ -175,34 +175,34 @@ void Update(int Value)
 
 
 	// Перемещение между комнатами ///////////////////
-	if (Player.Physics.Position.X > 0.97)			//
+	if (Player.Physics.Position.X > 10 / (double)win_height)			//
 	{												//
-		Player.Physics.Position.X = -0.97;			//
+		Player.Physics.Position.X = -10 / (double)win_height;			//
 		Map.current = Map.current->right;			//
 		Rebuild();									//
 		Map.draw(Map.current);						//
 	}												//
 													//
-	if (Player.Physics.Position.Y > 0.65)			//
+	if (Player.Physics.Position.Y > 10 / (double)win_width)			//
 	{												//
-		Player.Physics.Position.Y = -0.65;			//
+		Player.Physics.Position.Y = -10 / (double)win_width;			//
 		Map.current = Map.current->up;				//
 		Rebuild();									//
 		Map.draw(Map.current);						//
 	}												//
 													//
-	if (Player.Physics.Position.X < -0.97)			//
+	if (Player.Physics.Position.X < -10 / (double)win_height)			//
 	{												//
-		Player.Physics.Position.X = 0.97;			//
+		Player.Physics.Position.X = 10 / (double)win_height;			//
 		Map.current = Map.current->left;			//
 		Rebuild();									//
 		Map.draw(Map.current);						//
 	}												//
 													//
-	if (Player.Physics.Position.Y < -0.65)			//
+	if (Player.Physics.Position.Y < -10 / (double)win_width)			//
 	{												//
 		Map.current = Map.current->down;			//
-		Player.Physics.Position.Y = 0.65;			//
+		Player.Physics.Position.Y = 10 / (double)win_width;			//
 		Rebuild();									//
 		Map.draw(Map.current);						//
 	}												//
