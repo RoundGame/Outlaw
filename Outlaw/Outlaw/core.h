@@ -20,6 +20,8 @@ void initGL(int argc, char **argv, bool isNewWindow);
 	void Save(); 
 	//Построение Миникарты
 	void BuildMap(double Map_Size, bool reloadTexture);
+	//Биндим клавиши
+	void BindKey();
 
 // Отрисовка
 void Render();
