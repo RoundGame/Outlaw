@@ -25,7 +25,7 @@ Static_Object Floor;
 Static_Object HP[hp_count];
 Static_Object Wall[wall_count];
 Static_Object Ice[ice_count];
-
+bool isLeftMouseButtonDown = false;
 
 Static_Object Map_Back;
 Tile Level_Tile[level_size * level_size];
@@ -42,6 +42,9 @@ Static_Object Menu_Text;
 Static_Object Settings_Text;
 Static_Object Button[button_count];
 Static_Object Cursor;
+Static_Object Slider_Line;
+Static_Object Slider_Point;
+Static_Object Slider_Text;
 int currentButton = -1;
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
@@ -68,6 +71,9 @@ void Update(int Value)
 			Button[BUTTON_SETTINGS].isExist = true;
 			Button[BUTTON_EXIT].isExist = true;
 			Button[BUTTON_BACK].isExist = false;
+			Slider_Text.isExist = false;
+			Slider_Line.isExist = false;
+			Slider_Point.isExist = false;
 		}
 		if (currentMenu == 2)
 		{
@@ -78,6 +84,9 @@ void Update(int Value)
 			Button[BUTTON_SETTINGS].isExist = false;
 			Button[BUTTON_EXIT].isExist = false;
 			Button[BUTTON_BACK].isExist = true;
+			Slider_Text.isExist = true;
+			Slider_Line.isExist = true;
+			Slider_Point.isExist = true;
 		}
 		currentButton = -1;
 		Cursor.isExist = false;
@@ -91,6 +100,15 @@ void Update(int Value)
 					Cursor.Position = Button[i].Position;
 					currentButton = i;
 				}
+			}
+		}
+		if (Slider_Line.isExist && Collision(Slider_Line.Position, Slider_Line.Body.Size, Cross.Position, Vector(0.0, 0.0)))
+		{
+			if (isLeftMouseButtonDown)
+			{
+				Slider_Point.Position.X = Cross.Position.X;
+				int Volume = (Slider_Point.Position.X + 0.95) * 131332;
+				waveOutSetVolume(NULL, Volume + Volume * 0x10000);
 			}
 		}
 		glutPostRedisplay(); // Обновляем экран
@@ -289,7 +307,7 @@ void Matrix_Rotate(Vector position, double angle)
 // Инициализация главного окна
 void initGL(int argc, char **argv, bool isNewWindow)
 {
-	if (isNewWindow)
+	if (isNewWindow) //Если первый раз запущена игра
 	{
 		glutInit(&argc, argv);	// Инициализация glut
 		glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA); 	// Установка парометров отрисовки где
@@ -299,9 +317,15 @@ void initGL(int argc, char **argv, bool isNewWindow)
 		glutInitWindowSize(960, 540);	 // Размер экрана в пикселях
 		glutInitWindowPosition(100, 100); // Позиция окна относительно левого верхнего угла(0,0) в пикселях
 		glutCreateWindow("Outlaw");	 // Имя окна
+		BindKey(); //Биндим стандартные клавиши
 	}
 
 	Main_Window_Handle = GetActiveWindow(); // Запоминаем главное окно, что бы в последствии отключать обработчик клавиш если оно свернуто.
+
+	//Инициализация прицела + убирание стандартного курсора
+	Cross.Body.Load("textures/Cross.png"); 
+	Cross.Body.Size = Vector(0.1, 0.1);
+	glutSetCursor(GLUT_CURSOR_NONE);
 
 	//Инициализация меню
 	Menu_BackGround.Body.Load("textures/Menu/BackGround.png");
@@ -334,6 +358,24 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	Cursor.Body.Load("textures/Menu/Cursor.png");
 	Cursor.Body.Size = menu_button_size;
 	Cursor.Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, 0.0);
+	Slider_Text.Body.Load("textures/Menu/Slider_Text.png");
+	Slider_Text.Body.Size = Vector(0.4, 0.06);
+	Slider_Text.Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, 0.15);
+	Slider_Line.Body.Load("textures/Menu/Slider_Line.png");
+	Slider_Line.Body.Size = Vector(0.5, 0.02);
+	Slider_Line.Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, 0.07);
+	Slider_Point.Body.Load("textures/Menu/Slider_Point.png");
+	Slider_Point.Body.Size = Vector(0.06, 0.06);
+
+	//Узнаем текущую громкость и устанавливаем ползунок в настройках относительно текущей громкости
+	int Volume = 0;
+	waveOutGetVolume(NULL, (LPDWORD)&Volume);
+	Volume %= 0x10000;
+	if (Volume < 0)
+		Volume -= 0xFFFF0000;
+	Slider_Point.Position = Vector((double)Volume / 131332 - 0.95, 0.07);
+
+	//Если новая игра, то сразу отображаем меню, не загружая остального контента
 	if (currentMenu == -1)
 		return;
 
@@ -385,9 +427,6 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	Enemy.Knock_Back = 0.3;
 	Enemy.HP = 100;
 
-	Cross.Body.Load("textures/Cross.png"); // Прицел
-	Cross.Body.Size = Vector(0.1, 0.1);
-
 	for (int i = 0; i < hp_count; i++)
 	{
 		HP[i].Body.Load("textures/hp.png");
@@ -438,8 +477,12 @@ void initGL(int argc, char **argv, bool isNewWindow)
 		Ice[i + 1].Position.X = -(double)i / 18 - 3.5 / 9;
 		Ice[i + 1].Position.Y = -3.0 / 9;
 	}
+	srand(time(0));
+}
 
-	//Биндим клавиши
+//Биндим клавиши
+void BindKey()
+{
 	key[LEFT].Nominal1 = KEY_A;
 	key[RIGHT].Nominal1 = KEY_D;
 	key[UP].Nominal1 = KEY_W;
@@ -455,9 +498,6 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	key[MINIMAP].Nominal2 = KEY_UNKNOWN;
 	key[GAMEMENU].Nominal2 = KEY_UNKNOWN;
 	key[FULLSCREEN].Nominal2 = KEY_UNKNOWN;
-
-	glutSetCursor(GLUT_CURSOR_NONE);
-	srand(time(0));
 }
 
 void BuildMap(double Map_Size, bool reloadTexture)
@@ -514,6 +554,12 @@ void Render()
 			Draw_Quad(Menu_Text.Position, Menu_Text.Body);
 		if (Settings_Text.isExist)
 			Draw_Quad(Settings_Text.Position, Settings_Text.Body);
+		if (Slider_Text.isExist)
+			Draw_Quad(Slider_Text.Position, Slider_Text.Body);
+		if (Slider_Line.isExist)
+			Draw_Quad(Slider_Line.Position, Slider_Line.Body);
+		if (Slider_Point.isExist)
+			Draw_Quad(Slider_Point.Position, Slider_Point.Body);
 		for (int i = 0; i < button_count; i++)
 		{
 			if (Button[i].isExist)
@@ -755,7 +801,12 @@ LRESULT __stdcall KeybdHookProc(int code, WPARAM wParam, LPARAM lParam)
 			if ((key[GAMEMENU].Nominal1 == KEY->vkCode || key[GAMEMENU].Nominal2 == KEY->vkCode))
 			{
 				if (currentMenu == 0)
+				{
+					prevMenu = currentMenu;
 					currentMenu = 1;
+				}
+				else if (currentMenu == 1)
+					currentMenu = 0;
 				else if (currentMenu != -1)
 					currentMenu = prevMenu;
 			}
@@ -779,6 +830,7 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == WM_LBUTTONDOWN)
 		{
+			isLeftMouseButtonDown = true;
 			if (currentMenu == 0)
 			{
 				if (!Player.isAttack && Player.HP > 0)
@@ -810,6 +862,8 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 				}
 			}
 		}
+		if (wParam == WM_LBUTTONUP)
+			isLeftMouseButtonDown = false;
 		if (wParam == WM_RBUTTONDOWN)
 		{
 			if (Player.HP > 0 && currentMenu == 0)
