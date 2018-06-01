@@ -6,7 +6,6 @@
 #include "character.h"
 #include <time.h>
 #include "generation.h"
-#include "wave.h"
 
 static HHOOK Keyboard_Hook; // Хэндл хука клавиатуры
 static HHOOK Mouse_Hook; // Хэндл хука мыши
@@ -30,6 +29,7 @@ void Draw_Quad(Vector Position, Sprite Sprite); // Рисует квадрат �
 void Animation(int Value); // Главная функция анимации
 void Matrix_Rotate(Vector position, double angle); // Поворот в соответствии физическому компоненту
 void Update(int Value);	// Главнвя функция изменения позиции
+void Play_Music();
 void CreateBullet();
 bool Collision(Vector Position1, Vector Size1, Vector Position2, Vector Size2); // Возвращает истину, если Physics1 пересекает Physics2
 

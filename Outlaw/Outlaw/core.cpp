@@ -15,7 +15,6 @@ struct Window
 const int bullet_count = 10;
 const int hp_count = 5;
 
-
 Object bullet[bullet_count];
 Static_Object pick;
 Static_Object pick2;
@@ -47,10 +46,6 @@ Static_Object Slider_Line;
 Static_Object Slider_Point;
 Static_Object Slider_Text;
 int currentButton = -1;
-
-// Загрузка музыки
-Wave gun("sound/gun8.wav");
-Wave reload("sound/reload.wav");
 
 void Rebuild()
 {
@@ -860,6 +855,17 @@ void SetFullScreen() //Функция установки полного экра
 	}
 }
 
+//char* info = new char[20]; //доработать
+void Play_Music()
+{
+	int n = rand() % 4 + 1;
+	char* text = new char[2];
+	_itoa_s(n, text, 2, 10);
+	string s = "play sound/music" + string(text) + ".wav";
+	mciSendStringA(s.c_str(), NULL, 0, NULL);
+	//mciSendStringA("status", info, 20, NULL);
+}
+
 void CreateBullet()
 {
 	int k = -1;
@@ -868,7 +874,7 @@ void CreateBullet()
 		if (!bullet[i].isExist)
 		{
 			bullet[i].isExist = true;
-			gun.play();
+			PlaySoundA("sound/gun8.wav", NULL, SND_ASYNC | SND_FILENAME);
 			k = i;
 		}
 	}
