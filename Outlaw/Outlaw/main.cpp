@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 	int n = rand() % 4 + 1;
 	char* text = new char[2];
 	_itoa_s(n, text, 2, 10);
-	string s = "music" + string(text) + ".wav";
+	string s = "sound/music" + string(text) + ".wav";
 	PlaySoundA(s.c_str(), NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
 
 	/*Начинает основной цикл GLUT обработки событий. В цикле событий обрабатываются все сообщения клавиатуры,

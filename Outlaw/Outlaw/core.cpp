@@ -433,10 +433,10 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	Slider_Text.Body.Size = Vector(0.4, 0.06);
 	Slider_Text.Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, 0.15);
 	Slider_Line.Body.Load("textures/Menu/Slider_Line.png");
-	Slider_Line.Body.Size = Vector(0.5, 0.02);
+	Slider_Line.Body.Size = Vector(0.5, 0.08);
 	Slider_Line.Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, 0.07);
 	Slider_Point.Body.Load("textures/Menu/Slider_Point.png");
-	Slider_Point.Body.Size = Vector(0.06, 0.06);
+	Slider_Point.Body.Size = Vector(0.015, 0.06);
 
 	//Узнаем текущую громкость и устанавливаем ползунок в настройках относительно текущей громкости
 	int Volume = 0;

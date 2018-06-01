@@ -93,14 +93,14 @@ level::pos::pos(__int8 _h, __int8 _w, room * _link)
 	link = _link;
 }
 
-level::pos level::getnextpos()
+level::pos level::getnextpos() // Возвращает следующую точку доступную для расширения
 {
 	pos next = nextgen.front(); // Скопировать первую в списке точку
 	nextgen.pop_front(); // Удалить ее из списка
 	return next; // Вернуть по запросу
 }
 
-void level::draw() 
+void level::draw() // Рисует карту в консоли
 {
 	for (__int8 i = 0; i < level_size; i++)
 	{
@@ -153,6 +153,8 @@ void level::generation()
 				next.link->up = up;
 				up->down = next.link;
 
+				build(next.link->up); // Построение карты с учетом возможных выходов
+
 				nextgen.push_back(pos(next.h - 1, next.w, up)); // Запишем ее в очередь на расширение
 			}
 		}
@@ -171,6 +173,8 @@ void level::generation()
 				// Указываем путь к ней и обратно
 				next.link->down = down;
 				down->up = next.link;
+
+				build(next.link->down); // Построение карты с учетом возможных выходов
 
 				nextgen.push_back(pos(next.h + 1, next.w, down)); // Запишем ее в очередь на расширение
 			}
@@ -191,6 +195,8 @@ void level::generation()
 				next.link->left = left;
 				left->right = next.link;
 
+				build(next.link->left); // Построение карты с учетом возможных выходов
+
 				nextgen.push_back(pos(next.h, next.w - 1, left)); // Запишем ее в очередь на расширение
 			}
 		}
@@ -209,6 +215,8 @@ void level::generation()
 				// Указываем путь к ней и обратно
 				next.link->right = right;
 				right->left = next.link;
+
+				build(next.link->right); // Построение карты с учетом возможных выходов
 
 				nextgen.push_back(pos(next.h, next.w + 1, right)); // Запишем ее в очередь на расширение
 			}
