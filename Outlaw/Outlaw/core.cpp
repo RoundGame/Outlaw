@@ -15,7 +15,7 @@ struct Window
 const int bullet_count = 10;
 const int hp_count = 5;
 
-const int ice_count = 8;
+
 Object bullet[bullet_count];
 Static_Object pick;
 Static_Object pick2;
@@ -34,7 +34,7 @@ Tile Level_Tile[level_size][level_size];
 double Map_Size = 0.05;
 
 Character Player; // Создаем игрока
-Character Enemy; // Создаем врага
+Character Enemy[enemy_size]; // Создаем врага
 
 enum ButtonType { BUTTON_NEW_GAME = 0, BUTTON_SETTINGS, BUTTON_EXIT, BUTTON_BACK, BUTTON_CONTINUE, button_count };
 int currentMenu = -1, prevMenu = -1;
@@ -48,6 +48,10 @@ Static_Object Slider_Point;
 Static_Object Slider_Text;
 int currentButton = -1;
 
+// Загрузка музыки
+Wave gun("sound/gun8.wav");
+Wave reload("sound/reload.wav");
+
 void Rebuild()
 {
 	for (unsigned __int8 i = 0; i < wall_count; i++)
@@ -55,7 +59,14 @@ void Rebuild()
 		Wall[i].Position = Vector(1.5, 1.5);
 	}
 
+	for (unsigned __int8 e = 0; e < enemy_size; e++)
+	{
+		Enemy[e].Physics.Position = Vector(1.5, 1.5);
+		Enemy[e].HP = 100;
+	}
+
 	int k = 0;
+	int e = 0;
 	for (unsigned __int8 i = 0; i < room_h; i++)
 	{
 		for (unsigned __int8 j = 0; j < room_w; j++)
@@ -65,9 +76,15 @@ void Rebuild()
 				Wall[k].Position = Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05);
 				k++;
 			}
+			if (Map.current->box[i][j] == room_enemy && e < enemy_size)
+			{
+				Enemy[e].Physics.Position = Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05);
+				e++;
+			}
 		}
 	}
 }
+
 
 /*Цикл по подсчету координат перемещения персонажей и объектов */
 void Update(int Value)
@@ -250,67 +267,73 @@ void Update(int Value)
 
 	//Обход стен врагом, реализованный с помощью метода потенциальных полей
 	double max = wall_count * 100, X = 0, Y = 0;
-	for (double x = Enemy.Physics.Position.X - 0.1; x <= Enemy.Physics.Position.X + 0.1; x += 0.1)
+	for (unsigned __int8 e = 0; e < enemy_size; e++)
 	{
-		for (double y = Enemy.Physics.Position.Y - 0.1; y <= Enemy.Physics.Position.Y + 0.1; y += 0.1)
+		for (double x = Enemy[e].Physics.Position.X - 0.1; x <= Enemy[e].Physics.Position.X + 0.1; x += 0.1)
 		{
-			if (y != Enemy.Physics.Position.Y || x != Enemy.Physics.Position.X)
+			for (double y = Enemy[e].Physics.Position.Y - 0.1; y <= Enemy[e].Physics.Position.Y + 0.1; y += 0.1)
 			{
-				Vector temp = Vector(Player.Physics.Position.X - x, Player.Physics.Position.Y - y);
-				double len = 0.15 * temp.GetLength() * wall_count;
-				for (int i = 0; i < wall_count; i++)
+				if (y != Enemy[e].Physics.Position.Y || x != Enemy[e].Physics.Position.X)
 				{
-					temp = Vector(Wall[i].Position.X - x, Wall[i].Position.Y - y);
-					len += 0.2 / temp.GetLength();
-				}
-				if (len < max)
-				{
-					max = len;
-					X = x;
-					Y = y;
+					Vector temp = Vector(Player.Physics.Position.X - x, Player.Physics.Position.Y - y);
+					double len = 0.15 * temp.GetLength() * wall_count;
+					for (int i = 0; i < wall_count; i++)
+					{
+						temp = Vector(Wall[i].Position.X - x, Wall[i].Position.Y - y);
+						len += 0.2 / temp.GetLength();
+					}
+					if (len < max)
+					{
+						max = len;
+						X = x;
+						Y = y;
+					}
 				}
 			}
 		}
-	}
-	Vector EnemyWay = Vector(X - Enemy.Physics.Position.X, Y - Enemy.Physics.Position.Y);
-	Vector FromEnemyToPlayer = Vector(Player.Physics.Position.X - Enemy.Physics.Position.X, Player.Physics.Position.Y - Enemy.Physics.Position.Y);
-	EnemyWay = EnemyWay.GetNormalize();
-	if (Enemy.HP > 0)
-	{
-		if (FromEnemyToPlayer.GetLength() > 0.1)
-		{
-			Enemy.Physics.Acceleration.X = EnemyWay.X;
-			Enemy.Physics.Acceleration.Y = EnemyWay.Y;
-		}
-		else
-		{
-			Enemy.Physics.Acceleration = Vector(0, 0);
-			Enemy.isAttack = true;
-			Enemy.isKick = true;
-		}
-		Enemy.Set_Legs_Direction();
+		Vector EnemyWay = Vector(X - Enemy[e].Physics.Position.X, Y - Enemy[e].Physics.Position.Y);
+		Vector FromEnemyToPlayer = Vector(Player.Physics.Position.X - Enemy[e].Physics.Position.X, Player.Physics.Position.Y - Enemy[e].Physics.Position.Y);
 
-		Enemy.Use_Collisions(Wall, wall_count);
-		Enemy.Target_To(Player.Physics.Position, Window.Render_Size);
-		Enemy.Physics.Update(true);
-
-		if (Collision(Player.Physics.Position, Player.Legs.Size, Enemy.Physics.Position, Enemy.Legs.Size))
+		EnemyWay = EnemyWay.GetNormalize();
+		if (Enemy[e].HP > 0)
 		{
-			if (Player.isKick)
+			if (FromEnemyToPlayer.GetLength() > 0.1)
 			{
-				Enemy.Physics.Velocity.X -= FromEnemyToPlayer.GetNormalize().X * Player.Knock_Back;
-				Enemy.Physics.Velocity.Y -= FromEnemyToPlayer.GetNormalize().Y * Player.Knock_Back;
-
-				Enemy.HP -= rand() % 7 + 7;
-				Player.isKick = false;
+				Enemy[e].Physics.Acceleration.X = EnemyWay.X;
+				Enemy[e].Physics.Acceleration.Y = EnemyWay.Y;
 			}
-			if (Enemy.isKick && !Player.isInvulnerability)
+			else
 			{
-				Player.Physics.Velocity.X += FromEnemyToPlayer.GetNormalize().X * Enemy.Knock_Back;
-				Player.Physics.Velocity.Y += FromEnemyToPlayer.GetNormalize().Y * Enemy.Knock_Back;
-				Player.HP -= 20;
-				Player.isInvulnerability = true;
-				Enemy.isKick = false;
+				Enemy[e].Physics.Acceleration = Vector(0, 0);
+				Enemy[e].isAttack = true;
+				Enemy[e].isKick = true;
+			}
+			Enemy[e].Set_Legs_Direction();
+
+			Enemy[e].Use_Collisions(Wall, wall_count);
+			Enemy[e].Target_To(Player.Physics.Position, Window.Render_Size);
+			Enemy[e].Physics.Update(true);
+			
+			if (Collision(Player.Physics.Position, Player.Legs.Size, Enemy[e].Physics.Position, Enemy[e].Legs.Size))
+			{
+				if (Player.isKick)
+				{
+					Enemy[e].Physics.Velocity.X -= FromEnemyToPlayer.GetNormalize().X * Player.Knock_Back;
+					Enemy[e].Physics.Velocity.Y -= FromEnemyToPlayer.GetNormalize().Y * Player.Knock_Back;
+
+					Enemy[e].HP -= rand() % 7 + 7;
+					Player.isKick = false;
+
+
+				}
+				if (Enemy[e].isKick && !Player.isInvulnerability)
+				{
+					Player.Physics.Velocity.X += FromEnemyToPlayer.GetNormalize().X * Enemy[e].Knock_Back;
+					Player.Physics.Velocity.Y += FromEnemyToPlayer.GetNormalize().Y * Enemy[e].Knock_Back;
+					Player.HP -= 20;
+					Player.isInvulnerability = true;
+					Enemy[e].isKick = false;
+				}
 			}
 		}
 	}
@@ -324,13 +347,16 @@ void Update(int Value)
 			bullet[i].Physics.Update(false);
 			if (bullet[i].Physics.Position.X >= 1.5 || bullet[i].Physics.Position.X <= -1.5 || bullet[i].Physics.Position.Y >= 1.5 || bullet[i].Physics.Position.Y <= -1.5)
 				bullet[i].isExist = false;
-
-			if (Enemy.HP > 0 && Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Enemy.Physics.Position, Enemy.Legs.Size))
+			for (unsigned __int8 e = 0; e < enemy_size; e++)
 			{
-				bullet[i].isExist = false;
+				if (Enemy[e].HP > 0 && Collision(bullet[i].Physics.Position, bullet[i].Body.Size, Enemy[e].Physics.Position, Enemy[e].Legs.Size))
+				{
+					bullet[i].isExist = false;
 
-				Enemy.HP -= rand() % 7 + 15;
+					Enemy[e].HP -= rand() % 7 + 15;
+				}
 			}
+
 			// Если произошла колизия, изменим активность пули в нерабочее
 			for (int j = 0; j < wall_count; j++)
 			{
@@ -360,7 +386,11 @@ void Animation(int Value)
 		return;
 	}
 	Player.Animation(); // Анимация игрока
-	Enemy.Animation(); //Анимация врага
+	for (unsigned __int8 e = 0; e < enemy_size; e++)
+	{
+		Enemy[e].Animation(); //Анимация врага
+	}
+	
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 }
 
@@ -485,18 +515,23 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	Floor.Body.Load("textures/planks.png");
 	Floor.Body.Size = Vector(1.0 / 9, 1.0 / 9);
 
-	Enemy.Legs.Load("textures/Legs.png"); // Враг
-	Enemy.Legs.Size = Vector(0.2, 0.2);
-	Enemy.Body.Load("textures/Body.png");
-	Enemy.Body.Size = Vector(0.4, 0.4);
-	Enemy.Death.Load("textures/Death.png");
-	Enemy.Death.Size = Vector(0.35, 0.35);
-	Enemy.Attack.Load("textures/Attack.png");
-	Enemy.Attack.Size = Vector(0.18, 0.18);
-	Enemy.Physics.Position = Vector(0.5, 0.0);
-	Enemy.Physics.Speed = 0.1;
-	Enemy.Knock_Back = 0.3;
-	Enemy.HP = 100;
+	for (unsigned __int8 e = 0; e < enemy_size; e++)
+	{
+		Enemy[e].Legs.Load("textures/Legs.png"); // Враг
+		Enemy[e].Legs.Size = Vector(0.2, 0.2);
+		Enemy[e].Body.Load("textures/Body.png");
+		Enemy[e].Body.Size = Vector(0.4, 0.4);
+		Enemy[e].Death.Load("textures/Death.png");
+		Enemy[e].Death.Size = Vector(0.35, 0.35);
+		Enemy[e].Attack.Load("textures/Attack.png");
+		Enemy[e].Attack.Size = Vector(0.18, 0.18);
+		Enemy[e].Physics.Speed = 0.1;
+		Enemy[e].Knock_Back = 0.3;
+
+		Enemy[e].Physics.Position = Vector(2, 2);
+		Enemy[e].HP = 0;
+	}
+
 
 	for (int i = 0; i < hp_count; i++)
 	{
@@ -661,8 +696,8 @@ void Render()
 
 	if (pick2.isExist)
 		Draw_Quad(pick2.Position, pick2.Body);
-
-	Enemy.Draw(); // Рисуем врага
+	for (unsigned __int8 e = 0; e < enemy_size; e++)
+	Enemy[e].Draw(); // Рисуем врага
 	Player.Draw();// Рисуем игрока
 
 	//Отрисовка стен
@@ -717,19 +752,40 @@ void Render()
 
 	if (Player.HP > 0)
 	{
-		if (Enemy.HP > 0)
+		for (unsigned __int8 e = 0; e < enemy_size; e++)
 		{
-			char text[4];
-			_itoa_s((int)Enemy.HP, text, 10);
-			for (int i = 0; i < 3; i++)
+			if (Enemy[e].HP > 0)
 			{
-				glRasterPos2d(Enemy.Physics.Position.X - 0.08 + i * 0.04, Enemy.Physics.Position.Y + 0.06);
-				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+				char text[4];
+				_itoa_s((int)Enemy[e].HP, text, 10);
+				for (int i = 0; i < 3; i++)
+				{
+					glRasterPos2d(Enemy[e].Physics.Position.X - 0.08 + i * 0.04, Enemy[e].Physics.Position.Y + 0.06);
+					glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+				}
+				glRasterPos2d(Enemy[e].Physics.Position.X + 0.04, Enemy[e].Physics.Position.Y + 0.06);
+				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'H');
+				glRasterPos2d(Enemy[e].Physics.Position.X + 0.08, Enemy[e].Physics.Position.Y + 0.06);
+				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'P');
 			}
-			glRasterPos2d(Enemy.Physics.Position.X + 0.04, Enemy.Physics.Position.Y + 0.06);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'H');
-			glRasterPos2d(Enemy.Physics.Position.X + 0.08, Enemy.Physics.Position.Y + 0.06);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'P');
+			else
+			{
+				Map.current->enemy_die++;
+				Enemy[e].HP = -1;
+			}
+		}
+		if (Map.current->enemy_life == Map.current->enemy_die) // Если кол-во умерших противников = количеству противников в комнате
+		{
+			for (unsigned __int8 i = 0; i < room_h; i++)
+			{
+				for (unsigned __int8 j = 0; j < room_w; j++)
+				{
+					if (Map.current->box[i][j] == room_enemy)
+					{
+						Map.current->box[i][j] = room_floor;
+					}
+				}
+			}
 		}
 	}
 	else
@@ -814,6 +870,7 @@ void CreateBullet()
 		if (!bullet[i].isExist)
 		{
 			bullet[i].isExist = true;
+			gun.play();
 			k = i;
 		}
 	}

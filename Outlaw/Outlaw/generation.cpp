@@ -30,6 +30,7 @@ level::room::room(RoomType _T)
 	for (unsigned __int8 i = 0; i < enemy_size; i++) // Генерируем положение врагов
 	{
 		box[rand() % room_h][rand() % room_w] = room_enemy;
+		enemy_life++;
 	}
 	if (rand() % prob_gift == 0)
 	{

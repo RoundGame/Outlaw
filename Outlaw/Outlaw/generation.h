@@ -28,6 +28,8 @@ struct level
 		RoomType type;
 		char box[room_h][room_w];
 		room(RoomType _T); // Создает комнату типа _T
+		unsigned __int8 enemy_life = 0; // кол-во живых 
+		unsigned __int8 enemy_die = 0; // кол-во мертвых противников
 	};
 	struct pos // точка на карте
 	{

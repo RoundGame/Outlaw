@@ -1,4 +1,42 @@
-﻿  generation.cpp
+﻿  character.cpp
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\wave.h(2): warning C4005: _WIN32_WINNT: изменение макроопределения
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\shared\sdkddkver.h(215): note: см. предыдущее определение "_WIN32_WINNT"
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(81): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(82): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(83): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(84): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(93): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(94): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(95): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(96): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(105): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(106): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(107): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(108): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(117): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(118): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(119): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\character.cpp(120): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+  core.cpp
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\wave.h(2): warning C4005: _WIN32_WINNT: изменение макроопределения
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\shared\sdkddkver.h(215): note: см. предыдущее определение "_WIN32_WINNT"
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(149): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(809): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(810): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(811): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(812): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(834): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(834): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(859): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(860): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  generation.cpp
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\wave.h(2): warning C4005: _WIN32_WINNT: изменение макроопределения
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\shared\sdkddkver.h(215): note: см. предыдущее определение "_WIN32_WINNT"
 d:\visualstudio\opengl\outlaw\outlaw\outlaw\generation.cpp(5): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\generation.cpp(119): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\generation.cpp(120): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  main.cpp
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\wave.h(2): warning C4005: _WIN32_WINNT: изменение макроопределения
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\shared\sdkddkver.h(215): note: см. предыдущее определение "_WIN32_WINNT"
+d:\visualstudio\opengl\outlaw\outlaw\outlaw\main.cpp(51): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  Создание кода...
   Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe
