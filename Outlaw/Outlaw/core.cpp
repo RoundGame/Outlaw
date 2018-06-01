@@ -55,9 +55,7 @@ Wave reload("sound/reload.wav");
 void Rebuild()
 {
 	for (unsigned __int8 i = 0; i < wall_count; i++)
-	{
 		Wall[i].Position = Vector(1.5, 1.5);
-	}
 
 	for (unsigned __int8 e = 0; e < enemy_size; e++)
 	{

@@ -127,7 +127,7 @@ void Character::Use_Collisions(Static_Object Obj[], int obj_count)
 	Vector Wall_Resistance;
 	for (int i = 0; i < obj_count; i++)
 	{
-		if (Collision(Physics.Position, Legs.Size, Obj[i].Position, Obj[i].Body.Size))
+		if (Collision(Physics.Position, Vector(Legs.Size.X * 0.8, Legs.Size.Y * 0.8), Obj[i].Position, Obj[i].Body.Size))
 		{
 			Wall_Resistance.X += Physics.Position.X - Obj[i].Position.X;
 			Wall_Resistance.Y += Physics.Position.Y - Obj[i].Position.Y;
