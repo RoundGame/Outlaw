@@ -22,7 +22,6 @@ char numbers[255];
 
 Object bullet[bullet_count];
 Static_Object pick;
-Static_Object pick2;
 Static_Object Cross;
 Static_Object Floor;
 Static_Object HP[hp_count];
@@ -62,8 +61,10 @@ void Rebuild()
 	for (unsigned __int8 e = 0; e < enemy_size; e++)
 	{
 		Enemy[e].Physics.Position = Vector(1.5, 1.5);
-		Enemy[e].HP = 100;
+		Enemy[e].HP = -1;
 	}
+	pick.Position = Vector(1.5, 1.5);
+	pick.isExist = false;
 
 	int k = 0;
 	int e = 0;
@@ -79,7 +80,13 @@ void Rebuild()
 			if (Map.current->box[i][j] == room_enemy && e < enemy_size)
 			{
 				Enemy[e].Physics.Position = Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05);
+				Enemy[e].HP = 100;
 				e++;
+			}
+			if (Map.current->box[i][j] == room_gift)
+			{
+				pick.Position = Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05);
+				pick.isExist = true;
 			}
 		}
 	}
@@ -218,7 +225,7 @@ void Update(int Value)
 
 
 	// Перемещение между комнатами //////////////////////////////
-	if (Player.Physics.Position.X > 10 / (double)win_height)
+	if (Player.Physics.Position.X > (10 / (double)win_height) + 0.1)
 	{
 		Player.Physics.Position.X = -10 / (double)win_height;
 		Map.current = Map.current->right;
@@ -229,7 +236,7 @@ void Update(int Value)
 		Level_Tile[cursor_tile_x][cursor_tile_y].isStudy = true;
 	}
 
-	if (Player.Physics.Position.Y > 10 / (double)win_width)
+	if (Player.Physics.Position.Y > (10 / (double)win_width) + 0.1)
 	{
 		Player.Physics.Position.Y = -10 / (double)win_width;
 		Map.current = Map.current->up;
@@ -240,7 +247,7 @@ void Update(int Value)
 		Level_Tile[cursor_tile_x][cursor_tile_y].isStudy = true;
 	}
 
-	if (Player.Physics.Position.X < -10 / (double)win_height)
+	if (Player.Physics.Position.X < (-10 / (double)win_height) - 0.1)
 	{
 		Player.Physics.Position.X = 10 / (double)win_height;
 		Map.current = Map.current->left;
@@ -251,7 +258,7 @@ void Update(int Value)
 		Level_Tile[cursor_tile_x][cursor_tile_y].isStudy = true;
 	}
 
-	if (Player.Physics.Position.Y < -10 / (double)win_width)
+	if (Player.Physics.Position.Y < (-10 / (double)win_width) - 0.1)
 	{
 		Map.current = Map.current->down;
 		Player.Physics.Position.Y = 10 / (double)win_width;
@@ -277,13 +284,19 @@ void Update(int Value)
 	//Проверка, что мы взяли пикапы
 	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Position, pick.Body.Size) && pick.isExist)
 	{
+		for (unsigned __int8 i = 0; i < room_h; i++)
+		{
+			for (unsigned __int8 j = 0; j < room_w; j++)
+			{
+				if (Map.current->box[i][j] == room_gift)
+				{
+					Map.current->box[i][j] = ' ';
+				}
+			}
+		}
 		pick.isExist = false;
 		Player.Physics.Speed *= 1.5f;
-	}
 
-	if (Collision(Player.Physics.Position, Player.Legs.Size, pick2.Position, pick2.Body.Size) && pick2.isExist)
-	{
-		pick2.isExist = false;
 		Player.Body.Size = Vector(0.3, 0.3);
 		Player.Legs.Size = Vector(0.15, 0.15);
 		Player.Attack.Size = Vector(0.14, 0.14);
@@ -529,15 +542,8 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	Player.Physics.Speed = 0.2;
 	Player.HP = 100;
 
-	pick.Body.Load("textures/boots.png"); // Поднимаемые предметы
+	pick.Body.Load("textures/dye_powder_cyan.png"); // Поднимаемые предметы
 	pick.Body.Size = Vector(0.1, 0.1);
-	pick.Position = Vector(0.6, 0.01);
-	pick.isExist = true;
-
-	pick2.Body.Load("textures/dye_powder_cyan.png");
-	pick2.Body.Size = Vector(0.1, 0.1);
-	pick2.Position = Vector(0.3, 0.41);
-	pick2.isExist = true;
 
 	Floor.Body.Load("textures/planks.png");
 	Floor.Body.Size = Vector(1.0 / 9, 1.0 / 9);
@@ -725,10 +731,6 @@ void Render()
 			{
 				Draw_Quad(Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05), Floor.Body);
 			}
-			if (Map.current->box[i][j] == room_gift)
-			{
-				Draw_Quad(Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05), pick.Body);
-			}
 		}
 	}
 
@@ -736,13 +738,9 @@ void Render()
 	//for (int i = 0; i < ice_count; i++)
 	//	Draw_Quad(Ice[i].Position, Ice[i].Body);
 
-	//Отрисовка пикапов
-
 	if (pick.isExist)
 		Draw_Quad(pick.Position, pick.Body);
 
-	if (pick2.isExist)
-		Draw_Quad(pick2.Position, pick2.Body);
 	for (unsigned __int8 e = 0; e < enemy_size; e++)
 	Enemy[e].Draw(); // Рисуем врага
 	Player.Draw();// Рисуем игрока
