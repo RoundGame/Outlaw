@@ -295,11 +295,13 @@ void Update(int Value)
 			}
 		}
 		pick.isExist = false;
-		Player.Physics.Speed *= 1.5f;
+		Player.Physics.Speed = 0.3f;
 
 		Player.Body.Size = Vector(0.3, 0.3);
 		Player.Legs.Size = Vector(0.15, 0.15);
 		Player.Attack.Size = Vector(0.14, 0.14);
+
+		Player.HP += 25;
 	}
 
 	//Обход стен врагом, реализованный с помощью метода потенциальных полей

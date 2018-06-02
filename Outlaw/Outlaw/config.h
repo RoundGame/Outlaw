@@ -25,7 +25,7 @@ static const unsigned __int8 level_size = 7; // Размер "коробки" в
 static const unsigned __int8 room_h = 12; // Длина комнат
 static const unsigned __int8 room_w = 20; // Ширина комнат
 
-static const unsigned __int8 prob_gift = 5; // Вероятность спавна подарка на уровне 1 к prob_gift
+static const unsigned __int8 prob_gift = 1; // Вероятность спавна подарка на уровне 1 к prob_gift
 static const unsigned __int8 wall_frequency = 20; // Плотность генерации стен wall_frequency - вероятность к 1 спавна стены на точке 
 static const unsigned __int8 safe_indent = 1; // Отступ от стен(в блоках) в котором не генерируются препятствия
 
