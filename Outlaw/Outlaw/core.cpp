@@ -20,7 +20,6 @@ int scoren = 0;
 char nicks[255];
 char numbers[255];
 
-
 Object bullet[bullet_count];
 Static_Object pick;
 Static_Object pick2;
@@ -54,10 +53,6 @@ Static_Object Slider_Line;
 Static_Object Slider_Point;
 Static_Object Slider_Text;
 int currentButton = -1;
-
-// Загрузка музыки
-Wave gun("sound/gun8.wav");
-Wave reload("sound/reload.wav");
 
 void Rebuild()
 {
@@ -102,6 +97,12 @@ void Update(int Value)
 	Window.Position.Y = rect.top;
 	Window.Size.X = rect.right - rect.left; //Координаты правого нижнего минус координаты левого верхнего равно размеры окна
 	Window.Size.Y = rect.bottom - rect.top;
+
+	//Проверка, что музыка играет, если же нет, запустить другую
+	char info[8];
+	mciSendStringA("status music mode", info, 20, NULL);
+	if (info[0] == 's')
+		Play_Music();
 
 	//Если открыто меню
 	if (currentMenu != 0)
@@ -413,7 +414,6 @@ void Animation(int Value)
 	{
 		Enemy[e].Animation(); //Анимация врага
 	}
-	
 	glutTimerFunc(timer_animation, Animation, Value); //Задержка 100 мс перед новым вызовом функции
 }
 
@@ -909,6 +909,16 @@ void SetFullScreen() //Функция установки полного экра
 	}
 }
 
+void Play_Music()
+{
+	int n = rand() % 4 + 1;
+	char* text = new char[2];
+	_itoa_s(n, text, 2, 10);
+	string s = "open sound/music" + string(text) + ".wav alias music";
+	mciSendStringA(s.c_str(), NULL, 0, NULL);
+	mciSendStringA("play music", NULL, 0, NULL);
+}
+
 void CreateBullet()
 {
 	int k = -1;
@@ -917,7 +927,7 @@ void CreateBullet()
 		if (!bullet[i].isExist)
 		{
 			bullet[i].isExist = true;
-			gun.play();
+			PlaySoundA("sound/gun8.wav", NULL, SND_ASYNC | SND_FILENAME);
 			k = i;
 		}
 	}

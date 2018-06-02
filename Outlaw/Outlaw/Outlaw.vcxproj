@@ -123,7 +123,6 @@
     <ClCompile Include="generation.cpp" />
     <ClCompile Include="highscore.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="wave.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="character.h" />
@@ -134,7 +133,6 @@
     <ClInclude Include="info.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="magnitudes.h" />
-    <ClInclude Include="wave.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

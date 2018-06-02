@@ -47,13 +47,8 @@ int main(int argc, char **argv)
 	Keyboard_Hook = SetWindowsHookExA(WH_KEYBOARD_LL, KeybdHookProc, NULL, 0);
 	Keyboard_Hook = SetWindowsHookExA(WH_MOUSE_LL, MouseHookProc, NULL, 0);
 
-	//Включаем рандомную фоновую музыку
-	srand(time(0));
-	int n = rand() % 4 + 1;
-	char* text = new char[2];
-	_itoa_s(n, text, 2, 10);
-	string s = "sound/music" + string(text) + ".wav";
-	PlaySound(s.c_str(), NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+	//Включаем фоновую музыку
+	Play_Music();
 
 	/*Начинает основной цикл GLUT обработки событий. В цикле событий обрабатываются все сообщения клавиатуры,
 	мыши, таймера, перерисовывания и другие сообщения окна. Функция не возвращает ничего, пока программа не завершится.*/
