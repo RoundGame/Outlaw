@@ -121,6 +121,7 @@
     <ClCompile Include="character.cpp" />
     <ClCompile Include="core.cpp" />
     <ClCompile Include="generation.cpp" />
+    <ClCompile Include="highscore.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="wave.cpp" />
   </ItemGroup>
@@ -129,6 +130,7 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="generation.h" />
+    <ClInclude Include="highscore.h" />
     <ClInclude Include="info.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="magnitudes.h" />

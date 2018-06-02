@@ -7,6 +7,7 @@
 #include <time.h>
 #include "generation.h"
 #include "wave.h"
+#include "highscore.h"
 
 static HHOOK Keyboard_Hook; // Хэндл хука клавиатуры
 static HHOOK Mouse_Hook; // Хэндл хука мыши

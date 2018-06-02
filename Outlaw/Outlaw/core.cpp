@@ -14,6 +14,11 @@ struct Window
 
 const int bullet_count = 10;
 const int hp_count = 5;
+string nicksarr[255];
+int scorearr[255];
+int scoren = 0;
+char nicks[255];
+char numbers[255];
 
 
 Object bullet[bullet_count];
@@ -24,7 +29,9 @@ Static_Object Floor;
 Static_Object HP[hp_count];
 Static_Object Wall[wall_count];
 Static_Object Ice[ice_count];
+Static_Object Highscore_Tab;
 bool isLeftMouseButtonDown = false;
+bool gof = true;
 
 int cursor_tile_x = 0, cursor_tile_y = 0;
 level Map;
@@ -36,7 +43,7 @@ double Map_Size = 0.05;
 Character Player; // Создаем игрока
 Character Enemy[enemy_size]; // Создаем врага
 
-enum ButtonType { BUTTON_NEW_GAME = 0, BUTTON_SETTINGS, BUTTON_EXIT, BUTTON_BACK, BUTTON_CONTINUE, button_count };
+enum ButtonType { BUTTON_NEW_GAME = 0, BUTTON_SETTINGS, BUTTON_EXIT, BUTTON_BACK, BUTTON_CONTINUE, BUTTON_SCORE, button_count };
 int currentMenu = -1, prevMenu = -1;
 Static_Object Menu_BackGround;
 Static_Object Menu_Text;
@@ -106,11 +113,13 @@ void Update(int Value)
 			Button[BUTTON_CONTINUE].isExist = true;
 			Button[BUTTON_NEW_GAME].isExist = true;
 			Button[BUTTON_SETTINGS].isExist = true;
+			Button[BUTTON_SCORE].isExist = true;
 			Button[BUTTON_EXIT].isExist = true;
 			Button[BUTTON_BACK].isExist = false;
 			Slider_Text.isExist = false;
 			Slider_Line.isExist = false;
 			Slider_Point.isExist = false;
+			Highscore_Tab.isExist = false;
 		}
 		if (currentMenu == 2)
 		{
@@ -119,11 +128,27 @@ void Update(int Value)
 			Button[BUTTON_CONTINUE].isExist = false;
 			Button[BUTTON_NEW_GAME].isExist = false;
 			Button[BUTTON_SETTINGS].isExist = false;
+			Button[BUTTON_SCORE].isExist = false;
 			Button[BUTTON_EXIT].isExist = false;
 			Button[BUTTON_BACK].isExist = true;
 			Slider_Text.isExist = true;
 			Slider_Line.isExist = true;
 			Slider_Point.isExist = true;
+		}
+		if (currentMenu == 3)
+		{
+			Menu_Text.isExist = false;
+			Settings_Text.isExist = false;
+			Button[BUTTON_CONTINUE].isExist = false;
+			Button[BUTTON_NEW_GAME].isExist = false;
+			Button[BUTTON_SETTINGS].isExist = false;
+			Button[BUTTON_SCORE].isExist = false;
+			Button[BUTTON_EXIT].isExist = false;
+			Button[BUTTON_BACK].isExist = true;
+			Slider_Text.isExist = false;
+			Slider_Line.isExist = false;
+			Slider_Point.isExist = false;
+			Highscore_Tab.isExist = true;
 		}
 		currentButton = -1;
 		Cursor.isExist = false;
@@ -442,9 +467,12 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	Button[BUTTON_SETTINGS].Body.Load("textures/Menu/Settings.png");
 	Button[BUTTON_SETTINGS].Body.Size = menu_button_size;
 	Button[BUTTON_SETTINGS].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.14);
+	Button[BUTTON_SCORE].Body.Load("textures/Menu/Highscore.png");
+	Button[BUTTON_SCORE].Body.Size = menu_button_size;
+	Button[BUTTON_SCORE].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.26);
 	Button[BUTTON_EXIT].Body.Load("textures/Menu/Exit.png");
 	Button[BUTTON_EXIT].Body.Size = menu_button_size;
-	Button[BUTTON_EXIT].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.26);
+	Button[BUTTON_EXIT].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.38);
 	Button[BUTTON_BACK].Body.Load("textures/Menu/Back.png");
 	Button[BUTTON_BACK].Body.Size = menu_button_size;
 	Button[BUTTON_BACK].Position = Vector(-1 + menu_button_size.X / 3 + menu_button_ident, -0.26);
@@ -477,6 +505,7 @@ void initGL(int argc, char **argv, bool isNewWindow)
 	//Если новая игра, то сразу отображаем меню, не загружая остального контента
 	if (currentMenu == -1)
 		return;
+
 
 	//Генерация карты и уровня
 	Map = level();
@@ -650,6 +679,25 @@ void Render()
 			Draw_Quad(Slider_Line.Position, Slider_Line.Body);
 		if (Slider_Point.isExist)
 			Draw_Quad(Slider_Point.Position, Slider_Point.Body);
+		if (Highscore_Tab.isExist) {
+			glDisable(GL_TEXTURE_2D);
+			glDisable(GL_ALPHA_TEST);
+			for (int j = scoren - 1; j >= 0; j--) {
+				sprintf_s(numbers, "%d",scorearr[j]);
+				for (int i = 0; i < scorearr[j]; i++) {
+					glRasterPos2d(-1.f + 0.02*(nicksarr[j].length() + 8+i), 0.35 + 0.05*j);
+					glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, numbers[i]);
+				}
+				strcpy_s(nicks, nicksarr[j].c_str());
+				for (int k = 0; k < nicksarr[j].length(); k++) {
+					glRasterPos2d(-1.f + 0.03*k, 0.35+0.05*j);
+					glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, nicks[k]);
+				}
+			}
+			glEnable(GL_TEXTURE_2D);
+			glEnable(GL_ALPHA_TEST);
+		}
+
 		for (int i = 0; i < button_count; i++)
 		{
 			if (Button[i].isExist)
@@ -663,6 +711,7 @@ void Render()
 
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_ALPHA_TEST);
+
 		glutSwapBuffers(); // Замена буфера на вновь отрисованный 
 		return;
 	}
@@ -963,6 +1012,14 @@ LRESULT __stdcall MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 				case BUTTON_SETTINGS:
 					prevMenu = currentMenu;
 					currentMenu = 2;
+					break;
+				case BUTTON_SCORE:
+					prevMenu = currentMenu;
+					currentMenu = 3;
+					if (gof) {
+						sortscores(scoren,nicksarr,scorearr);
+						gof = false;
+					}
 					break;
 				case BUTTON_EXIT:
 					Save();
