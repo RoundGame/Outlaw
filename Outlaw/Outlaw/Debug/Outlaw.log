@@ -1,12 +1,4 @@
-﻿  core.cpp
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(180): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(700): warning C4018: <: несоответствие типов со знаком и без знака
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(856): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(857): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(858): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(859): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(881): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(881): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(906): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-d:\visualstudio\opengl\outlaw\outlaw\outlaw\core.cpp(907): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-  Outlaw.vcxproj -> D:\VisualStudio\OpenGL\Outlaw\Outlaw\Debug\Outlaw.exe
+﻿  generation.cpp
+e:\1folders\outlaw\outlaw\outlaw\generation.cpp(5): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\generation.cpp(121): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Debug\Outlaw.exe

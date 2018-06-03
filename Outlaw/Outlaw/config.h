@@ -30,7 +30,7 @@ static const unsigned __int8 wall_frequency = 20; // Плотность гене
 static const unsigned __int8 safe_indent = 1; // Отступ от стен(в блоках) в котором не генерируются препятствия
 
 static const unsigned __int8 wall_count = 90; // Максимальное количество стен на уровне
-static const unsigned __int8 ice_count = 8; // Максимальное блоков льда на уровне
+static const unsigned __int8 door_count = 8; // Максимальное блоков льда на уровне
 static const unsigned __int8 enemy_size = 3; // Кол-во врагов на уровень
 
 

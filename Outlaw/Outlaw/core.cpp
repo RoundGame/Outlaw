@@ -26,7 +26,6 @@ Static_Object Cross;
 Static_Object Floor;
 Static_Object HP[hp_count];
 Static_Object Wall[wall_count];
-Static_Object Ice[ice_count];
 Static_Object Highscore_Tab;
 bool isLeftMouseButtonDown = false;
 bool gof = true;
@@ -37,6 +36,7 @@ Static_Object Map_Back;
 Static_Object Map_Cursor;
 Tile Level_Tile[level_size][level_size];
 double Map_Size = 0.05;
+bool isRoomClear = false;
 
 Character Player; // Создаем игрока
 Character Enemy[enemy_size]; // Создаем врага
@@ -61,21 +61,27 @@ void Rebuild()
 	for (unsigned __int8 e = 0; e < enemy_size; e++)
 	{
 		Enemy[e].Physics.Position = Vector(1.5, 1.5);
-		Enemy[e].HP = -1;
+		Enemy[e].HP = -100;
 	}
 	pick.Position = Vector(1.5, 1.5);
 	pick.isExist = false;
 
 	int k = 0;
 	int e = 0;
+	int d = wall_count - 1;
 	for (unsigned __int8 i = 0; i < room_h; i++)
 	{
 		for (unsigned __int8 j = 0; j < room_w; j++)
 		{
 			if (Map.current->box[i][j] == room_wall && k < wall_count)
 			{
-				Wall[k].Position = Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.X) * (i - room_h / 2) - 0.05);
+				Wall[k].Position = Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.Y) * (i - room_h / 2) - 0.05);
 				k++;
+			}
+			if (Map.current->box[i][j] == room_door && d > wall_count - door_count - 1)
+			{
+				Wall[d].Position = Vector((float)(Wall[0].Body.Size.X * (j - room_w / 2) + 0.05), (float)(-Wall[0].Body.Size.Y) * (i - room_h / 2) - 0.05);
+				d--;
 			}
 			if (Map.current->box[i][j] == room_enemy && e < enemy_size)
 			{
@@ -153,9 +159,6 @@ void Update(int Value)
 			Button[BUTTON_SCORE].isExist = false;
 			Button[BUTTON_EXIT].isExist = false;
 			Button[BUTTON_BACK].isExist = true;
-			Slider_Text.isExist = false;
-			Slider_Line.isExist = false;
-			Slider_Point.isExist = false;
 			Highscore_Tab.isExist = true;
 		}
 		currentButton = -1;
@@ -219,7 +222,10 @@ void Update(int Value)
 	Player.Physics.Acceleration = Player.Physics.Acceleration.GetNormalize();
 	Player.Set_Legs_Direction();
 
-	Player.Use_Collisions(Wall, wall_count);
+	if (isRoomClear)
+		Player.Use_Collisions(Wall, wall_count - door_count);
+	else
+		Player.Use_Collisions(Wall, wall_count);
 	Player.Target_To(Cross.Position, Window.Render_Size);
 	Player.Physics.Update(true); // Изменение позиции игрока
 
@@ -227,7 +233,7 @@ void Update(int Value)
 	// Перемещение между комнатами //////////////////////////////
 	if (Player.Physics.Position.X > (10 / (double)win_height) + 0.1)
 	{
-		Player.Physics.Position.X = -10 / (double)win_height;
+		Player.Physics.Position.X = -10 / (double)win_height + 0.2;
 		Map.current = Map.current->right;
 		Rebuild();
 		Map.draw(Map.current);
@@ -238,7 +244,7 @@ void Update(int Value)
 
 	if (Player.Physics.Position.Y > (10 / (double)win_width) + 0.1)
 	{
-		Player.Physics.Position.Y = -10 / (double)win_width;
+		Player.Physics.Position.Y = -10 / (double)win_width + 0.2;
 		Map.current = Map.current->up;
 		Rebuild();
 		Map.draw(Map.current);
@@ -249,7 +255,7 @@ void Update(int Value)
 
 	if (Player.Physics.Position.X < (-10 / (double)win_height) - 0.1)
 	{
-		Player.Physics.Position.X = 10 / (double)win_height;
+		Player.Physics.Position.X = 10 / (double)win_height - 0.2;
 		Map.current = Map.current->left;
 		Rebuild();
 		Map.draw(Map.current);
@@ -260,8 +266,8 @@ void Update(int Value)
 
 	if (Player.Physics.Position.Y < (-10 / (double)win_width) - 0.1)
 	{
+		Player.Physics.Position.Y = 10 / (double)win_width - 0.2;
 		Map.current = Map.current->down;
-		Player.Physics.Position.Y = 10 / (double)win_width;
 		Rebuild();
 		Map.draw(Map.current);
 
@@ -281,7 +287,7 @@ void Update(int Value)
 	//		Enemy.Physics.Boost = 0.5;
 	//}
 
-	//Проверка, что мы взяли пикапы
+	//Проверка, что мы взяли пикап
 	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Position, pick.Body.Size) && pick.isExist)
 	{
 		for (unsigned __int8 i = 0; i < room_h; i++)
@@ -289,18 +295,16 @@ void Update(int Value)
 			for (unsigned __int8 j = 0; j < room_w; j++)
 			{
 				if (Map.current->box[i][j] == room_gift)
-				{
 					Map.current->box[i][j] = ' ';
-				}
 			}
 		}
 		pick.isExist = false;
 		Player.Physics.Speed = 0.3f;
-
+		/*
 		Player.Body.Size = Vector(0.3, 0.3);
 		Player.Legs.Size = Vector(0.15, 0.15);
 		Player.Attack.Size = Vector(0.14, 0.14);
-
+		*/
 		Player.HP += 25;
 	}
 
@@ -567,23 +571,16 @@ void initGL(int argc, char **argv, bool isNewWindow)
 		Enemy[e].HP = 0;
 	}
 
-
 	for (int i = 0; i < hp_count; i++)
 	{
 		HP[i].Body.Load("textures/hp.png");
 		HP[i].Body.Size = Vector(0.07, 0.07);
 		HP[i].Position = Vector(-10 / (double)win_height + 0.06 + i * 0.08, 10 / (double)win_width - 0.06);
 	}
-
 	for (int i = 0; i < wall_count; i++)
 	{
 		Wall[i].Body.Load("textures/cobblestone.png");
 		Wall[i].Body.Size = Vector(1.0 / 9, 1.0 / 9);
-	}
-	for (int i = 0; i < ice_count; i++)
-	{
-		Ice[i].Body.Load("textures/ice.png");
-		Ice[i].Body.Size = Vector(1.0 / 9, 1.0 / 9);
 	}
 	for (int i = 0; i < bullet_count; i++)
 	{
@@ -736,10 +733,6 @@ void Render()
 		}
 	}
 
-	//Отрисовка льда
-	//for (int i = 0; i < ice_count; i++)
-	//	Draw_Quad(Ice[i].Position, Ice[i].Body);
-
 	if (pick.isExist)
 		Draw_Quad(pick.Position, pick.Body);
 
@@ -748,9 +741,15 @@ void Render()
 	Player.Draw();// Рисуем игрока
 
 	//Отрисовка стен
-	for (int i = 0; i < wall_count; i++)
+	for (int i = 0; i < wall_count - door_count; i++)
 		Draw_Quad(Wall[i].Position, Wall[i].Body);
 
+	//Отрисовка дверей, если они закрыты
+	if (!isRoomClear)
+	{
+		for (int i = wall_count - 1; i > wall_count - door_count - 1; i--)
+			Draw_Quad(Wall[i].Position, Wall[i].Body);
+	}
 
 	//Отрисовка пуль
 	for (int i = 0; i < bullet_count; i++)
@@ -815,12 +814,13 @@ void Render()
 				glRasterPos2d(Enemy[e].Physics.Position.X + 0.08, Enemy[e].Physics.Position.Y + 0.06);
 				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'P');
 			}
-			else
+			else if (Enemy[e].HP != -100)
 			{
 				Map.current->enemy_die++;
-				Enemy[e].HP = -1;
+				Enemy[e].HP = -100;
 			}
 		}
+		isRoomClear = false;
 		if (Map.current->enemy_life == Map.current->enemy_die) // Если кол-во умерших противников = количеству противников в комнате
 		{
 			for (unsigned __int8 i = 0; i < room_h; i++)
@@ -828,11 +828,10 @@ void Render()
 				for (unsigned __int8 j = 0; j < room_w; j++)
 				{
 					if (Map.current->box[i][j] == room_enemy)
-					{
 						Map.current->box[i][j] = room_floor;
-					}
 				}
 			}
+			isRoomClear = true;
 		}
 	}
 	else

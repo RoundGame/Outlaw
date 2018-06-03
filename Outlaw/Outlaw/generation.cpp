@@ -27,14 +27,15 @@ level::room::room(RoomType _T)
 		}
 	}
 
-	for (unsigned __int8 i = 0; i < enemy_size; i++) // Генерируем положение врагов
+	int rnd = rand() % enemy_size;
+	for (unsigned __int8 i = 0; i <= rnd; i++) // Генерируем положение врагов
 	{
-		box[rand() % room_h][rand() % room_w] = room_enemy;
+		box[rand() % (room_h - 2) + 1][rand() % (room_w - 2) + 1] = room_enemy;
 		enemy_life++;
 	}
 	if (rand() % prob_gift == 0)
 	{
-		box[rand() % (room_h-1) + 1][rand() % (room_w - 1) + 1 ] = room_gift; // Подарок в комнату
+		box[rand() % (room_h - 2) + 1][rand() % (room_w - 2) + 1] = room_gift; // Подарок в комнату
 	}
 
 	for (int i = 0; i < room_h; i++) // Рисуем стены ( левая и правая)
@@ -133,7 +134,6 @@ bool level::create(__int8 h, __int8 w)
 
 void level::generation() 
 {
-
 	if (nextgen.size()) // Для не пустой очереди
 	{
 		pos next = getnextpos(); // Получим нового кандидата на расширение

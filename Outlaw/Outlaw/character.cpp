@@ -38,7 +38,7 @@ void Character::Animation()
 	if (isInvulnerability)
 	{
 		Inv_CurrentFrame++;
-		if (Inv_CurrentFrame > Attack.AnimationSize)
+		if (Inv_CurrentFrame > Attack.AnimationSize * 2)
 		{
 			isInvulnerability = false;
 			Inv_CurrentFrame = 0;
