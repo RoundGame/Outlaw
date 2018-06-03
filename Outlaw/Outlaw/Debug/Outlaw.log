@@ -1,4 +1,12 @@
-﻿  generation.cpp
-e:\1folders\outlaw\outlaw\outlaw\generation.cpp(5): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-e:\1folders\outlaw\outlaw\outlaw\generation.cpp(121): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+﻿  core.cpp
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(183): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(680): warning C4018: <: несоответствие типов со знаком и без знака
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(838): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(839): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(840): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(841): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(863): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(863): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(888): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+e:\1folders\outlaw\outlaw\outlaw\core.cpp(889): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
   Outlaw.vcxproj -> E:\1Folders\Outlaw\Outlaw\Debug\Outlaw.exe

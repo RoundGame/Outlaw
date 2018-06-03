@@ -276,17 +276,6 @@ void Update(int Value)
 	}
 	/////////////////////////////////////////////////////////////
 
-	////Проверка, что мы на льду
-	//Player.Physics.Boost = 5;
-	//Enemy.Physics.Boost = 5;
-	//for (int i = 0; i < ice_count; i++)
-	//{
-	//	if (Collision(Player.Physics.Position, Player.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
-	//		Player.Physics.Boost = 0.5;
-	//	if (Collision(Enemy.Physics.Position, Enemy.Legs.Size, Ice[i].Position, Ice[i].Body.Size))
-	//		Enemy.Physics.Boost = 0.5;
-	//}
-
 	//Проверка, что мы взяли пикап
 	if (Collision(Player.Physics.Position, Player.Legs.Size, pick.Position, pick.Body.Size) && pick.isExist)
 	{
@@ -305,7 +294,9 @@ void Update(int Value)
 		Player.Legs.Size = Vector(0.15, 0.15);
 		Player.Attack.Size = Vector(0.14, 0.14);
 		*/
-		Player.HP += 25;
+		Player.HP += 20;
+		if (Player.HP > 100)
+			Player.HP = 100;
 	}
 
 	//Обход стен врагом, реализованный с помощью метода потенциальных полей
@@ -588,14 +579,6 @@ void initGL(int argc, char **argv, bool isNewWindow)
 		bullet[i].Body.Size = Vector(0.1, 0.05);
 		bullet[i].Physics.Speed = 0.4;
 	}
-
-	//for (int i = 0; i < ice_count; i += 2)
-	//{
-	//	Ice[i].Position.X = -(double)i / 18 - 3.5 / 9;
-	//	Ice[i].Position.Y = -2.0 / 9;
-	//	Ice[i + 1].Position.X = -(double)i / 18 - 3.5 / 9;
-	//	Ice[i + 1].Position.Y = -3.0 / 9;
-	//}
 
 	Rebuild(); // Установка препятствий в комнате
 }
